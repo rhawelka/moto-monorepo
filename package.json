@@ -2,7 +2,10 @@
   "name": "@moto-monorepo/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start:api": "nx serve api",
+    "start:dashboard-web": "nx serve dashboard-web"
+  },
   "private": true,
   "devDependencies": {
     "@angular-devkit/core": "~22.0.4",

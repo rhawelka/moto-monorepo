@@ -15,8 +15,8 @@
     "skipDefaultLibCheck": true,
     "strict": false,
     "paths": {
-      "@moto-monorepo/ui": ["./ui/src/index.ts"],
-      "@moto-monorepo/interfaces": ["./interfaces/src/index.ts"],
+      "@moto-monorepo/ui": ["./shared/ui/src/index.ts"],
+      "@moto-monorepo/interfaces": ["./shared/interfaces/src/index.ts"],
       "@moto-monorepo/constants": ["./shared/constants/src/index.ts"],
       "@moto-monorepo/utils": ["./shared/utils/src/index.ts"],
       "@moto-monorepo/dto": ["./shared/dto/src/index.ts"]
