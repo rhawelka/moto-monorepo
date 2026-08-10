@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
+import { CommonHeader } from '@moto-monorepo/ui';
+
 
 @Component({
-  imports: [NxWelcome, RouterModule],
+  imports: [RouterModule, CommonHeader],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',

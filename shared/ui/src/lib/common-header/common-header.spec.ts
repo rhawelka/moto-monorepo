@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Ui } from './ui';
+import { CommonHeader } from './common-header';
 
-describe('Ui', () => {
-  let component: Ui;
-  let fixture: ComponentFixture<Ui>;
+describe('CommonHeader', () => {
+  let component: CommonHeader;
+  let fixture: ComponentFixture<CommonHeader>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Ui],
+      imports: [CommonHeader],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Ui);
+    fixture = TestBed.createComponent(CommonHeader);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
