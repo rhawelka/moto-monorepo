@@ -1,9 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'lib-sidebar',
-  imports: [],
+  selector: 'ui-sidebar',
+  imports: [CommonModule],
   templateUrl: './sidebar.html',
-  styleUrl: './sidebar.css',
+  styleUrl: './sidebar.scss',
 })
-export class Sidebar {}
+export class Sidebar {
+  expanded = true;
+
+  toggle(): void {
+    this.expanded = !this.expanded;
+  }
+}

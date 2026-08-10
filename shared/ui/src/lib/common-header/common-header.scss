@@ -1,0 +1,73 @@
+// Variables
+$header-height: 70px;
+$spacing-base: 1rem;
+$color-bg: #ffffff;
+$color-text: #1a1a1a;
+$color-primary: #0066ff;
+
+.site-header {
+  background-color: $color-bg;
+  border-bottom: 1px solid #e5e5e5;
+  width: 100%;
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 ($spacing-base * 1.5);
+    height: $header-height;
+
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+  }
+
+  &__logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+
+    img {
+      width: auto;
+      display: block;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 6px;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+
+  &--secondary {
+    background-color: transparent;
+    color: $color-text;
+
+    &:hover {
+      background-color: #f3f4f6;
+    }
+  }
+
+  &--primary {
+    background-color: $color-primary;
+    color: #ffffff;
+
+    &:hover {
+      background-color: darken($color-primary, 8%);
+    }
+  }
+}

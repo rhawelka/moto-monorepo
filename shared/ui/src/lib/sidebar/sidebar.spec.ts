@@ -18,4 +18,14 @@ describe('Sidebar', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should toggle the collapsed state', () => {
+    expect(component.expanded).toBe(true);
+
+    component.toggle();
+    expect(component.expanded).toBe(false);
+
+    component.toggle();
+    expect(component.expanded).toBe(true);
+  });
 });

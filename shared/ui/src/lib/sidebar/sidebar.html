@@ -1,1 +1,40 @@
-<p>sidebar works!</p>
+<aside class="ui-sidebar" [class.ui-sidebar--collapsed]="!expanded">
+  <div class="ui-sidebar__content">
+    <div class="ui-sidebar__title">
+      <span class="ui-sidebar__logo">Moto</span>
+      @if (expanded) {
+      <span class="ui-sidebar__text">Workspace</span>
+      }
+    </div>
+
+    <nav class="ui-sidebar__nav" aria-label="Sidebar navigation">
+      <a class="ui-sidebar__link" href="#">
+        <span class="ui-sidebar__icon">●</span>ss @if(expanded){
+        <span class="ui-sidebar__label">Overview</span>
+        }
+      </a>
+      <a class="ui-sidebar__link" href="#">
+        <span class="ui-sidebar__icon">○</span>
+        @if(expanded){
+        <span class="ui-sidebar__label">Reports</span>
+        }
+      </a>
+      <a class="ui-sidebar__link" href="#">
+        <span class="ui-sidebar__icon">◇</span>
+        @if(expanded){
+        <span class="ui-sidebar__label">Settings</span>
+        }
+      </a>
+    </nav>
+  </div>
+
+  <div class="ui-sidebar__footer">
+    <button class="ui-sidebar__toggle" type="button" (click)="toggle()">
+      @if(expanded){
+      <span>Collapse</span>
+      } @if(expanded){
+      <span>Expand</span>
+      }
+    </button>
+  </div>
+</aside>
