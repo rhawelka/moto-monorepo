@@ -1,0 +1,34 @@
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
+import { AuthService } from '../../services/auth/auth.service';
+import { CreateUserDto } from '@moto-monorepo/dto';
+import { AuthGuard } from '@nestjs/passport';
+
+@Controller('auth')
+export class AuthController {
+  constructor(private authService: AuthService) {}
+
+  @Post('register')
+  register(@Body() dto: CreateUserDto) {
+    return this.authService.register(dto);
+  }
+
+  @Post('logout')
+  logout() {
+    // Stateless JWT logout is handled on client by clearing the token.
+    // If using HttpOnly Cookies, clear cookie here via Response.
+    return { message: 'Logged out successfully' };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('profile')
+  getProfile(@Request() req: any) {
+    return req.user;
+  }
+}
