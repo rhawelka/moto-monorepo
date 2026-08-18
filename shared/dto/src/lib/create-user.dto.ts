@@ -1,7 +1,6 @@
 import { IsEmail, IsString, MinLength } from 'class-validator';
 
 export class CreateUserDto {
-  // TODO: tekst w message po angielsku
   @IsEmail({}, { message: 'Invalid email format' })
   email!: string;
 

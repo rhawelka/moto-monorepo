@@ -6,9 +6,10 @@
       </a>
 
       <nav class="site-header__nav" aria-label="Main Navigation">
-        <a href="#action1" class="btn btn--secondary">Overview</a>
-        <a href="#action2" class="btn btn--secondary">Features</a>
-        <a href="#action3" class="btn btn--primary">Get Started</a>
+        <a [routerLink]="'#action1'" class="btn btn--secondary">Overview</a>
+        <a [routerLink]="'#action2'" class="btn btn--secondary">Features</a>
+        <a [routerLink]="'#action3'" class="btn btn--primary">Get Started</a>
+        <a [routerLink]="['/login']" class="btn btn--primary">login</a>
       </nav>
     </div>
   </header>
