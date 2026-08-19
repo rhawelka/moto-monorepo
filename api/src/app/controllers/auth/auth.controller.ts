@@ -9,10 +9,14 @@ import {
 import { AuthService } from '../../services/auth/auth.service';
 import { CreateUserDto, LoginDto } from '@moto-monorepo/dto';
 import { AuthGuard } from '@nestjs/passport';
+import { LoggerService } from '@moto-monorepo/services';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private logger: LoggerService,
+  ) {}
 
   @Post('register')
   register(@Body() dto: CreateUserDto) {
@@ -21,6 +25,7 @@ export class AuthController {
 
   @Post('login')
   login(@Body() dto: LoginDto) {
+    this.logger.log(`Login attempt for email: ${dto.email}`);
     return this.authService.login(dto);
   }
 

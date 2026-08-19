@@ -3,12 +3,14 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { LoginDto, CreateUserDto } from '@moto-monorepo/dto';
+import { LoggerService } from '@moto-monorepo/services';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private logger: LoggerService,
   ) {}
 
   async register(dto: CreateUserDto) {
@@ -18,7 +20,12 @@ export class AuthService {
   }
 
   async login(dto: LoginDto) {
+    this.logger.log(`Login attempt for email in service: ${dto.email}`);
+
     const user = await this.usersService.findByEmail(dto.email);
+    this.logger.log(
+      `User found in service: ${user ? user.email : 'not found'}`,
+    );
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
     const isMatch = await bcrypt.compare(dto.password, user.passwordHash);

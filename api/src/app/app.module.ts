@@ -5,11 +5,21 @@ import { AuthController } from './controllers/auth/auth.controller';
 import { LoginController } from './controllers/login/login.controller';
 import { AuthService } from './services/auth/auth.service';
 import { UsersService } from './services/users/users.service';
-import { JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
+import { LoggerService } from '@moto-monorepo/services';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.getOrThrow<string>('JWT_SECRET'),
+      }),
+    }),
+  ],
   controllers: [AppController, AuthController, LoginController],
-  providers: [AppService, AuthService, UsersService, JwtService],
+  providers: [AppService, AuthService, UsersService, LoggerService],
 })
 export class AppModule {}
