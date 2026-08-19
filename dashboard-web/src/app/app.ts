@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CommonHeader, Sidebar } from '@moto-monorepo/ui';
 
 @Component({
-  imports: [RouterModule, CommonHeader, Sidebar],
+  imports: [RouterModule],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',

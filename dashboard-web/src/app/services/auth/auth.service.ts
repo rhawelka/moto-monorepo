@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 
+// todo move interfaces to a separate file
 export interface User {
   id: string;
   email: string;
 }
 
+// todo move interfaces to a separate file
 export interface AuthResponse {
   user: User;
   access_token: string;
@@ -18,7 +20,8 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  private readonly API_URL = 'http://localhost:3000/api/auth';
+  // move localhost URL to environment variable or config file for better flexibility and security
+  private readonly API_URL = 'http://localhost:3000/api/v1/auth';
 
   // State management using Signals
   currentUser = signal<User | null>(this.getUserFromStorage());

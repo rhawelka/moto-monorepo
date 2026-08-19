@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-main {
+  margin-left: 260px;
+  padding: 1.5rem;
+  min-height: calc(100vh - 70px);
+  box-sizing: border-box;
+}
