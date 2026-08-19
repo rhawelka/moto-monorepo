@@ -1,5 +1,5 @@
 import { LoginDto } from '@moto-monorepo/dto';
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   form,
   FormField,
@@ -7,6 +7,7 @@ import {
   email,
   submit,
 } from '@angular/forms/signals';
+import { LoggerService } from '@moto-monorepo/services';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,8 @@ import {
   standalone: true,
 })
 export class Login {
+  private logger = inject(LoggerService);
+
   loginModel = signal<LoginDto>({
     email: '',
     password: '',
@@ -32,7 +35,7 @@ export class Login {
     event.preventDefault();
     submit(this.loginForm, async () => {
       const credentials = this.loginModel();
-      console.log('Logging in with:', credentials);
+      this.logger.error(`Logging in with: ${JSON.stringify(credentials)}`);
       // Add your login logic here
     });
   }

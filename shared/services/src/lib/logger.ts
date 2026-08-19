@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class LoggerService {
   log(message: string) {
     console.log(new Date() + ': ' + JSON.stringify(message));
@@ -15,7 +15,7 @@ export class LoggerService {
   }
 
   warn(message: string) {
-    console.warn(new Date() + ': ' + JSON.stringify(message));
+    console.warn('%c' + new Date() + ': ' + JSON.stringify(message));
   }
 
   error(message: string) {
