@@ -1,0 +1,10 @@
+name: Test
+
+description: Run the Nx test targets
+
+runs:
+  using: composite
+  steps:
+    - name: Run tests
+      shell: bash
+      run: npx nx run-many -t test
