@@ -19,6 +19,7 @@ export class UsersService {
 
   async create(dto: CreateUserDto): Promise<Omit<User, 'passwordHash'>> {
     const existing = await this.findByEmail(dto.email);
+
     if (existing) throw new ConflictException('Email already registered');
 
     const passwordHash = await bcrypt.hash(dto.password, 10);
@@ -30,6 +31,7 @@ export class UsersService {
     this.users.push(newUser);
 
     const { passwordHash: _, ...result } = newUser;
+
     return result;
   }
 }

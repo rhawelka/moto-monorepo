@@ -5,5 +5,7 @@
   "type": "commonjs",
   "main": "./index.cjs",
   "types": "./index.d.ts",
-  "dependencies": {}
+  "dependencies": {
+    "@angular/core": "~22.0.4"
+  }
 }

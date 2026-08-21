@@ -10,9 +10,4 @@ export class LoginController {
   login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
   }
-
-  @Get('')
-  test() {
-    return 'test';
-  }
 }
