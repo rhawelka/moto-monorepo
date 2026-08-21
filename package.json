@@ -4,7 +4,15 @@
   "license": "MIT",
   "scripts": {
     "start:api": "nx serve api",
-    "start:ui": "nx serve dashboard-web"
+    "start:ui": "nx serve dashboard-web",
+    "lint": "npx nx run-many -t lint",
+    "test": "npx nx run-many -t test",
+    "test:watch": "npx nx run-many -t test --watch",
+    "test:coverage": "npx nx run-many -t test --code-coverage",
+    "test:ci": "npx nx run-many -t test --ci --code-coverage",
+    "build": "npx nx run-many -t build",
+    "build:api": "nx build api",
+    "build:ui": "nx build dashboard-web"
   },
   "private": true,
   "devDependencies": {
@@ -66,10 +74,17 @@
     "@angular/platform-browser-dynamic": "~22.0.4",
     "@angular/router": "~22.0.4",
     "@nestjs/common": "^11.0.0",
+    "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.0",
+    "@nestjs/jwt": "^11.0.2",
+    "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.0",
     "axios": "^1.6.0",
+    "bcrypt": "^6.0.0",
+    "class-validator": "^0.15.1",
+    "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "~7.8.0"
+    "rxjs": "~7.8.0",
+    "zone.js": "^0.16.2"
   }
 }

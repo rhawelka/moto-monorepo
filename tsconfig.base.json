@@ -19,7 +19,9 @@
       "@moto-monorepo/interfaces": ["./shared/interfaces/src/index.ts"],
       "@moto-monorepo/constants": ["./shared/constants/src/index.ts"],
       "@moto-monorepo/utils": ["./shared/utils/src/index.ts"],
-      "@moto-monorepo/dto": ["./shared/dto/src/index.ts"]
+      "@moto-monorepo/dto": ["./shared/dto/src/index.ts"],
+      "@moto-monorepo/shared": ["./shared/src/index.ts"],
+      "@moto-monorepo/services": ["./shared/services/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

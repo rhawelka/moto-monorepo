@@ -1,0 +1,81 @@
+<ng-container>
+  @if (errorMessage()) {
+    <div class="error" role="alert">{{ errorMessage() }}</div>
+  }
+
+  @if (isRegistering()) {
+    <h1>Create account</h1>
+    <form (submit)="onRegisterSubmit($event)">
+      <div class="form-field">
+        <label>
+          Email
+          <input type="email" [formField]="registerForm.email" />
+        </label>
+        @if (registerForm.email().invalid() && registerForm.email().touched()) {
+          <div class="error">
+            @for (error of registerForm.email().errors(); track error.kind) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-field">
+        <label>
+          Password
+          <input type="password" [formField]="registerForm.password" />
+        </label>
+        @if (
+          registerForm.password().invalid() && registerForm.password().touched()
+        ) {
+          <div class="error">
+            @for (error of registerForm.password().errors(); track error.kind) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      <button type="submit" [disabled]="registerForm().invalid()">
+        Register
+      </button>
+    </form>
+  } @else {
+    <h1>Log in</h1>
+    <form (submit)="onLoginSubmit($event)">
+      <div class="form-field">
+        <label>
+          Email
+          <input type="email" [formField]="loginForm.email" />
+        </label>
+        @if (loginForm.email().invalid() && loginForm.email().touched()) {
+          <div class="error">
+            @for (error of loginForm.email().errors(); track error.kind) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-field">
+        <label>
+          Password
+          <input type="password" [formField]="loginForm.password" />
+        </label>
+        @if (loginForm.password().invalid() && loginForm.password().touched()) {
+          <div class="error">
+            @for (error of loginForm.password().errors(); track error.kind) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      <button type="submit" [disabled]="loginForm().invalid()">Log in</button>
+    </form>
+  }
+
+  <button type="button" (click)="toggleMode()">
+    {{ isRegistering() ? 'Back to login' : 'Create an account' }}
+  </button>
+</ng-container>

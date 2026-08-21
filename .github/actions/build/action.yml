@@ -1,0 +1,10 @@
+name: Build
+
+description: Run the Nx build targets
+
+runs:
+  using: composite
+  steps:
+    - name: Run build
+      shell: bash
+      run: npx nx run-many -t build

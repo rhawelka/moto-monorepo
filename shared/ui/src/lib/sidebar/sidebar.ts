@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'ui-sidebar',
@@ -8,9 +8,14 @@ import { Component } from '@angular/core';
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
+  @Output() logoutRequested = new EventEmitter<void>();
   expanded = true;
 
   toggle(): void {
     this.expanded = !this.expanded;
+  }
+
+  logout(): void {
+    this.logoutRequested.emit();
   }
 }

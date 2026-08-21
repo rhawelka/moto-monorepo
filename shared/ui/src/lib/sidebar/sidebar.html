@@ -29,6 +29,13 @@
   </div>
 
   <div class="ui-sidebar__footer">
+    <button class="ui-sidebar__logout" type="button" (click)="logout()">
+      @if(expanded){
+      <span>Log out</span>
+      } @else {
+      <span aria-label="Log out">Exit</span>
+      }
+    </button>
     <button class="ui-sidebar__toggle" type="button" (click)="toggle()">
       @if(expanded){
       <span>Collapse</span>

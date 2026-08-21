@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { CommonHeader } from './common-header';
 
 describe('CommonHeader', () => {
@@ -8,6 +9,7 @@ describe('CommonHeader', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CommonHeader],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CommonHeader);
