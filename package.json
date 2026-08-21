@@ -4,8 +4,15 @@
   "license": "MIT",
   "scripts": {
     "start:api": "nx serve api",
-    "start:ui": "nx serve dashboard-web --port=4200",
-    "lint": "npx nx run-many -t lint"
+    "start:ui": "nx serve dashboard-web",
+    "lint": "npx nx run-many -t lint",
+    "test": "npx nx run-many -t test",
+    "test:watch": "npx nx run-many -t test --watch",
+    "test:coverage": "npx nx run-many -t test --code-coverage",
+    "test:ci": "npx nx run-many -t test --ci --code-coverage",
+    "build": "npx nx run-many -t build",
+    "build:api": "nx build api",
+    "build:ui": "nx build dashboard-web"
   },
   "private": true,
   "devDependencies": {
