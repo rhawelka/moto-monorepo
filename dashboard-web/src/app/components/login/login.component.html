@@ -5,7 +5,7 @@
 
   @if (isRegistering()) {
     <h1>Create account</h1>
-    <form (submit)="onSubmit($event)">
+    <form (submit)="onRegisterSubmit($event)">
       <div class="form-field">
         <label>
           Email
@@ -42,7 +42,7 @@
     </form>
   } @else {
     <h1>Log in</h1>
-    <form (submit)="onSubmit($event)">
+    <form (submit)="onLoginSubmit($event)">
       <div class="form-field">
         <label>
           Email

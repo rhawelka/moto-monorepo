@@ -8,6 +8,7 @@ import { UsersService } from './services/users/users.service';
 import { JwtModule } from '@nestjs/jwt';
 import { LoggerService } from '@moto-monorepo/services';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtStrategy } from '../app/services/jwt.strategy';
 
 @Module({
   imports: [
@@ -20,6 +21,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     }),
   ],
   controllers: [AppController, AuthController, LoginController],
-  providers: [AppService, AuthService, UsersService, LoggerService],
+  providers: [
+    AppService,
+    AuthService,
+    UsersService,
+    LoggerService,
+    JwtStrategy,
+  ],
 })
 export class AppModule {}

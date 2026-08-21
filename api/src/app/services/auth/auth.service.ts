@@ -16,6 +16,7 @@ export class AuthService {
   async register(dto: CreateUserDto) {
     const user = await this.usersService.create(dto);
     const token = this.generateToken(user.id, user.email);
+
     return { user, access_token: token };
   }
 
@@ -26,12 +27,23 @@ export class AuthService {
     this.logger.log(
       `User found in service: ${user ? user.email : 'not found'}`,
     );
-    if (!user) throw new UnauthorizedException('Invalid credentials');
+
+    if (!user) {
+      this.logger.warn(`Login failed for email: ${dto.email}`);
+      throw new UnauthorizedException('Invalid credentials');
+    }
 
     const isMatch = await bcrypt.compare(dto.password, user.passwordHash);
-    if (!isMatch) throw new UnauthorizedException('Invalid credentials');
+
+    if (!isMatch) {
+      this.logger.warn(
+        `Login failed for email: ${dto.email} - password mismatch`,
+      );
+      throw new UnauthorizedException('Invalid credentials');
+    }
 
     const token = this.generateToken(user.id, user.email);
+
     return {
       user: { id: user.id, email: user.email },
       access_token: token,

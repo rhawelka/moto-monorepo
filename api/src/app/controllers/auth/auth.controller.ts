@@ -20,6 +20,7 @@ export class AuthController {
 
   @Post('register')
   register(@Body() dto: CreateUserDto) {
+    this.logger.log(`Registering new user with email: ${dto.email}`);
     return this.authService.register(dto);
   }
 

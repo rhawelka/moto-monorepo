@@ -46,19 +46,24 @@ export class LoginComponent {
     email(fieldPath.email, { message: 'Enter a valid email address' });
   });
 
-  onSubmit(event: Event) {
+  onLoginSubmit(event: Event) {
     event.preventDefault();
     this.errorMessage.set('');
 
-    const submitLogin = async () => {
+    submit(this.loginForm, async () => {
       try {
         await firstValueFrom(this.authService.login(this.loginModel()));
       } catch {
         this.errorMessage.set('Login failed. Check your email and password.');
       }
-    };
+    });
+  }
 
-    const submitRegistration = async () => {
+  onRegisterSubmit(event: Event) {
+    event.preventDefault();
+    this.errorMessage.set('');
+
+    submit(this.registerForm, async () => {
       try {
         await firstValueFrom(this.authService.register(this.registerModel()));
       } catch {
@@ -66,13 +71,7 @@ export class LoginComponent {
           'Registration failed. This email may already be registered.',
         );
       }
-    };
-
-    if (this.isRegistering()) {
-      submit(this.registerForm, submitRegistration);
-    } else {
-      submit(this.loginForm, submitLogin);
-    }
+    });
   }
 
   toggleMode() {

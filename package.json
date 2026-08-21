@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start:api": "nx serve api",
-    "start:ui": "nx serve dashboard-web"
+    "start:ui": "nx serve dashboard-web --port=4200"
   },
   "private": true,
   "devDependencies": {

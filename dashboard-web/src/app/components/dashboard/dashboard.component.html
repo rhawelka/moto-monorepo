@@ -1,6 +1,6 @@
 <div class="app-shell">
   <ui-common-header></ui-common-header>
-  <ui-sidebar></ui-sidebar>
+  <ui-sidebar (logoutRequested)="logout()"></ui-sidebar>
 
   <main class="app-main">
     <router-outlet></router-outlet>

@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonHeader, Sidebar } from '@moto-monorepo/ui';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,4 +10,10 @@ import { CommonHeader, Sidebar } from '@moto-monorepo/ui';
   styleUrl: './dashboard.component.scss',
   standalone: true,
 })
-export class DashboardComponent {}
+export class DashboardComponent {
+  private authService = inject(AuthService);
+
+  logout(): void {
+    this.authService.logout();
+  }
+}
