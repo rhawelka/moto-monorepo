@@ -1,37 +1,47 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '@moto-monorepo/dto';
+import { PrismaService } from '../../database/prisma.service';
+import { Role } from '@prisma/client';
 
 // TODO move to interfaces folder
 export interface User {
   id: string;
   email: string;
   passwordHash: string;
+  role: Role;
 }
 
 @Injectable()
 export class UsersService {
-  private users: User[] = []; // In-memory fallback for example
+  constructor(private readonly prisma: PrismaService) {}
 
   async findByEmail(email: string): Promise<User | undefined> {
-    return this.users.find((u) => u.email === email);
+    return this.prisma.user.findUnique({
+      where: { email: this.normalizeEmail(email) },
+    });
   }
 
   async create(dto: CreateUserDto): Promise<Omit<User, 'passwordHash'>> {
-    const existing = await this.findByEmail(dto.email);
+    const email = this.normalizeEmail(dto.email);
+    const existing = await this.findByEmail(email);
 
     if (existing) throw new ConflictException('Email already registered');
 
     const passwordHash = await bcrypt.hash(dto.password, 10);
-    const newUser: User = {
-      id: Date.now().toString(),
-      email: dto.email,
-      passwordHash,
-    };
-    this.users.push(newUser);
+    const newUser = await this.prisma.user.create({
+      data: {
+        email,
+        passwordHash,
+      },
+    });
 
     const { passwordHash: _, ...result } = newUser;
 
     return result;
+  }
+
+  private normalizeEmail(email: string): string {
+    return email.trim().toLowerCase();
   }
 }
