@@ -14,10 +14,10 @@ export interface User {
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async findByEmail(email: string): Promise<User | undefined> {
-    return this.prisma.user.findUnique({
+    return this.prismaService.user.findUnique({
       where: { email: this.normalizeEmail(email) },
     });
   }
@@ -29,7 +29,7 @@ export class UsersService {
     if (existing) throw new ConflictException('Email already registered');
 
     const passwordHash = await bcrypt.hash(dto.password, 10);
-    const newUser = await this.prisma.user.create({
+    const newUser = await this.prismaService.user.create({
       data: {
         email,
         passwordHash,
