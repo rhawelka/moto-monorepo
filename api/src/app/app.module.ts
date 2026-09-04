@@ -9,10 +9,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { LoggerService } from '@moto-monorepo/services';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from '../app/services/jwt.strategy';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    DatabaseModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
