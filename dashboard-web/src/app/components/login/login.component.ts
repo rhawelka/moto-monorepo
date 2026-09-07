@@ -43,7 +43,8 @@ export class LoginComponent {
     }
 
     firstValueFrom(this.authService.login(this.loginForm.getRawValue())).catch(
-      () => this.errorMessage.set('Login failed. Check your email and password.'),
+      () =>
+        this.errorMessage.set('Login failed. Check your email and password.'),
     );
   }
 }
