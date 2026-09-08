@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ import { AuthService } from '../../services/auth/auth.service';
     MatInputModule,
     ReactiveFormsModule,
     RouterLink,
+    MatIconModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -27,6 +29,7 @@ export class LoginComponent {
   private formBuilder = inject(FormBuilder);
 
   errorMessage = signal('');
+  passwordVisible = signal(false);
 
   loginForm = this.formBuilder.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -46,5 +49,10 @@ export class LoginComponent {
       () =>
         this.errorMessage.set('Login failed. Check your email and password.'),
     );
+  }
+
+  onClickRevealPassword(event: MouseEvent) {
+    event.preventDefault();
+    this.passwordVisible.update((visible) => !visible);
   }
 }
