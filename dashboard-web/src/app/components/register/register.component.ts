@@ -9,6 +9,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -27,6 +28,7 @@ function passwordsMatch(control: AbstractControl): ValidationErrors | null {
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
     ReactiveFormsModule,
     RouterLink,
@@ -40,6 +42,9 @@ export class RegisterComponent {
   private formBuilder = inject(FormBuilder);
 
   errorMessage = signal('');
+  passwordVisible = signal(false);
+  confirmPasswordVisible = signal(false);
+
   registerForm = this.formBuilder.nonNullable.group(
     {
       email: ['', [Validators.required, Validators.email]],
@@ -68,5 +73,15 @@ export class RegisterComponent {
           'Registration failed. This email may already be registered.',
         );
       });
+  }
+
+  onClickRevealPassword(event: MouseEvent): void {
+    event.preventDefault();
+    this.passwordVisible.update((visible) => !visible);
+  }
+
+  onClickRevealConfirmPassword(event: MouseEvent): void {
+    event.preventDefault();
+    this.confirmPasswordVisible.update((visible) => !visible);
   }
 }
