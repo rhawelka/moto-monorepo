@@ -1,14 +1,115 @@
 :host {
   display: block;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .app-shell {
-  min-height: 100vh;
-}
+  height: 100%;
 
-.app-main {
-  margin-left: 260px;
-  padding: 1.5rem;
-  min-height: calc(100vh - 70px);
-  box-sizing: border-box;
+  .dashboard-shell {
+    height: 100%;
+    background: #f3f4f6;
+
+    .app-sidenav {
+      width: 240px;
+      border-right: 1px solid rgba(0, 0, 0, 0.08);
+      background: #111827;
+      transition: width 180ms ease;
+
+      &--collapsed {
+        width: 72px;
+
+        mat-nav-list {
+          span[matListItemTitle] {
+            display: none;
+          }
+        }
+
+        .sidenav-footer {
+          padding-inline: 0.5rem;
+
+          .sidenav-toggle {
+            .sidenav-toggle-label {
+              display: none;
+            }
+
+            mat-icon {
+              display: inline-flex;
+              flex: 0 0 24px;
+              width: 24px;
+              height: 24px;
+              margin: 0;
+            }
+          }
+
+          button[color='warn'] {
+            padding-inline: 0;
+
+            mat-icon {
+              margin-inline: 0;
+            }
+          }
+        }
+      }
+
+      ::ng-deep .mat-drawer-inner-container {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidenav-toolbar {
+        background: #1f2937;
+        color: #fff;
+        font-weight: 700;
+      }
+
+      mat-nav-list {
+        a {
+          color: #e5e7eb;
+        }
+
+        .active-link {
+          background: rgba(255, 255, 255, 0.08);
+        }
+      }
+
+      .sidenav-footer {
+        padding: 1rem;
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        button {
+          min-width: 0;
+          width: 100%;
+        }
+
+        .sidenav-toggle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1rem;
+          border: 0;
+          background: transparent;
+          color: #e5e7eb;
+          cursor: pointer;
+
+          mat-icon {
+            margin: 0;
+          }
+        }
+      }
+    }
+
+    mat-sidenav-content {
+      .app-main {
+        padding: 1.5rem;
+        min-height: 0;
+        box-sizing: border-box;
+      }
+    }
+  }
 }
