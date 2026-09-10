@@ -1,81 +1,69 @@
-<ng-container>
-  @if (errorMessage()) {
-    <div class="error" role="alert">{{ errorMessage() }}</div>
-  }
+<main class="auth-page">
+  <mat-card class="auth-card">
+    <mat-card-header>
+      <mat-card-title>Welcome back</mat-card-title>
+      <mat-card-subtitle
+        >Sign in to continue to your dashboard</mat-card-subtitle
+      >
+    </mat-card-header>
 
-  @if (isRegistering()) {
-    <h1>Create account</h1>
-    <form (submit)="onRegisterSubmit($event)">
-      <div class="form-field">
-        <label>
-          Email
-          <input type="email" [formField]="registerForm.email" />
-        </label>
-        @if (registerForm.email().invalid() && registerForm.email().touched()) {
-          <div class="error">
-            @for (error of registerForm.email().errors(); track error.kind) {
-              <span>{{ error.message }}</span>
-            }
-          </div>
-        }
-      </div>
+    <mat-card-content>
+      @if (errorMessage()) {
+        <p class="error" role="alert">{{ errorMessage() }}</p>
+      }
 
-      <div class="form-field">
-        <label>
-          Password
-          <input type="password" [formField]="registerForm.password" />
-        </label>
-        @if (
-          registerForm.password().invalid() && registerForm.password().touched()
-        ) {
-          <div class="error">
-            @for (error of registerForm.password().errors(); track error.kind) {
-              <span>{{ error.message }}</span>
-            }
-          </div>
-        }
-      </div>
+      <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit($event)">
+        <mat-form-field appearance="outline">
+          <mat-label>Login (email)</mat-label>
+          <input
+            matInput
+            type="email"
+            formControlName="email"
+            autocomplete="email"
+          />
+          @if (loginForm.controls.email.hasError('required')) {
+            <mat-error>Email is required</mat-error>
+          } @else if (loginForm.controls.email.hasError('email')) {
+            <mat-error>Enter a valid email address</mat-error>
+          }
+        </mat-form-field>
 
-      <button type="submit" [disabled]="registerForm().invalid()">
-        Register
-      </button>
-    </form>
-  } @else {
-    <h1>Log in</h1>
-    <form (submit)="onLoginSubmit($event)">
-      <div class="form-field">
-        <label>
-          Email
-          <input type="email" [formField]="loginForm.email" />
-        </label>
-        @if (loginForm.email().invalid() && loginForm.email().touched()) {
-          <div class="error">
-            @for (error of loginForm.email().errors(); track error.kind) {
-              <span>{{ error.message }}</span>
-            }
-          </div>
-        }
-      </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            formControlName="password"
+            autocomplete="current-password"
+            [type]="passwordVisible() ? 'text' : 'password'"
+          />
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            [attr.aria-label]="
+              passwordVisible() ? 'Hide password' : 'Show password'
+            "
+            [attr.aria-pressed]="passwordVisible()"
+            (click)="onClickRevealPassword($event)"
+          >
+            <mat-icon>{{
+              passwordVisible() ? 'visibility_off' : 'visibility'
+            }}</mat-icon>
+          </button>
+          @if (loginForm.controls.password.hasError('required')) {
+            <mat-error>Password is required</mat-error>
+          } @else if (loginForm.controls.password.hasError('minlength')) {
+            <mat-error>Password must be at least 8 characters</mat-error>
+          }
+        </mat-form-field>
 
-      <div class="form-field">
-        <label>
-          Password
-          <input type="password" [formField]="loginForm.password" />
-        </label>
-        @if (loginForm.password().invalid() && loginForm.password().touched()) {
-          <div class="error">
-            @for (error of loginForm.password().errors(); track error.kind) {
-              <span>{{ error.message }}</span>
-            }
-          </div>
-        }
-      </div>
+        <button mat-flat-button color="primary" type="submit">Log in</button>
+      </form>
+    </mat-card-content>
 
-      <button type="submit" [disabled]="loginForm().invalid()">Log in</button>
-    </form>
-  }
-
-  <button type="button" (click)="toggleMode()">
-    {{ isRegistering() ? 'Back to login' : 'Create an account' }}
-  </button>
-</ng-container>
+    <mat-card-actions>
+      <span>New here?</span>
+      <a mat-button routerLink="/register">Register user</a>
+    </mat-card-actions>
+  </mat-card>
+</main>

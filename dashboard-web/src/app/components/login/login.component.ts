@@ -1,81 +1,58 @@
-import { CreateUserDto, LoginDto } from '@moto-monorepo/dto';
 import { Component, inject, signal } from '@angular/core';
-import {
-  form,
-  FormField,
-  required,
-  email,
-  submit,
-} from '@angular/forms/signals';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
-  imports: [FormField],
+  imports: [
+    MatButtonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    RouterLink,
+    MatIconModule,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   standalone: true,
 })
 export class LoginComponent {
   private authService = inject(AuthService);
+  private formBuilder = inject(FormBuilder);
 
-  isRegistering = signal(false);
   errorMessage = signal('');
+  passwordVisible = signal(false);
 
-  loginModel = signal<LoginDto>({
-    email: '',
-    password: '',
-    rememberMe: false,
-  });
-
-  loginForm = form(this.loginModel, (fieldPath) => {
-    required(fieldPath.email, { message: 'Email is required' });
-    required(fieldPath.password, { message: 'Password is required' });
-    email(fieldPath.email, { message: 'Enter a valid email address' });
-  });
-
-  registerModel = signal<CreateUserDto>({
-    email: '',
-    password: '',
-  });
-
-  registerForm = form(this.registerModel, (fieldPath) => {
-    required(fieldPath.email, { message: 'Email is required' });
-    required(fieldPath.password, { message: 'Password is required' });
-    email(fieldPath.email, { message: 'Enter a valid email address' });
+  loginForm = this.formBuilder.nonNullable.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
   onLoginSubmit(event: Event) {
     event.preventDefault();
     this.errorMessage.set('');
 
-    submit(this.loginForm, async () => {
-      try {
-        await firstValueFrom(this.authService.login(this.loginModel()));
-      } catch {
-        this.errorMessage.set('Login failed. Check your email and password.');
-      }
-    });
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    firstValueFrom(this.authService.login(this.loginForm.getRawValue())).catch(
+      () =>
+        this.errorMessage.set('Login failed. Check your email and password.'),
+    );
   }
 
-  onRegisterSubmit(event: Event) {
+  onClickRevealPassword(event: MouseEvent) {
     event.preventDefault();
-    this.errorMessage.set('');
-
-    submit(this.registerForm, async () => {
-      try {
-        await firstValueFrom(this.authService.register(this.registerModel()));
-      } catch {
-        this.errorMessage.set(
-          'Registration failed. This email may already be registered.',
-        );
-      }
-    });
-  }
-
-  toggleMode() {
-    this.errorMessage.set('');
-    this.isRegistering.update((value) => !value);
+    this.passwordVisible.update((visible) => !visible);
   }
 }
