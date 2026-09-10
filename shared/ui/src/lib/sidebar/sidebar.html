@@ -1,47 +1,55 @@
-<aside class="ui-sidebar" [class.ui-sidebar--collapsed]="!expanded">
-  <div class="ui-sidebar__content">
-    <div class="ui-sidebar__title">
-      <span class="ui-sidebar__logo">Moto</span>
+<mat-sidenav-container class="ui-sidebar-shell">
+  <mat-sidenav
+    mode="side"
+    opened
+    class="ui-sidebar"
+    [class.ui-sidebar--collapsed]="!expanded"
+  >
+    <mat-toolbar class="ui-sidebar__toolbar">
       @if (expanded) {
-      <span class="ui-sidebar__text">Workspace</span>
-      }
-    </div>
-
-    <nav class="ui-sidebar__nav" aria-label="Sidebar navigation">
-      <a class="ui-sidebar__link" href="#">
-        <span class="ui-sidebar__icon">●</span>ss @if(expanded){
-        <span class="ui-sidebar__label">Overview</span>
-        }
-      </a>
-      <a class="ui-sidebar__link" href="#">
-        <span class="ui-sidebar__icon">○</span>
-        @if(expanded){
-        <span class="ui-sidebar__label">Reports</span>
-        }
-      </a>
-      <a class="ui-sidebar__link" href="#">
-        <span class="ui-sidebar__icon">◇</span>
-        @if(expanded){
-        <span class="ui-sidebar__label">Settings</span>
-        }
-      </a>
-    </nav>
-  </div>
-
-  <div class="ui-sidebar__footer">
-    <button class="ui-sidebar__logout" type="button" (click)="logout()">
-      @if(expanded){
-      <span>Log out</span>
+      <span>Moto</span>
       } @else {
-      <span aria-label="Log out">Exit</span>
+      <span aria-label="Moto">M</span>
       }
-    </button>
-    <button class="ui-sidebar__toggle" type="button" (click)="toggle()">
-      @if(expanded){
-      <span>Collapse</span>
-      } @else{
-      <span>Expand</span>
+    </mat-toolbar>
+
+    <mat-nav-list>
+      @for (item of navItems; track item.route + item.label) {
+      <a mat-list-item [routerLink]="item.route" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span matListItemTitle>{{ item.label }}</span>
+      </a>
       }
-    </button>
-  </div>
-</aside>
+    </mat-nav-list>
+
+    <div class="ui-sidebar__footer">
+      <button
+        type="button"
+        class="ui-sidebar__toggle"
+        [attr.aria-label]="expanded ? 'Collapse navigation' : 'Expand navigation'"
+        (click)="toggle()"
+      >
+        <mat-icon>
+          {{ expanded ? 'keyboard_arrow_left' : 'keyboard_arrow_right' }}
+        </mat-icon>
+        @if (expanded) {
+        <span class="ui-sidebar__toggle-label">Collapse</span>
+        }
+      </button>
+      <button
+        mat-raised-button
+        color="warn"
+        type="button"
+        class="ui-sidebar__logout"
+        (click)="logout()"
+      >
+        <mat-icon>logout</mat-icon>
+        @if (expanded) { Log out }
+      </button>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

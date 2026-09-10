@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { Sidebar } from './sidebar';
 
 describe('Sidebar', () => {
@@ -8,6 +9,7 @@ describe('Sidebar', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Sidebar],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Sidebar);
@@ -27,5 +29,14 @@ describe('Sidebar', () => {
 
     component.toggle();
     expect(component.expanded).toBe(true);
+  });
+
+  it('should emit a logout request', () => {
+    const logoutSpy = jest.fn();
+    component.logoutRequested.subscribe(logoutSpy);
+
+    component.logout();
+
+    expect(logoutSpy).toHaveBeenCalledTimes(1);
   });
 });

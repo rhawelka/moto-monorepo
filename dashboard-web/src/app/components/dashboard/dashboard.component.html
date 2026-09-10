@@ -1,67 +1,9 @@
 <div class="app-shell">
-  <mat-sidenav-container class="dashboard-shell">
-    <mat-sidenav
-      mode="side"
-      opened
-      class="app-sidenav"
-      [class.app-sidenav--collapsed]="sidenavCollapsed"
-    >
-      <mat-toolbar color="primary" class="sidenav-toolbar">
-        @if (!sidenavCollapsed) {
-          <span>Moto</span>
-        } @else {
-          <span aria-label="Moto">M</span>
-        }
-      </mat-toolbar>
+  <ui-sidebar (logoutRequested)="logout()">
+    <ui-common-header></ui-common-header>
 
-      <mat-nav-list>
-        <a mat-list-item routerLink="/dashboard" routerLinkActive="active-link">
-          <mat-icon matListItemIcon>dashboard</mat-icon>
-          <span matListItemTitle>Overview</span>
-        </a>
-        <a mat-list-item routerLink="/dashboard" routerLinkActive="active-link">
-          <mat-icon matListItemIcon>bar_chart</mat-icon>
-          <span matListItemTitle>Reports</span>
-        </a>
-        <a mat-list-item routerLink="/dashboard" routerLinkActive="active-link">
-          <mat-icon matListItemIcon>settings</mat-icon>
-          <span matListItemTitle>Settings</span>
-        </a>
-      </mat-nav-list>
-
-      <div class="sidenav-footer">
-        <button
-          type="button"
-          class="sidenav-toggle"
-          [attr.aria-label]="
-            sidenavCollapsed ? 'Expand navigation' : 'Collapse navigation'
-          "
-          (click)="toggleSidenav()"
-        >
-          <mat-icon>
-            {{
-              sidenavCollapsed ? 'keyboard_arrow_right' : 'keyboard_arrow_left'
-            }}
-          </mat-icon>
-          @if (!sidenavCollapsed) {
-            <span class="sidenav-toggle-label">Collapse</span>
-          }
-        </button>
-        <button mat-raised-button color="warn" type="button" (click)="logout()">
-          <mat-icon>logout</mat-icon>
-          @if (!sidenavCollapsed) {
-            Log out
-          }
-        </button>
-      </div>
-    </mat-sidenav>
-
-    <mat-sidenav-content>
-      <ui-common-header></ui-common-header>
-
-      <main class="app-main">
-        <router-outlet></router-outlet>
-      </main>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+    <main class="app-main">
+      <router-outlet></router-outlet>
+    </main>
+  </ui-sidebar>
 </div>

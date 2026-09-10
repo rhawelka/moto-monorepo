@@ -26,43 +26,48 @@ describe('DashboardComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create with an expanded sidenav', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
-    expect(component.sidenavCollapsed).toBe(false);
   });
 
   it('should toggle the sidenav from the footer control', () => {
     const toggleButton = fixture.nativeElement.querySelector(
-      '.sidenav-toggle',
+      '.ui-sidebar__toggle',
     ) as HTMLButtonElement;
 
     expect(
-      fixture.nativeElement.querySelector('.sidenav-toggle-label')?.textContent,
+      fixture.nativeElement.querySelector('.ui-sidebar__toggle-label')
+        ?.textContent,
     ).toContain('Collapse');
 
     toggleButton.click();
     fixture.detectChanges();
 
-    expect(component.sidenavCollapsed).toBe(true);
     expect(toggleButton.getAttribute('aria-label')).toBe('Expand navigation');
     expect(
-      fixture.nativeElement.querySelector('.app-sidenav--collapsed'),
+      fixture.nativeElement.querySelector('.ui-sidebar--collapsed'),
     ).not.toBeNull();
     expect(
-      fixture.nativeElement.querySelector('.sidenav-toggle-label'),
+      fixture.nativeElement.querySelector('.ui-sidebar__toggle-label'),
     ).toBeNull();
   });
 
   it('should expand the sidenav after toggling twice', () => {
-    component.toggleSidenav();
-    component.toggleSidenav();
+    const toggleButton = fixture.nativeElement.querySelector(
+      '.ui-sidebar__toggle',
+    ) as HTMLButtonElement;
 
-    expect(component.sidenavCollapsed).toBe(false);
+    toggleButton.click();
+    toggleButton.click();
+
+    expect(
+      fixture.nativeElement.querySelector('.ui-sidebar--collapsed'),
+    ).toBeNull();
   });
 
   it('should delegate logout to AuthService', () => {
     const logoutButton = fixture.nativeElement.querySelector(
-      '.sidenav-footer button[color="warn"]',
+      '.ui-sidebar__logout',
     ) as HTMLButtonElement;
 
     logoutButton.click();
