@@ -1,24 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { AuthService } from '../../services/auth/auth.service';
 import { DashboardComponent } from './dashboard.component';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
-  let authService: { logout: jest.Mock };
 
   beforeEach(async () => {
-    authService = {
-      logout: jest.fn(),
-    };
-
     await TestBed.configureTestingModule({
       imports: [DashboardComponent],
-      providers: [
-        provideRouter([]),
-        { provide: AuthService, useValue: authService },
-      ],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardComponent);
@@ -65,13 +56,12 @@ describe('DashboardComponent', () => {
     ).toBeNull();
   });
 
-  it('should delegate logout to AuthService', () => {
-    const logoutButton = fixture.nativeElement.querySelector(
-      '.ui-sidebar__logout',
-    ) as HTMLButtonElement;
+  it('should render settings above the collapse control', () => {
+    const footer = fixture.nativeElement.querySelector('.ui-sidebar__footer');
 
-    logoutButton.click();
-
-    expect(authService.logout).toHaveBeenCalledTimes(1);
+    expect(footer.querySelector('.ui-sidebar__settings')).not.toBeNull();
+    expect(
+      footer.querySelector('.ui-sidebar__settings + button'),
+    ).not.toBeNull();
   });
 });

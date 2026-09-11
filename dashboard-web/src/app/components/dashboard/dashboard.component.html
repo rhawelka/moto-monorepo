@@ -1,9 +1,11 @@
 <div class="app-shell">
-  <ui-sidebar (logoutRequested)="logout()">
-    <ui-common-header></ui-common-header>
+  <ui-common-header></ui-common-header>
 
-    <main class="app-main">
-      <router-outlet></router-outlet>
-    </main>
-  </ui-sidebar>
+  <div class="app-body">
+    <ui-sidebar>
+      <main class="app-main">
+        <router-outlet></router-outlet>
+      </main>
+    </ui-sidebar>
+  </div>
 </div>

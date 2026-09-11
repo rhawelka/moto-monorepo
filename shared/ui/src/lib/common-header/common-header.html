@@ -2,15 +2,36 @@
   <header class="site-header">
     <div class="site-header__container">
       <a href="/" class="site-header__logo">
-        <img src="logo.svg" alt="Logo" />
+        <span class="site-header__logo-mark" aria-hidden="true">M</span>
+        <span class="site-header__logo-name">Moto</span>
       </a>
 
-      <nav class="site-header__nav" aria-label="Main Navigation">
-        <a [routerLink]="'#action1'" class="btn btn--secondary">Overview</a>
-        <a [routerLink]="'#action2'" class="btn btn--secondary">Features</a>
-        <a [routerLink]="'#action3'" class="btn btn--primary">Get Started</a>
-        <a [routerLink]="['/login']" class="btn btn--primary">login</a>
-      </nav>
+      <div class="site-header__actions" aria-label="Header actions">
+        <button
+          mat-icon-button
+          type="button"
+          aria-label="Notifications"
+          (click)="logHeaderAction('notifications')"
+        >
+          <mat-icon>notifications_none</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          type="button"
+          aria-label="Help"
+          (click)="logHeaderAction('help')"
+        >
+          <mat-icon>help_outline</mat-icon>
+        </button>
+        <button
+          type="button"
+          class="site-header__avatar"
+          aria-label="User profile"
+          (click)="logHeaderAction('profile')"
+        >
+          JD
+        </button>
+      </div>
     </div>
   </header>
 </ng-container>

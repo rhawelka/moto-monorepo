@@ -6,6 +6,13 @@
 
 .app-shell {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .app-body {
+    flex: 1;
+    min-height: 0;
+  }
 
   .app-main {
     padding: 1.5rem;

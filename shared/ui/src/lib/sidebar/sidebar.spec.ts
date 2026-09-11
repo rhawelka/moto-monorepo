@@ -31,28 +31,9 @@ describe('Sidebar', () => {
     expect(component.expanded).toBe(true);
   });
 
-  it('should remove the logout label when collapsed', () => {
-    fixture.detectChanges();
-
+  it('should render settings in the footer', () => {
     expect(
-      fixture.nativeElement.querySelector('.ui-sidebar__logout-label'),
+      fixture.nativeElement.querySelector('.ui-sidebar__settings'),
     ).not.toBeNull();
-
-    component.toggle();
-    fixture.detectChanges();
-
-    expect(component.expanded).toBe(false);
-    expect(
-      fixture.nativeElement.querySelector('.ui-sidebar__logout-label'),
-    ).not.toBeNull();
-  });
-
-  it('should emit a logout request', () => {
-    const logoutSpy = jest.fn();
-    component.logoutRequested.subscribe(logoutSpy);
-
-    component.logout();
-
-    expect(logoutSpy).toHaveBeenCalledTimes(1);
   });
 });

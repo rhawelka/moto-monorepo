@@ -8,13 +8,6 @@
     class="ui-sidebar"
     [class.ui-sidebar--collapsed]="!expanded"
   >
-    <mat-toolbar class="ui-sidebar__toolbar">
-      <span class="ui-sidebar__brand-mark" aria-hidden="true">M</span>
-      @if (expanded) {
-      <span class="ui-sidebar__brand-name">Moto</span>
-      }
-    </mat-toolbar>
-
     <div class="ui-sidebar__section-label">Workspace</div>
     <mat-nav-list aria-label="Workspace navigation">
       @for (item of navItems; track item.route + item.label) {
@@ -26,6 +19,15 @@
     </mat-nav-list>
 
     <div class="ui-sidebar__footer">
+      <a
+        mat-list-item
+        class="ui-sidebar__settings"
+        [routerLink]="settingsItem.route"
+        routerLinkActive="active-link"
+      >
+        <mat-icon matListItemIcon>{{ settingsItem.icon }}</mat-icon>
+        <span matListItemTitle>{{ settingsItem.label }}</span>
+      </a>
       <button
         type="button"
         class="ui-sidebar__toggle"
@@ -38,16 +40,6 @@
         @if (expanded) {
         <span class="ui-sidebar__toggle-label">Collapse</span>
         }
-      </button>
-      <button
-        mat-raised-button
-        color="warn"
-        type="button"
-        class="ui-sidebar__logout"
-        (click)="logout()"
-      >
-        <mat-icon>logout</mat-icon>
-        <span class="ui-sidebar__logout-label">Log out</span>
       </button>
     </div>
   </mat-sidenav>
