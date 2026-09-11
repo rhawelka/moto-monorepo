@@ -12,21 +12,21 @@
 
   &--collapsed {
     ::ng-deep .mat-drawer-content {
-      margin-left: 72px !important;
+      margin-left: 4.5rem !important;
     }
   }
 
   .ui-sidebar {
-    width: 220px;
-    border: 1px solid #1b3c73;
+    width: 13.75rem;
+    border: 0.0625rem solid #1b3c73;
     border-radius: 0;
     background: #0d2b5c;
     color: #e8f0ff;
-    box-shadow: 0 10px 28px rgba(13, 43, 92, 0.18);
+    box-shadow: 0 0.625rem 1.75rem rgba(13, 43, 92, 0.18);
     transition: width 180ms ease;
 
-    &--collapsed {
-      width: 72px;
+    .mat-mdc-list-item-icon {
+      width: 1.5rem;
 
       mat-nav-list span[matListItemTitle],
       .ui-sidebar__toggle-label,
@@ -45,7 +45,7 @@
 
         ::ng-deep {
           .mdc-list-item__start {
-            width: 24px;
+            width: 1.5rem;
             margin: 0 auto !important;
           }
 
@@ -54,7 +54,7 @@
           }
 
           .mat-mdc-list-item-icon {
-            width: 24px;
+            width: 1.5rem;
             margin: 0 !important;
           }
         }
@@ -68,7 +68,7 @@
       .ui-sidebar__settings {
         box-sizing: border-box;
         min-width: 0;
-        height: 42px;
+        height: 2.625rem;
         padding-inline: 0;
       }
 
@@ -82,7 +82,7 @@
 
         ::ng-deep {
           .mdc-list-item__start {
-            width: 24px;
+            width: 1.5rem;
             margin: 0 auto !important;
           }
 
@@ -91,7 +91,7 @@
           }
 
           .mat-mdc-list-item-icon {
-            width: 24px;
+            width: 1.5rem;
             margin: 0 !important;
           }
         }
@@ -127,9 +127,9 @@
       padding: 0.35rem 0.7rem;
 
       a {
-        min-height: 42px;
+        min-height: 2.625rem;
         margin: 0.2rem 0;
-        border-radius: 10px;
+        border-radius: 0.625rem;
         color: #c2d2ee;
         transition:
           background-color 140ms ease,
@@ -144,7 +144,7 @@
       .active-link {
         background: #1455c0;
         color: #fff;
-        box-shadow: 0 5px 12px rgba(4, 24, 61, 0.2);
+        box-shadow: 0 0.3125rem 0.75rem rgba(4, 24, 61, 0.2);
       }
 
       ::ng-deep .mat-mdc-list-item-icon {
@@ -155,7 +155,7 @@
     &__footer {
       padding: 1rem 1rem 1.1rem;
       margin-top: auto;
-      border-top: 1px solid rgba(184, 211, 255, 0.14);
+      border-top: 0.0625rem solid rgba(184, 211, 255, 0.14);
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
@@ -183,17 +183,17 @@
 
       mat-icon {
         display: inline-flex;
-        flex: 0 0 24px;
-        width: 24px;
-        height: 24px;
+        flex: 0 0 1.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
         margin: 0;
       }
     }
 
     &__settings {
-      min-height: 42px;
+      min-height: 2.625rem;
       margin: 0;
-      border-radius: 10px;
+      border-radius: 0.625rem;
       color: #c2d2ee;
 
       &:hover {

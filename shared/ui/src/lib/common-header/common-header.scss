@@ -1,4 +1,4 @@
-$header-height: 64px;
+$header-height: 4rem;
 $spacing-base: 1rem;
 $color-bg: #0d2b5c;
 $color-text: #dce9ff;
@@ -11,7 +11,7 @@ $color-primary: #2d72e8;
 
 .site-header {
   background: $color-bg;
-  border-bottom: 1px solid rgba(184, 211, 255, 0.14);
+  border-bottom: 0.0625rem solid rgba(184, 211, 255, 0.14);
   box-sizing: border-box;
   width: 100%;
 
@@ -35,8 +35,8 @@ $color-primary: #2d72e8;
 
     &-mark {
       display: inline-flex;
-      width: 30px;
-      height: 30px;
+      width: 1.875rem;
+      height: 1.875rem;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
@@ -67,10 +67,10 @@ $color-primary: #2d72e8;
   }
 
   &__avatar {
-    width: 34px;
-    height: 34px;
+    width: 2.125rem;
+    height: 2.125rem;
     margin-left: 0.4rem;
-    border: 2px solid #79a8f2;
+    border: 0.125rem solid #79a8f2;
     border-radius: 50%;
     background: #397edb;
     color: #fff;
