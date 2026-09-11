@@ -1,4 +1,7 @@
-<mat-sidenav-container class="ui-sidebar-shell">
+<mat-sidenav-container
+  class="ui-sidebar-shell"
+  [class.ui-sidebar-shell--collapsed]="!expanded"
+>
   <mat-sidenav
     mode="side"
     opened
@@ -6,14 +9,14 @@
     [class.ui-sidebar--collapsed]="!expanded"
   >
     <mat-toolbar class="ui-sidebar__toolbar">
+      <span class="ui-sidebar__brand-mark" aria-hidden="true">M</span>
       @if (expanded) {
-      <span>Moto</span>
-      } @else {
-      <span aria-label="Moto">M</span>
+      <span class="ui-sidebar__brand-name">Moto</span>
       }
     </mat-toolbar>
 
-    <mat-nav-list>
+    <div class="ui-sidebar__section-label">Workspace</div>
+    <mat-nav-list aria-label="Workspace navigation">
       @for (item of navItems; track item.route + item.label) {
       <a mat-list-item [routerLink]="item.route" routerLinkActive="active-link">
         <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
@@ -44,7 +47,7 @@
         (click)="logout()"
       >
         <mat-icon>logout</mat-icon>
-        @if (expanded) { Log out }
+        <span class="ui-sidebar__logout-label">Log out</span>
       </button>
     </div>
   </mat-sidenav>

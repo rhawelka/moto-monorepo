@@ -1,23 +1,27 @@
 @use 'sass:color';
 
-// Variables
 $header-height: 70px;
 $spacing-base: 1rem;
-$color-bg: #ffffff;
-$color-text: #1a1a1a;
-$color-primary: #0066ff;
+$color-bg: #0d2b5c;
+$color-text: #dce9ff;
+$color-primary: #2d72e8;
+
+:host {
+  display: block;
+  width: 100%;
+}
 
 .site-header {
-  background-color: $color-bg;
-  border-bottom: 1px solid #e5e5e5;
+  background: $color-bg;
+  border-bottom: 1px solid rgba(184, 211, 255, 0.14);
+  box-sizing: border-box;
   width: 100%;
 
   &__container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 ($spacing-base * 1.5);
+    width: 100%;
+    padding: 0 ($spacing-base * 1.25);
     height: $header-height;
-
+    box-sizing: border-box;
     display: flex;
     justify-content: space-between;
     align-content: center;
@@ -32,6 +36,7 @@ $color-primary: #0066ff;
     img {
       width: auto;
       display: block;
+      max-height: 34px;
     }
   }
 
@@ -60,16 +65,18 @@ $color-primary: #0066ff;
     color: $color-text;
 
     &:hover {
-      background-color: #f3f4f6;
+      background-color: rgba(90, 145, 235, 0.14);
+      color: #fff;
     }
   }
 
   &--primary {
     background-color: $color-primary;
-    color: #ffffff;
+    color: #fff;
+    box-shadow: none;
 
     &:hover {
-      background-color: color.scale($color-primary, $lightness: -8%);
+      background-color: color.scale($color-primary, $lightness: -10%);
     }
   }
 }
