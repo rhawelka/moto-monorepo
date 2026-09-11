@@ -1,121 +1,209 @@
-.ui-sidebar {
-  position: fixed;
-  top: 70px;
-  left: 0;
-  height: calc(100vh - 70px);
-  width: 260px;
-  background: #111827;
-  color: #fff;
-  border-left: 1px solid #d1d5db;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: width 180ms ease;
-  z-index: 10;
+:host {
+  display: block;
+  height: 100%;
+  min-height: 0;
+}
 
-  &__content {
-    padding: 1rem;
-  }
-
-  &__title {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    min-height: 48px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-  }
-
-  &__logo {
-    display: inline-flex;
-    width: 34px;
-    height: 34px;
-    align-items: center;
-    justify-content: center;
-    background: #2563eb;
-    border-radius: 8px;
-  }
-
-  &__text {
-    white-space: nowrap;
-  }
-
-  &__nav {
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  &__link {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    color: #d1d5db;
-    text-decoration: none;
-    padding: 0.7rem 0.8rem;
-    border-radius: 8px;
-
-    &:hover {
-      background-color: #1f2937;
-      color: #fff;
-    }
-  }
-
-  &__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-  }
-
-  &__label {
-    white-space: nowrap;
-  }
-
-  &__footer {
-    padding: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &__logout,
-  &__toggle {
-    width: 100%;
-    padding: 0.72rem 1rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-
-  &__logout {
-    background: #991b1b;
-    color: white;
-
-    &:hover {
-      background: #b91c1c;
-    }
-  }
-
-  &__toggle {
-    background: #374151;
-    color: white;
-
-    &:hover {
-      background: #4b5563;
-    }
-  }
+.ui-sidebar-shell {
+  height: 100%;
+  width: 100%;
+  background: #f3f4f6;
+  box-sizing: border-box;
 
   &--collapsed {
-    width: 82px;
+    ::ng-deep .mat-drawer-content {
+      margin-left: 4.5rem !important;
+    }
+  }
 
-    .ui-sidebar__label,
-    .ui-sidebar__text {
-      display: none;
+  .ui-sidebar {
+    width: 13.75rem;
+    border: 0.0625rem solid #1b3c73;
+    border-radius: 0;
+    background: #0d2b5c;
+    color: #e8f0ff;
+    box-shadow: 0 0.625rem 1.75rem rgba(13, 43, 92, 0.18);
+    transition: width 180ms ease;
+
+    .mat-mdc-list-item-icon {
+      width: 1.5rem;
+
+      mat-nav-list span[matListItemTitle],
+      .ui-sidebar__toggle-label,
+      .ui-sidebar__section-label {
+        display: none;
+      }
+
+      mat-nav-list {
+        padding-inline: 0.5rem;
+
+        a {
+          box-sizing: border-box;
+          justify-content: center;
+          padding: 0 !important;
+        }
+
+        ::ng-deep {
+          .mdc-list-item__start {
+            width: 1.5rem;
+            margin: 0 auto !important;
+          }
+
+          .mdc-list-item__content {
+            display: none;
+          }
+
+          .mat-mdc-list-item-icon {
+            width: 1.5rem;
+            margin: 0 !important;
+          }
+        }
+      }
+
+      .ui-sidebar__footer {
+        padding-inline: 0.75rem;
+      }
+
+      .ui-sidebar__toggle,
+      .ui-sidebar__settings {
+        box-sizing: border-box;
+        min-width: 0;
+        height: 2.625rem;
+        padding-inline: 0;
+      }
+
+      .ui-sidebar__toggle {
+        justify-content: center;
+      }
+
+      .ui-sidebar__settings {
+        justify-content: center;
+        padding: 0 !important;
+
+        ::ng-deep {
+          .mdc-list-item__start {
+            width: 1.5rem;
+            margin: 0 auto !important;
+          }
+
+          .mdc-list-item__content {
+            display: none;
+          }
+
+          .mat-mdc-list-item-icon {
+            width: 1.5rem;
+            margin: 0 !important;
+          }
+        }
+      }
+    }
+
+    ::ng-deep .mat-drawer-inner-container {
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    ::ng-deep .mat-drawer-content {
+      min-width: 0;
+      width: 100%;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: margin-left 180ms ease;
+    }
+
+    &__section-label {
+      padding: 1.25rem 1.25rem 0.45rem;
+      color: #8da9d2;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    mat-nav-list {
+      padding: 0.35rem 0.7rem;
+
+      a {
+        min-height: 2.625rem;
+        margin: 0.2rem 0;
+        border-radius: 0.625rem;
+        color: #c2d2ee;
+        transition:
+          background-color 140ms ease,
+          color 140ms ease;
+
+        &:hover {
+          background: rgba(90, 145, 235, 0.14);
+          color: #fff;
+        }
+      }
+
+      .active-link {
+        background: #1455c0;
+        color: #fff;
+        box-shadow: 0 0.3125rem 0.75rem rgba(4, 24, 61, 0.2);
+      }
+
+      ::ng-deep .mat-mdc-list-item-icon {
+        color: currentColor;
+      }
+    }
+
+    &__footer {
+      padding: 1rem 1rem 1.1rem;
+      margin-top: auto;
+      border-top: 0.0625rem solid rgba(184, 211, 255, 0.14);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      button {
+        min-width: 0;
+        width: 100%;
+      }
+    }
+
+    &__toggle {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border: 0;
+      background: transparent;
+      color: #e5e7eb;
+      cursor: pointer;
+
+      &:hover {
+        background: rgba(90, 145, 235, 0.14);
+      }
+
+      mat-icon {
+        display: inline-flex;
+        flex: 0 0 1.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        margin: 0;
+      }
+    }
+
+    &__settings {
+      min-height: 2.625rem;
+      margin: 0;
+      border-radius: 0.625rem;
+      color: #c2d2ee;
+
+      &:hover {
+        background: rgba(90, 145, 235, 0.14);
+        color: #fff;
+      }
+
+      ::ng-deep .mat-mdc-list-item-icon {
+        color: currentColor;
+      }
     }
   }
 }

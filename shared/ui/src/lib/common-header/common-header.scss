@@ -1,23 +1,25 @@
-@use 'sass:color';
-
-// Variables
-$header-height: 70px;
+$header-height: 4rem;
 $spacing-base: 1rem;
-$color-bg: #ffffff;
-$color-text: #1a1a1a;
-$color-primary: #0066ff;
+$color-bg: #0d2b5c;
+$color-text: #dce9ff;
+$color-primary: #2d72e8;
+
+:host {
+  display: block;
+  width: 100%;
+}
 
 .site-header {
-  background-color: $color-bg;
-  border-bottom: 1px solid #e5e5e5;
+  background: $color-bg;
+  border-bottom: 0.0625rem solid rgba(184, 211, 255, 0.14);
+  box-sizing: border-box;
   width: 100%;
 
   &__container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 ($spacing-base * 1.5);
+    width: 100%;
+    padding: 0 ($spacing-base * 1.25);
     height: $header-height;
-
+    box-sizing: border-box;
     display: flex;
     justify-content: space-between;
     align-content: center;
@@ -27,49 +29,53 @@ $color-primary: #0066ff;
   &__logo {
     display: inline-flex;
     align-items: center;
+    gap: 0.65rem;
     text-decoration: none;
+    color: #fff;
 
-    img {
-      width: auto;
-      display: block;
+    &-mark {
+      display: inline-flex;
+      width: 1.875rem;
+      height: 1.875rem;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: $color-primary;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    &-name {
+      font-size: 1rem;
+      font-weight: 700;
     }
   }
 
-  &__nav {
+  &__actions {
     display: flex;
     align-items: center;
-    gap: 1rem;
-  }
-}
+    gap: 0.25rem;
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 1.25rem;
-  font-size: 0.95rem;
-  font-weight: 500;
-  border-radius: 6px;
-  text-decoration: none;
-  transition:
-    background-color 0.2s ease,
-    transform 0.1s ease;
+    button {
+      color: #dce9ff;
 
-  &--secondary {
-    background-color: transparent;
-    color: $color-text;
-
-    &:hover {
-      background-color: #f3f4f6;
+      &:hover {
+        background: rgba(90, 145, 235, 0.16);
+        color: #fff;
+      }
     }
   }
 
-  &--primary {
-    background-color: $color-primary;
-    color: #ffffff;
-
-    &:hover {
-      background-color: color.scale($color-primary, $lightness: -8%);
-    }
+  &__avatar {
+    width: 2.125rem;
+    height: 2.125rem;
+    margin-left: 0.4rem;
+    border: 0.125rem solid #79a8f2;
+    border-radius: 50%;
+    background: #397edb;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 700;
   }
 }

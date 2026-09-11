@@ -9,29 +9,29 @@
   justify-content: center;
   min-height: 100vh;
   padding: 2rem;
-}
 
-.auth-card {
-  max-width: 28rem;
-  width: 100%;
-}
+  .auth-card {
+    max-width: 28rem;
+    width: 100%;
+  }
 
-form {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
+  form {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
 
-input[matInput] {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-}
+  input[matInput] {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
 
-.error {
-  color: #b3261e;
-}
+  .error {
+    color: #b3261e;
+  }
 
-mat-card-actions {
-  gap: 0.5rem;
-  padding: 1rem;
+  mat-card-actions {
+    gap: 0.5rem;
+    padding: 1rem;
+  }
 }
