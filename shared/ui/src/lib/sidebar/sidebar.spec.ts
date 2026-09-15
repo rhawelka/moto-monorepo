@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslocoTestingModule } from '@jsverse/transloco';
 import { provideRouter } from '@angular/router';
 import { Sidebar } from './sidebar';
 
@@ -8,7 +9,18 @@ describe('Sidebar', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Sidebar],
+      imports: [
+        Sidebar,
+        TranslocoTestingModule.forRoot({
+          langs: {
+            en: {},
+          },
+          translocoConfig: {
+            availableLangs: ['en'],
+            defaultLang: 'en',
+          },
+        }),
+      ],
       providers: [provideRouter([])],
     }).compileComponents();
 
@@ -24,13 +36,13 @@ describe('Sidebar', () => {
 
   it('should expose the default navigation items and settings footer config', () => {
     expect(component.navItems).toEqual([
-      { label: 'Overview', icon: 'dashboard', route: '/dashboard' },
-      { label: 'Reports', icon: 'bar_chart', route: '/dashboard' },
+      { label: 'overview', icon: 'dashboard', route: '/dashboard' },
+      { label: 'reports', icon: 'bar_chart', route: '/dashboard' },
     ]);
     expect(component.settingsItem).toEqual({
-      label: 'Settings',
+      label: 'settings',
       icon: 'settings',
-      route: '/dashboard',
+      route: '/dashboard/settings',
     });
     expect(component.expanded).toBe(true);
   });

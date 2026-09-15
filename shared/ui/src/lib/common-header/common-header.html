@@ -1,4 +1,4 @@
-<ng-container>
+<ng-container *transloco="let t; prefix: 'authentication'">
   <header class="site-header">
     <div class="site-header__container">
       <a href="/" class="site-header__logo">
@@ -27,11 +27,17 @@
           type="button"
           class="site-header__avatar"
           aria-label="User profile"
-          (click)="logHeaderAction('profile')"
+          [matMenuTriggerFor]="profileMenu"
         >
           JD
         </button>
       </div>
     </div>
+
+    <mat-menu #profileMenu="matMenu">
+      <button mat-menu-item type="button" (click)="logout.emit()">
+        {{t('logout')}}
+      </button>
+    </mat-menu>
   </header>
 </ng-container>

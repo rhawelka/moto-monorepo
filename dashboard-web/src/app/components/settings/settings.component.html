@@ -1,0 +1,29 @@
+<section class="settings-page" *transloco="let t; prefix: 'settings'">
+  <header class="settings-page__header">
+    <p class="settings-page__eyebrow">{{ t('title') }}</p>
+    <h1>{{ t('language') }}</h1>
+  </header>
+
+  <div
+    class="settings-page__language"
+    role="group"
+    [attr.aria-label]="t('language')"
+  >
+    <button
+      type="button"
+      [class.settings-page__language-option--active]="activeLanguage() === 'en'"
+      [attr.aria-pressed]="activeLanguage() === 'en'"
+      (click)="changeLanguage('en')"
+    >
+      {{ t('english') }}
+    </button>
+    <button
+      type="button"
+      [class.settings-page__language-option--active]="activeLanguage() === 'pl'"
+      [attr.aria-pressed]="activeLanguage() === 'pl'"
+      (click)="changeLanguage('pl')"
+    >
+      {{ t('polish') }}
+    </button>
+  </div>
+</section>
