@@ -14,7 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
-import { TranslocoDirective } from '@jsverse/transloco';
+import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 
 function passwordsMatch(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password')?.value;
@@ -42,6 +42,7 @@ function passwordsMatch(control: AbstractControl): ValidationErrors | null {
 export class RegisterComponent {
   private authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
+  private transloco = inject(TranslocoService);
 
   errorMessage = signal('');
   passwordVisible = signal(false);
@@ -72,7 +73,7 @@ export class RegisterComponent {
       })
       .catch(() => {
         this.errorMessage.set(
-          'Registration failed. This email may already be registered.',
+          this.transloco.translate('authentication.registrationFailed'),
         );
       });
   }

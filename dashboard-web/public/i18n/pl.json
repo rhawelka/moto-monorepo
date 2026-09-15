@@ -31,6 +31,7 @@
     "passwordRequired": "Hasło jest wymagane",
     "passwordMinLength": "Hasło musi mieć co najmniej 8 znaków",
     "passwordsMismatch": "Hasła muszą być zgodne",
-    "loginFailed": "Logowanie nie powiodło się. Sprawdź adres e-mail i hasło."
+    "loginFailed": "Logowanie nie powiodło się. Sprawdź adres e-mail i hasło.",
+    "registrationFailed": "Rejestracja nie powiodła się. Ten adres e-mail może być już zarejestrowany."
   }
 }

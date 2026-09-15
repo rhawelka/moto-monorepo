@@ -20,7 +20,12 @@ describe('RegisterComponent', () => {
         RegisterComponent,
         TranslocoTestingModule.forRoot({
           langs: {
-            en: {},
+            en: {
+              authentication: {
+                registrationFailed:
+                  'Registration failed. This email may already be registered.',
+              },
+            },
           },
           translocoConfig: {
             availableLangs: ['en'],
