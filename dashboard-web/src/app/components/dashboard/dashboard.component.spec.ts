@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslocoTestingModule } from '@jsverse/transloco';
 import { provideRouter } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
 
@@ -8,7 +9,18 @@ describe('DashboardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DashboardComponent],
+      imports: [
+        DashboardComponent,
+        TranslocoTestingModule.forRoot({
+          langs: {
+            en: {},
+          },
+          translocoConfig: {
+            availableLangs: ['en'],
+            defaultLang: 'en',
+          },
+        }),
+      ],
       providers: [provideRouter([])],
     }).compileComponents();
 

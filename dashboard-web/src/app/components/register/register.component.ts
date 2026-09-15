@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
+import { TranslocoDirective } from '@jsverse/transloco';
 
 function passwordsMatch(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password')?.value;
@@ -32,6 +33,7 @@ function passwordsMatch(control: AbstractControl): ValidationErrors | null {
     MatInputModule,
     ReactiveFormsModule,
     RouterLink,
+    TranslocoDirective,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',

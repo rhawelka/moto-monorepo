@@ -1,0 +1,30 @@
+{
+  "sidebar": {
+    "overview": "Overview",
+    "reports": "Reports",
+    "settings": "Settings",
+    "collapse": "Collapse"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "english": "English",
+    "polish": "Polish"
+  },
+  "authentication": {
+    "createAccount": "Create your account",
+    "registerToDashboard": "Register to access your dashboard",
+    "login": "Login",
+    "loginEmail": "Login (Email)",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "registerUser": "Register User",
+    "alreadyHaveAccount": "Already have an account?",
+    "backToLogin": "Back to login",
+    "emailRequired": "Email is required",
+    "enterValidEmail": "Please enter a valid email address",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Password must be at least 8 characters",
+    "passwordsMismatch": "Passwords must match"
+  }
+}

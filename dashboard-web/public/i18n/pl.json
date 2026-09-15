@@ -1,0 +1,30 @@
+{
+  "sidebar": {
+    "overview": "Przegląd",
+    "reports": "Raporty",
+    "settings": "Ustawienia",
+    "collapse": "Zwiń"
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "language": "Język",
+    "english": "Angielski",
+    "polish": "Polski"
+  },
+  "authentication": {
+    "createAccount": "Utwórz konto",
+    "registerToDashboard": "Zarejestruj się, aby uzyskać dostęp do pulpitu nawigacyjnego",
+    "login": "Zaloguj się",
+    "loginEmail": "Zaloguj się (Email)",
+    "password": "Hasło",
+    "confirmPassword": "Potwierdź hasło",
+    "registerUser": "Zarejestruj użytkownika",
+    "alreadyHaveAccount": "Masz już konto?",
+    "backToLogin": "Powrót do logowania",
+    "emailRequired": "Email jest wymagany",
+    "enterValidEmail": "Proszę wprowadzić prawidłowy adres e-mail",
+    "passwordRequired": "Hasło jest wymagane",
+    "passwordMinLength": "Hasło musi mieć co najmniej 8 znaków",
+    "passwordsMismatch": "Hasła muszą być zgodne"
+  }
+}

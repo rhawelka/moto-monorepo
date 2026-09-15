@@ -27,11 +27,17 @@
           type="button"
           class="site-header__avatar"
           aria-label="User profile"
-          (click)="logHeaderAction('profile')"
+          [matMenuTriggerFor]="profileMenu"
         >
           JD
         </button>
       </div>
     </div>
+
+    <mat-menu #profileMenu="matMenu">
+      <button mat-menu-item type="button" (click)="logout.emit()">
+        Log out
+      </button>
+    </mat-menu>
   </header>
 </ng-container>
