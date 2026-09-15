@@ -8,6 +8,7 @@ import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
     ReactiveFormsModule,
     RouterLink,
     MatIconModule,
+    TranslocoDirective,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -27,6 +29,7 @@ import { MatIconModule } from '@angular/material/icon';
 export class LoginComponent {
   private authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
+  private transloco = inject(TranslocoService);
 
   errorMessage = signal('');
   passwordVisible = signal(false);
@@ -47,7 +50,9 @@ export class LoginComponent {
 
     firstValueFrom(this.authService.login(this.loginForm.getRawValue())).catch(
       () =>
-        this.errorMessage.set('Login failed. Check your email and password.'),
+        this.errorMessage.set(
+          this.transloco.translate('authentication.loginFailed'),
+        ),
     );
   }
 

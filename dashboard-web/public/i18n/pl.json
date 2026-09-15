@@ -12,19 +12,25 @@
     "polish": "Polski"
   },
   "authentication": {
+    "welcomeBack": "Witaj ponownie",
+    "signInToDashboard": "Zaloguj się, aby przejść do pulpitu nawigacyjnego",
     "createAccount": "Utwórz konto",
     "registerToDashboard": "Zarejestruj się, aby uzyskać dostęp do pulpitu nawigacyjnego",
     "login": "Zaloguj się",
     "loginEmail": "Zaloguj się (Email)",
     "password": "Hasło",
     "confirmPassword": "Potwierdź hasło",
+    "showPassword": "Pokaż hasło",
+    "hidePassword": "Ukryj hasło",
     "registerUser": "Zarejestruj użytkownika",
+    "newHere": "Jesteś tu nowy?",
     "alreadyHaveAccount": "Masz już konto?",
     "backToLogin": "Powrót do logowania",
     "emailRequired": "Email jest wymagany",
     "enterValidEmail": "Proszę wprowadzić prawidłowy adres e-mail",
     "passwordRequired": "Hasło jest wymagane",
     "passwordMinLength": "Hasło musi mieć co najmniej 8 znaków",
-    "passwordsMismatch": "Hasła muszą być zgodne"
+    "passwordsMismatch": "Hasła muszą być zgodne",
+    "loginFailed": "Logowanie nie powiodło się. Sprawdź adres e-mail i hasło."
   }
 }

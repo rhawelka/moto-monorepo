@@ -1,69 +1,71 @@
-<main class="auth-page">
-  <mat-card class="auth-card">
-    <mat-card-header>
-      <mat-card-title>Welcome back</mat-card-title>
-      <mat-card-subtitle
-        >Sign in to continue to your dashboard</mat-card-subtitle
-      >
-    </mat-card-header>
+<ng-container *transloco="let t; prefix: 'authentication'">
+  <main class="auth-page">
+    <mat-card class="auth-card">
+      <mat-card-header>
+        <mat-card-title>{{ t('welcomeBack') }}</mat-card-title>
+        <mat-card-subtitle>{{ t('signInToDashboard') }}</mat-card-subtitle>
+      </mat-card-header>
 
-    <mat-card-content>
-      @if (errorMessage()) {
-        <p class="error" role="alert">{{ errorMessage() }}</p>
-      }
+      <mat-card-content>
+        @if (errorMessage()) {
+          <p class="error" role="alert">{{ errorMessage() }}</p>
+        }
 
-      <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit($event)">
-        <mat-form-field appearance="outline">
-          <mat-label>Login (email)</mat-label>
-          <input
-            matInput
-            type="email"
-            formControlName="email"
-            autocomplete="email"
-          />
-          @if (loginForm.controls.email.hasError('required')) {
-            <mat-error>Email is required</mat-error>
-          } @else if (loginForm.controls.email.hasError('email')) {
-            <mat-error>Enter a valid email address</mat-error>
-          }
-        </mat-form-field>
+        <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit($event)">
+          <mat-form-field appearance="outline">
+            <mat-label>{{ t('loginEmail') }}</mat-label>
+            <input
+              matInput
+              type="email"
+              formControlName="email"
+              autocomplete="email"
+            />
+            @if (loginForm.controls.email.hasError('required')) {
+              <mat-error>{{ t('emailRequired') }}</mat-error>
+            } @else if (loginForm.controls.email.hasError('email')) {
+              <mat-error>{{ t('enterValidEmail') }}</mat-error>
+            }
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Password</mat-label>
-          <input
-            matInput
-            formControlName="password"
-            autocomplete="current-password"
-            [type]="passwordVisible() ? 'text' : 'password'"
-          />
-          <button
-            type="button"
-            mat-icon-button
-            matSuffix
-            [attr.aria-label]="
-              passwordVisible() ? 'Hide password' : 'Show password'
-            "
-            [attr.aria-pressed]="passwordVisible()"
-            (click)="onClickRevealPassword($event)"
-          >
-            <mat-icon>{{
-              passwordVisible() ? 'visibility_off' : 'visibility'
-            }}</mat-icon>
+          <mat-form-field appearance="outline">
+            <mat-label>{{ t('password') }}</mat-label>
+            <input
+              matInput
+              formControlName="password"
+              autocomplete="current-password"
+              [type]="passwordVisible() ? 'text' : 'password'"
+            />
+            <button
+              type="button"
+              mat-icon-button
+              matSuffix
+              [attr.aria-label]="
+                passwordVisible() ? t('hidePassword') : t('showPassword')
+              "
+              [attr.aria-pressed]="passwordVisible()"
+              (click)="onClickRevealPassword($event)"
+            >
+              <mat-icon>{{
+                passwordVisible() ? 'visibility_off' : 'visibility'
+              }}</mat-icon>
+            </button>
+            @if (loginForm.controls.password.hasError('required')) {
+              <mat-error>{{ t('passwordRequired') }}</mat-error>
+            } @else if (loginForm.controls.password.hasError('minlength')) {
+              <mat-error>{{ t('passwordMinLength') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <button mat-flat-button color="primary" type="submit">
+            {{ t('login') }}
           </button>
-          @if (loginForm.controls.password.hasError('required')) {
-            <mat-error>Password is required</mat-error>
-          } @else if (loginForm.controls.password.hasError('minlength')) {
-            <mat-error>Password must be at least 8 characters</mat-error>
-          }
-        </mat-form-field>
+        </form>
+      </mat-card-content>
 
-        <button mat-flat-button color="primary" type="submit">Log in</button>
-      </form>
-    </mat-card-content>
-
-    <mat-card-actions>
-      <span>New here?</span>
-      <a mat-button routerLink="/register">Register user</a>
-    </mat-card-actions>
-  </mat-card>
-</main>
+      <mat-card-actions>
+        <span>{{ t('newHere') }}</span>
+        <a mat-button routerLink="/register">{{ t('registerUser') }}</a>
+      </mat-card-actions>
+    </mat-card>
+  </main>
+</ng-container>

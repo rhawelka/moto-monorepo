@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslocoTestingModule } from '@jsverse/transloco';
 import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
@@ -15,7 +16,22 @@ describe('LoginComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [LoginComponent],
+      imports: [
+        LoginComponent,
+        TranslocoTestingModule.forRoot({
+          langs: {
+            en: {
+              authentication: {
+                loginFailed: 'Login failed. Check your email and password.',
+              },
+            },
+          },
+          translocoConfig: {
+            availableLangs: ['en'],
+            defaultLang: 'en',
+          },
+        }),
+      ],
       providers: [
         provideRouter([]),
         { provide: AuthService, useValue: authService },

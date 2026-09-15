@@ -12,19 +12,25 @@
     "polish": "Polish"
   },
   "authentication": {
+    "welcomeBack": "Welcome back",
+    "signInToDashboard": "Sign in to continue to your dashboard",
     "createAccount": "Create your account",
     "registerToDashboard": "Register to access your dashboard",
     "login": "Login",
     "loginEmail": "Login (Email)",
     "password": "Password",
     "confirmPassword": "Confirm Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "registerUser": "Register User",
+    "newHere": "New here?",
     "alreadyHaveAccount": "Already have an account?",
     "backToLogin": "Back to login",
     "emailRequired": "Email is required",
     "enterValidEmail": "Please enter a valid email address",
     "passwordRequired": "Password is required",
     "passwordMinLength": "Password must be at least 8 characters",
-    "passwordsMismatch": "Passwords must match"
+    "passwordsMismatch": "Passwords must match",
+    "loginFailed": "Login failed. Check your email and password."
   }
 }
