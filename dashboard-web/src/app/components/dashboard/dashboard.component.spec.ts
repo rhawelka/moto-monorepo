@@ -13,7 +13,14 @@ describe('DashboardComponent', () => {
         DashboardComponent,
         TranslocoTestingModule.forRoot({
           langs: {
-            en: {},
+            en: {
+              sidebar: {
+                overview: 'Overview',
+                reports: 'Reports',
+                settings: 'Settings',
+                collapse: 'Collapse',
+              },
+            },
           },
           translocoConfig: {
             availableLangs: ['en'],
