@@ -32,6 +32,7 @@
     "passwordMinLength": "Password must be at least 8 characters",
     "passwordsMismatch": "Passwords must match",
     "loginFailed": "Login failed. Check your email and password.",
-    "registrationFailed": "Registration failed. This email may already be registered."
+    "registrationFailed": "Registration failed. This email may already be registered.",
+    "logout": "Log out"
   }
 }
