@@ -19,6 +19,9 @@ describe('SettingsComponent', () => {
                 language: 'Language',
                 english: 'English',
                 polish: 'Polish',
+                theme: 'Theme',
+                light: 'Light',
+                dark: 'Dark',
               },
             },
             pl: {
@@ -27,6 +30,9 @@ describe('SettingsComponent', () => {
                 language: 'Język',
                 english: 'Angielski',
                 polish: 'Polski',
+                theme: 'Motyw',
+                light: 'Jasny',
+                dark: 'Ciemny',
               },
             },
           },
@@ -76,5 +82,13 @@ describe('SettingsComponent', () => {
     fixture.detectChanges();
 
     expect(component.activeLanguage()).toBe('en');
+  });
+
+  it('should switch and persist the dark theme', () => {
+    component.changeTheme('dark');
+
+    expect(component.activeTheme()).toBe('dark');
+    expect(localStorage.getItem('theme')).toBe('dark');
+    expect(document.documentElement.dataset['theme']).toBe('dark');
   });
 });

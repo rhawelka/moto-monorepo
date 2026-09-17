@@ -1,8 +1,61 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
+:root {
+  --color-brand-navy: #061930;
+  --color-brand-blue: #2d72e8;
+  --color-brand-blue-dark: #1455c0;
+  --color-brand-blue-border: #1b3c73;
+  --color-brand-blue-light: #79a8f2;
+  --color-brand-blue-avatar: #397edb;
+  --color-brand-text: #dce9ff;
+  --color-sidebar-background-text: #e8f0ff;
+  --color-sidebar-control-text: #e5e7eb;
+  --color-sidebar-text: #c2d2ee;
+  --color-sidebar-muted: #8da9d2;
+  --color-page-text: #172033;
+  --color-page-muted: #58709a;
+  --color-page-background: #f3f4f6;
+  --color-card-background: #fff;
+  --color-border: #cbd5e1;
+  --color-control-text: #52627c;
+  --color-auth-background-start: #e8f1f5;
+  --color-auth-background-end: #f8faf9;
+  --color-error: #b3261e;
+  --color-white: #fff;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --radius-md: 0.5rem;
+  --header-height: 4rem;
+  --sidebar-width: 13.75rem;
+  --sidebar-collapsed-width: 4.5rem;
+  --control-height: 2.625rem;
+}
+
+[data-theme='dark'] {
+  --color-page-text: #e5e7eb;
+  --color-page-muted: #a9b8d0;
+  --color-page-background: #101827;
+  --color-card-background: #182235;
+  --color-border: #34445d;
+  --color-control-text: #d5def0;
+  --color-auth-background-start: #101827;
+  --color-auth-background-end: #1b293d;
+}
+
 html,
 body {
   margin: 0;
   height: 100%;
+}
+
+body {
+  background: var(--color-page-background);
+  color: var(--color-page-text);
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
 }

@@ -26,4 +26,24 @@
       {{ t('polish') }}
     </button>
   </div>
+
+  <h1>{{ t('theme') }}</h1>
+  <div class="settings-page__theme" role="group" [attr.aria-label]="t('theme')">
+    <button
+      type="button"
+      [class.settings-page__theme-option--active]="activeTheme() === 'light'"
+      [attr.aria-pressed]="activeTheme() === 'light'"
+      (click)="changeTheme('light')"
+    >
+      {{ t('light') }}
+    </button>
+    <button
+      type="button"
+      [class.settings-page__theme-option--active]="activeTheme() === 'dark'"
+      [attr.aria-pressed]="activeTheme() === 'dark'"
+      (click)="changeTheme('dark')"
+    >
+      {{ t('dark') }}
+    </button>
+  </div>
 </section>
