@@ -17,7 +17,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npx nx run dashboard-web:serve',
+    command: 'npm run start:ui',
     url: 'http://localhost:4200',
     reuseExistingServer: !process.env['CI'],
   },

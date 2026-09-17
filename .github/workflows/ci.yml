@@ -44,6 +44,24 @@ jobs:
       - name: Test
         uses: ./.github/actions/test
 
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          filter: tree:0
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run E2E tests
+        run: CI=1 npx nx run dashboard-web-e2e:e2e-ci
+
   build:
     runs-on: ubuntu-latest
     steps:
