@@ -31,4 +31,4 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run E2E tests
-        run: CI=1 npx nx run dashboard-web-e2e:e2e-ci
+        run: CI=1 npx nx run dashboard-web-e2e:e2e
