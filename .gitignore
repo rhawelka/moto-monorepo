@@ -34,7 +34,7 @@ node_modules
 /connect.lock
 /coverage
 /playwright-report
-/test-results
+test-results
 /libpeerconnection.log
 npm-debug.log
 yarn-error.log
