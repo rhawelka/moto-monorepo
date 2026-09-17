@@ -1,24 +1,18 @@
-$header-height: 4rem;
-$spacing-base: 1rem;
-$color-bg: #0d2b5c;
-$color-text: #dce9ff;
-$color-primary: #2d72e8;
-
 :host {
   display: block;
   width: 100%;
 }
 
 .site-header {
-  background: $color-bg;
-  border-bottom: 0.0625rem solid rgba(184, 211, 255, 0.14);
+  background: var(--color-brand-navy);
+  border-bottom: 0.0625rem solid #b8d3ff24;
   box-sizing: border-box;
   width: 100%;
 
   &__container {
     width: 100%;
-    padding: 0 ($spacing-base * 1.25);
-    height: $header-height;
+    padding: 0 calc(var(--spacing-md) * 1.25);
+    height: var(--header-height);
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
@@ -31,7 +25,7 @@ $color-primary: #2d72e8;
     align-items: center;
     gap: 0.65rem;
     text-decoration: none;
-    color: #fff;
+    color: var(--color-white);
 
     &-mark {
       display: inline-flex;
@@ -40,8 +34,8 @@ $color-primary: #2d72e8;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      background: $color-primary;
-      color: #fff;
+      background: var(--color-brand-blue);
+      color: var(--color-white);
       font-weight: 800;
     }
 
@@ -57,11 +51,11 @@ $color-primary: #2d72e8;
     gap: 0.25rem;
 
     button {
-      color: #dce9ff;
+      color: var(--color-brand-text);
 
       &:hover {
-        background: rgba(90, 145, 235, 0.16);
-        color: #fff;
+        background: #5a91eb29;
+        color: var(--color-white);
       }
     }
   }
@@ -70,10 +64,10 @@ $color-primary: #2d72e8;
     width: 2.125rem;
     height: 2.125rem;
     margin-left: 0.4rem;
-    border: 0.125rem solid #79a8f2;
+    border: 0.125rem solid var(--color-brand-blue-light);
     border-radius: 50%;
-    background: #397edb;
-    color: #fff;
+    background: var(--color-brand-blue-avatar);
+    color: var(--color-white);
     cursor: pointer;
     font-size: 0.7rem;
     font-weight: 700;

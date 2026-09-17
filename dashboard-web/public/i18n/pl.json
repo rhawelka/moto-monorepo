@@ -9,7 +9,10 @@
     "title": "Ustawienia",
     "language": "Język",
     "english": "Angielski",
-    "polish": "Polski"
+    "polish": "Polski",
+    "theme": "Motyw",
+    "light": "Jasny",
+    "dark": "Ciemny"
   },
   "authentication": {
     "welcomeBack": "Witaj ponownie",

@@ -4,17 +4,17 @@
 
 .settings-page {
   max-width: 42rem;
-  padding: 1.5rem;
-  color: #172033;
+  padding: var(--spacing-lg);
+  color: var(--color-page-text);
 }
 
 .settings-page__header {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-lg);
 }
 
 .settings-page__eyebrow {
   margin: 0 0 0.35rem;
-  color: #58709a;
+  color: var(--color-page-muted);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -28,11 +28,20 @@
 
 .settings-page__language {
   display: inline-flex;
-  gap: 0.25rem;
-  padding: 0.25rem;
-  border: 0.0625rem solid #cbd5e1;
-  border-radius: 0.5rem;
-  background: #fff;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs);
+  border: 0.0625rem solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-card-background);
+}
+
+.settings-page__theme {
+  display: inline-flex;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs);
+  border: 0.0625rem solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-card-background);
 }
 
 .settings-page__language button {
@@ -40,14 +49,27 @@
   border: 0;
   border-radius: 0.35rem;
   background: transparent;
-  color: #52627c;
+  color: var(--color-control-text);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+.settings-page__theme button {
+  padding: 0.6rem 1rem;
+  border: 0;
+  border-radius: 0.35rem;
+  background: transparent;
+  color: var(--color-control-text);
   cursor: pointer;
   font: inherit;
   font-weight: 600;
 }
 
 .settings-page__language button:hover,
-.settings-page__language-option--active {
-  background: #1455c0;
-  color: #fff;
+.settings-page__language-option--active,
+.settings-page__theme button:hover,
+.settings-page__theme-option--active {
+  background: var(--color-brand-blue-dark);
+  color: var(--color-white);
 }

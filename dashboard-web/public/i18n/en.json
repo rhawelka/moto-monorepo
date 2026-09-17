@@ -9,7 +9,10 @@
     "title": "Settings",
     "language": "Language",
     "english": "English",
-    "polish": "Polish"
+    "polish": "Polish",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark"
   },
   "authentication": {
     "welcomeBack": "Welcome back",

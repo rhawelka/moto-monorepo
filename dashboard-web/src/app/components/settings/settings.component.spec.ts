@@ -8,6 +8,9 @@ describe('SettingsComponent', () => {
   let transloco: TranslocoService;
 
   beforeEach(async () => {
+    localStorage.clear();
+    document.documentElement.removeAttribute('data-theme');
+
     await TestBed.configureTestingModule({
       imports: [
         SettingsComponent,
@@ -19,6 +22,9 @@ describe('SettingsComponent', () => {
                 language: 'Language',
                 english: 'English',
                 polish: 'Polish',
+                theme: 'Theme',
+                light: 'Light',
+                dark: 'Dark',
               },
             },
             pl: {
@@ -27,6 +33,9 @@ describe('SettingsComponent', () => {
                 language: 'Język',
                 english: 'Angielski',
                 polish: 'Polski',
+                theme: 'Motyw',
+                light: 'Jasny',
+                dark: 'Ciemny',
               },
             },
           },
@@ -76,5 +85,63 @@ describe('SettingsComponent', () => {
     fixture.detectChanges();
 
     expect(component.activeLanguage()).toBe('en');
+  });
+
+  it('should switch and persist the dark theme', () => {
+    component.changeTheme('dark');
+
+    expect(component.activeTheme()).toBe('dark');
+    expect(localStorage.getItem('theme')).toBe('dark');
+    expect(document.documentElement.dataset['theme']).toBe('dark');
+  });
+
+  it('should switch back to and persist the light theme', () => {
+    component.changeTheme('dark');
+    component.changeTheme('light');
+
+    expect(component.activeTheme()).toBe('light');
+    expect(localStorage.getItem('theme')).toBe('light');
+    expect(document.documentElement.dataset['theme']).toBe('light');
+  });
+
+  it('should restore the stored dark theme when initialized', () => {
+    localStorage.setItem('theme', 'dark');
+
+    const storedThemeFixture = TestBed.createComponent(SettingsComponent);
+    const storedThemeComponent = storedThemeFixture.componentInstance;
+
+    expect(storedThemeComponent.activeTheme()).toBe('dark');
+    expect(document.documentElement.dataset['theme']).toBe('dark');
+
+    storedThemeFixture.destroy();
+  });
+
+  it('should fall back to light for an unsupported stored theme', () => {
+    localStorage.setItem('theme', 'blue');
+
+    const storedThemeFixture = TestBed.createComponent(SettingsComponent);
+    const storedThemeComponent = storedThemeFixture.componentInstance;
+
+    expect(storedThemeComponent.activeTheme()).toBe('light');
+    expect(document.documentElement.dataset['theme']).toBe('light');
+
+    storedThemeFixture.destroy();
+  });
+
+  it('should change the theme from the rendered controls', () => {
+    const darkButton = fixture.nativeElement.querySelector(
+      '.settings-page__theme button:last-child',
+    ) as HTMLButtonElement;
+
+    darkButton.click();
+    fixture.detectChanges();
+
+    expect(component.activeTheme()).toBe('dark');
+    expect(darkButton.getAttribute('aria-pressed')).toBe('true');
+    expect(
+      fixture.nativeElement.querySelector(
+        '.settings-page__theme-option--active',
+      ),
+    ).toBe(darkButton);
   });
 });

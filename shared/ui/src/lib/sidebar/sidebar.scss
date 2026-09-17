@@ -7,26 +7,26 @@
 .ui-sidebar-shell {
   height: 100%;
   width: 100%;
-  background: #f3f4f6;
+  background: var(--color-page-background);
   box-sizing: border-box;
 
   &--collapsed {
     ::ng-deep .mat-drawer-content {
-      margin-left: 4.5rem !important;
+      margin-left: var(--sidebar-collapsed-width) !important;
     }
   }
 
   .ui-sidebar {
-    width: 13.75rem;
-    border: 0.0625rem solid #1b3c73;
+    width: var(--sidebar-width);
+    border: 0.0625rem solid var(--color-brand-blue-border);
     border-radius: 0;
-    background: #0d2b5c;
-    color: #e8f0ff;
-    box-shadow: 0 0.625rem 1.75rem rgba(13, 43, 92, 0.18);
+    background: var(--color-brand-navy);
+    color: var(--color-sidebar-background-text);
+    box-shadow: 0 0.625rem 1.75rem #0d2b5c2e;
     transition: width 180ms ease;
 
     &--collapsed {
-      width: 4.5rem;
+      width: var(--sidebar-collapsed-width);
 
       mat-nav-list span[matListItemTitle],
       .ui-sidebar__toggle-label,
@@ -68,7 +68,7 @@
       .ui-sidebar__settings {
         box-sizing: border-box;
         min-width: 0;
-        height: 2.625rem;
+        height: var(--control-height);
         padding-inline: 0;
       }
 
@@ -120,7 +120,7 @@
 
     &__section-label {
       padding: 1.25rem 1.25rem 0.45rem;
-      color: #8da9d2;
+      color: var(--color-sidebar-muted);
       font-size: 0.65rem;
       font-weight: 700;
       letter-spacing: 0.12em;
@@ -134,21 +134,21 @@
         min-height: 2.625rem;
         margin: 0.2rem 0;
         border-radius: 0.625rem;
-        color: #c2d2ee;
+        color: var(--color-sidebar-text);
         transition:
           background-color 140ms ease,
           color 140ms ease;
 
         &:hover {
-          background: rgba(90, 145, 235, 0.14);
-          color: #fff;
+          background: #5a91eb24;
+          color: var(--color-white);
         }
       }
 
       .active-link {
-        background: #1455c0;
-        color: #fff;
-        box-shadow: 0 0.3125rem 0.75rem rgba(4, 24, 61, 0.2);
+        background: var(--color-brand-blue-dark);
+        color: var(--color-white);
+        box-shadow: 0 0.3125rem 0.75rem #04183d33;
       }
 
       ::ng-deep .mat-mdc-list-item-icon {
@@ -159,7 +159,7 @@
     &__footer {
       padding: 1rem 1rem 1.1rem;
       margin-top: auto;
-      border-top: 0.0625rem solid rgba(184, 211, 255, 0.14);
+      border-top: 0.0625rem solid #b8d3ff24;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
@@ -176,15 +176,15 @@
       justify-content: flex-start;
       gap: 0.5rem;
       box-sizing: border-box;
-      height: 2.625rem;
+      height: var(--control-height);
       padding: 0.75rem 1rem;
       border: 0;
       background: transparent;
-      color: #e5e7eb;
+      color: var(--color-sidebar-control-text);
       cursor: pointer !important;
 
       &:hover {
-        background: rgba(90, 145, 235, 0.14);
+        background: #5a91eb24;
       }
 
       mat-icon {
@@ -201,12 +201,12 @@
       min-height: 2.625rem;
       margin: 0;
       border-radius: 0.625rem;
-      color: #c2d2ee;
+      color: var(--color-sidebar-text);
       cursor: pointer !important;
 
       &:hover {
-        background: rgba(90, 145, 235, 0.14);
-        color: #fff;
+        background: #5a91eb24;
+        color: var(--color-white);
       }
 
       ::ng-deep .mat-mdc-list-item-icon {

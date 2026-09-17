@@ -4,11 +4,15 @@
 
 .auth-page {
   align-items: center;
-  background: linear-gradient(135deg, #e8f1f5, #f8faf9);
+  background: linear-gradient(
+    135deg,
+    var(--color-auth-background-start),
+    var(--color-auth-background-end)
+  );
   display: flex;
   justify-content: center;
   min-height: 100vh;
-  padding: 2rem;
+  padding: var(--spacing-xl);
 
   .auth-card {
     max-width: 28rem;
@@ -18,7 +22,7 @@
   form {
     display: grid;
     gap: 1rem;
-    margin-top: 1.5rem;
+    margin-top: var(--spacing-lg);
   }
 
   input[matInput] {
@@ -27,11 +31,11 @@
   }
 
   .error {
-    color: #b3261e;
+    color: var(--color-error);
   }
 
   mat-card-actions {
     gap: 0.5rem;
-    padding: 1rem;
+    padding: var(--spacing-md);
   }
 }
