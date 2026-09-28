@@ -31,6 +31,7 @@ export class Sidebar {
   @Input() navItems: SidebarItem[] = [
     { label: 'overview', icon: 'dashboard', route: '/dashboard' },
     { label: 'reports', icon: 'bar_chart', route: '/dashboard' },
+    { label: 'map', icon: 'map', route: '/dashboard/map' },
   ];
   @Input() settingsItem: SidebarItem = {
     label: 'settings',

@@ -26,6 +26,13 @@ export const appRoutes: Routes = [
         path: 'settings',
         component: SettingsComponent,
       },
+      {
+        path: 'map',
+        loadComponent: () =>
+          import('./components/map/map.component').then(
+            (component) => component.MapComponent,
+          ),
+      },
     ],
   },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

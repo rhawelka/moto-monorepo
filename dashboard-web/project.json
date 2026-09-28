@@ -19,6 +19,11 @@
           {
             "glob": "**/*",
             "input": "dashboard-web/public"
+          },
+          {
+            "glob": "**/*",
+            "input": "node_modules/@arcgis/core/assets",
+            "output": "assets"
           }
         ],
         "styles": ["dashboard-web/src/styles.scss"],
