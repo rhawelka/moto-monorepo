@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
 import EsriMap from '@arcgis/core/Map.js';
 import esriConfig from '@arcgis/core/config.js';
 import MapView from '@arcgis/core/views/MapView.js';

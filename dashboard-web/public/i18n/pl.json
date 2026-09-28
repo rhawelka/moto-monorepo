@@ -22,6 +22,7 @@
     "registerToDashboard": "Zarejestruj się, aby uzyskać dostęp do pulpitu nawigacyjnego",
     "login": "Zaloguj się",
     "loginEmail": "Zaloguj się (Email)",
+    "email": "Adres e-mail",
     "password": "Hasło",
     "confirmPassword": "Potwierdź hasło",
     "showPassword": "Pokaż hasło",
