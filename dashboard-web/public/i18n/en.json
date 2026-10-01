@@ -3,6 +3,7 @@
     "overview": "Overview",
     "reports": "Reports",
     "map": "Map",
+    "users": "Users",
     "settings": "Settings",
     "collapse": "Collapse"
   },
@@ -15,6 +16,10 @@
     "light": "Light",
     "dark": "Dark"
   },
+  "users": {
+    "title": "Users",
+    "loadError": "Users could not be loaded. Please try again later."
+  },
   "authentication": {
     "welcomeBack": "Welcome back",
     "signInToDashboard": "Sign in to continue to your dashboard",
@@ -22,6 +27,7 @@
     "registerToDashboard": "Register to access your dashboard",
     "login": "Login",
     "loginEmail": "Login (Email)",
+    "loginIdentifier": "Email or username",
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm Password",

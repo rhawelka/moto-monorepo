@@ -99,7 +99,7 @@ And join the Nx community:
 
 ## Run locally
 
-Requirements: Node.js 22+, npm, and Docker with Docker Compose.
+Requirements: Node.js 22.22.3 (pinned in `.nvmrc`), npm, and Docker with Docker Compose.
 
 Install dependencies and create the local environment file:
 
@@ -115,11 +115,19 @@ docker compose up -d
 docker compose ps
 ```
 
-Apply the Prisma migration:
+Apply all Prisma migrations, including creation of the initial admin account:
 
 ```bash
-npx prisma migrate dev --name init --schema=api/prisma/schema.prisma
+npx prisma migrate deploy --schema=api/prisma/schema.prisma
 ```
+
+Initial admin login:
+
+- Username: `admin`
+- Email: `admin@test.pl`
+- Password: `admin`
+
+Sign in with username `admin` or email `admin@test.pl`. These are development bootstrap credentials; change the password and credentials before exposing the application outside a trusted environment.
 
 Start the API in one terminal:
 

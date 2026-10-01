@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonHeader, Sidebar } from '@moto-monorepo/ui';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
@@ -12,6 +12,14 @@ import { AuthService } from '../../services/auth/auth.service';
 })
 export class DashboardComponent {
   private readonly authService = inject(AuthService);
+  readonly navItems = computed(() => [
+    { label: 'overview', icon: 'dashboard', route: '/dashboard' },
+    { label: 'reports', icon: 'bar_chart', route: '/dashboard' },
+    { label: 'map', icon: 'map', route: '/dashboard/map' },
+    ...(this.authService.currentUser()?.role === 'ADMIN'
+      ? [{ label: 'users', icon: 'group', route: '/dashboard/users' }]
+      : []),
+  ]);
 
   logout(): void {
     this.authService.logout();

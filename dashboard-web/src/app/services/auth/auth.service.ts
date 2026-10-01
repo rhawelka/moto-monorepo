@@ -7,6 +7,7 @@ import { tap } from 'rxjs';
 export interface User {
   id: string;
   email: string;
+  role: 'USER' | 'ADMIN';
 }
 
 // todo move interfaces to a separate file

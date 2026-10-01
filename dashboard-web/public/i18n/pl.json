@@ -3,6 +3,7 @@
     "overview": "Przegląd",
     "reports": "Raporty",
     "map": "Mapa",
+    "users": "Użytkownicy",
     "settings": "Ustawienia",
     "collapse": "Zwiń"
   },
@@ -15,6 +16,10 @@
     "light": "Jasny",
     "dark": "Ciemny"
   },
+  "users": {
+    "title": "Użytkownicy",
+    "loadError": "Nie udało się pobrać użytkowników. Spróbuj ponownie później."
+  },
   "authentication": {
     "welcomeBack": "Witaj ponownie",
     "signInToDashboard": "Zaloguj się, aby przejść do pulpitu nawigacyjnego",
@@ -22,6 +27,7 @@
     "registerToDashboard": "Zarejestruj się, aby uzyskać dostęp do pulpitu nawigacyjnego",
     "login": "Zaloguj się",
     "loginEmail": "Zaloguj się (Email)",
+    "loginIdentifier": "E-mail lub nazwa użytkownika",
     "email": "Adres e-mail",
     "password": "Hasło",
     "confirmPassword": "Potwierdź hasło",

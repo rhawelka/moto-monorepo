@@ -35,8 +35,8 @@ export class LoginComponent {
   passwordVisible = signal(false);
 
   loginForm = this.formBuilder.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    email: ['', [Validators.required]],
+    password: ['', [Validators.required]],
   });
 
   onLoginSubmit(event: Event) {

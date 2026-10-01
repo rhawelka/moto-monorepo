@@ -1,0 +1,17 @@
+<ng-container *transloco="let t; prefix: 'users'">
+  <section class="users-page">
+    <h1>{{ t('title') }}</h1>
+    @if (loadFailed()) {
+      <p class="users-page__error" role="alert">{{ t('loadError') }}</p>
+    }
+    <ag-grid-angular
+      class="users-grid"
+      [theme]="theme"
+      [rowData]="rowData()"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [pagination]="true"
+      [paginationPageSize]="25"
+    />
+  </section>
+</ng-container>
