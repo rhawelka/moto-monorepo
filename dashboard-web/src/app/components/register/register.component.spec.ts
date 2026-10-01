@@ -24,6 +24,7 @@ describe('RegisterComponent', () => {
               authentication: {
                 registrationFailed:
                   'Registration failed. This email may already be registered.',
+                confirmPasswordRequired: 'Please confirm your password',
               },
             },
           },
@@ -60,6 +61,23 @@ describe('RegisterComponent', () => {
     expect(component.registerForm.hasError('passwordsMismatch')).toBe(true);
     expect(component.registerForm.touched).toBe(true);
     expect(authService.register).not.toHaveBeenCalled();
+  });
+
+  it('should show a translated error when password confirmation is empty', () => {
+    component.registerForm.setValue({
+      email: 'rider@example.com',
+      password: 'password123',
+      confirmPassword: '',
+    });
+    component.onRegisterSubmit(new Event('submit'));
+    fixture.detectChanges();
+
+    expect(
+      fixture.nativeElement.querySelector('mat-error')?.textContent,
+    ).toContain('Please confirm your password');
+    expect(fixture.nativeElement.textContent).not.toContain(
+      'authentication.confirmPasswordRequired',
+    );
   });
 
   it('should register valid credentials and log the mock email', async () => {

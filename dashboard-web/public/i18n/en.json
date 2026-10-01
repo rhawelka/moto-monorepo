@@ -40,6 +40,7 @@
     "emailRequired": "Email is required",
     "enterValidEmail": "Please enter a valid email address",
     "passwordRequired": "Password is required",
+    "confirmPasswordRequired": "Please confirm your password",
     "passwordMinLength": "Password must be at least 8 characters",
     "passwordsMismatch": "Passwords must match",
     "loginFailed": "Login failed. Check your email and password.",
