@@ -2,6 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
+  FormControl,
+  FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
@@ -40,22 +42,25 @@ function passwordsMatch(control: AbstractControl): ValidationErrors | null {
   standalone: true,
 })
 export class RegisterComponent {
-  private authService = inject(AuthService);
-  private formBuilder = inject(FormBuilder);
-  private transloco = inject(TranslocoService);
-
   errorMessage = signal('');
   passwordVisible = signal(false);
   confirmPasswordVisible = signal(false);
+  registerForm!: FormGroup<{
+    email: FormControl<string>;
+    password: FormControl<string>;
+    confirmPassword: FormControl<string>;
+  }>;
 
-  registerForm = this.formBuilder.nonNullable.group(
-    {
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', Validators.required],
-    },
-    { validators: passwordsMatch },
-  );
+  constructor() {
+    this.registerForm = this.formBuilder.nonNullable.group(
+      {
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', Validators.required],
+      },
+      { validators: passwordsMatch },
+    );
+  }
 
   onRegisterSubmit(event: Event): void {
     event.preventDefault();
@@ -87,4 +92,8 @@ export class RegisterComponent {
     event.preventDefault();
     this.confirmPasswordVisible.update((visible) => !visible);
   }
+
+  private authService = inject(AuthService);
+  private formBuilder = inject(FormBuilder);
+  private transloco = inject(TranslocoService);
 }

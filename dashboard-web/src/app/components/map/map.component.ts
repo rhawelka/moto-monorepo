@@ -16,12 +16,6 @@ import MapView from '@arcgis/core/views/MapView.js';
   styleUrl: './map.component.scss',
 })
 export class MapComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('mapContainer', { static: true })
-  private mapContainer!: ElementRef<HTMLDivElement>;
-
-  private mapView?: MapView;
-  private stylesheet?: HTMLLinkElement;
-
   ngAfterViewInit(): void {
     esriConfig.assetsPath = new URL('assets', document.baseURI).href;
 
@@ -46,4 +40,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.mapView?.destroy();
     this.stylesheet?.remove();
   }
+
+  @ViewChild('mapContainer', { static: true })
+  private mapContainer!: ElementRef<HTMLDivElement>;
+  private mapView?: MapView;
+  private stylesheet?: HTMLLinkElement;
 }

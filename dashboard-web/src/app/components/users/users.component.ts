@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AllCommunityModule,
@@ -42,8 +42,8 @@ export class UsersComponent {
     },
   ];
 
-  constructor(usersService: UsersService) {
-    usersService
+  constructor() {
+    this.usersService
       .listNonAdminUsers()
       .pipe(takeUntilDestroyed())
       .subscribe({
@@ -51,4 +51,6 @@ export class UsersComponent {
         error: () => this.loadFailed.set(true),
       });
   }
+
+  private usersService = inject(UsersService);
 }

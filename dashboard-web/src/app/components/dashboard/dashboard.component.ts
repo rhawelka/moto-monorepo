@@ -11,7 +11,6 @@ import { AuthService } from '../../services/auth/auth.service';
   standalone: true,
 })
 export class DashboardComponent {
-  private readonly authService = inject(AuthService);
   readonly navItems = computed(() => [
     { label: 'overview', icon: 'dashboard', route: '/dashboard' },
     { label: 'reports', icon: 'bar_chart', route: '/dashboard' },
@@ -24,4 +23,6 @@ export class DashboardComponent {
   logout(): void {
     this.authService.logout();
   }
+
+  private readonly authService = inject(AuthService);
 }

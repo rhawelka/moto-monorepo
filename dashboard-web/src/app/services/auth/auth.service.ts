@@ -18,12 +18,6 @@ export interface AuthResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private http = inject(HttpClient);
-  private router = inject(Router);
-
-  // move localhost URL to environment variable or config file for better flexibility and security
-  private readonly API_URL = 'http://localhost:3000/api/v1/auth';
-
   // State management using Signals
   currentUser = signal<User | null>(this.getUserFromStorage());
   isAuthenticated = computed(() => !!this.currentUser());
@@ -62,4 +56,10 @@ export class AuthService {
     const userJson = localStorage.getItem('user');
     return userJson ? JSON.parse(userJson) : null;
   }
+
+  private http = inject(HttpClient);
+  private router = inject(Router);
+
+  // move localhost URL to environment variable or config file for better flexibility and security
+  private readonly API_URL = 'http://localhost:3000/api/v1/auth';
 }

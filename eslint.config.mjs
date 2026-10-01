@@ -37,6 +37,36 @@ export default [
       '**/*.mjs',
     ],
     // Override or add rules here
-    rules: {},
+    rules: {
+      '@typescript-eslint/member-ordering': [
+        'error',
+        {
+          classes: {
+            memberTypes: [
+              ['field', 'get', 'set', 'method', 'constructor'],
+              [
+                'private-field',
+                'private-get',
+                'private-set',
+                'private-method',
+                'private-constructor',
+              ],
+            ],
+          },
+          classExpressions: {
+            memberTypes: [
+              ['field', 'get', 'set', 'method', 'constructor'],
+              [
+                'private-field',
+                'private-get',
+                'private-set',
+                'private-method',
+                'private-constructor',
+              ],
+            ],
+          },
+        },
+      ],
+    },
   },
 ];
