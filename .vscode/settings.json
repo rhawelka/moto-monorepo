@@ -1,5 +1,0 @@
-{
-  "terminal.integrated.env.linux": {
-    "PATH": "${env:HOME}/.local/share/moto-node-22.22.3/node_modules/node/bin:${env:PATH}"
-  }
-}
