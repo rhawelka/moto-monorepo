@@ -2,6 +2,7 @@
   "sidebar": {
     "overview": "Overview",
     "reports": "Reports",
+    "map": "Map",
     "settings": "Settings",
     "collapse": "Collapse"
   },
@@ -21,6 +22,7 @@
     "registerToDashboard": "Register to access your dashboard",
     "login": "Login",
     "loginEmail": "Login (Email)",
+    "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm Password",
     "showPassword": "Show password",

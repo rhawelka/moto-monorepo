@@ -1,0 +1,10 @@
+:host {
+  display: block;
+  height: calc(100vh - var(--header-height) - 3rem);
+  min-height: 24rem;
+}
+
+.map-page__canvas {
+  width: 100%;
+  height: 100%;
+}
