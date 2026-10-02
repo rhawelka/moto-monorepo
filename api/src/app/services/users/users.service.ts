@@ -24,12 +24,12 @@ export class UsersService {
   }
 
   async findByEmailOrUsername(identifier: string): Promise<User | undefined> {
-    const normalizedIdentifier = this.normalizeEmail(identifier);
+    const normalizedEmailIndentifier = this.normalizeEmail(identifier);
     return this.prismaService.user.findFirst({
       where: {
         OR: [
-          { email: normalizedIdentifier },
-          { username: normalizedIdentifier },
+          { email: normalizedEmailIndentifier },
+          { username: normalizedEmailIndentifier },
         ],
       },
     });
@@ -37,6 +37,7 @@ export class UsersService {
 
   async create(dto: CreateUserDto): Promise<Omit<User, 'passwordHash'>> {
     const email = this.normalizeEmail(dto.email);
+    const username = dto.username.trim().toLowerCase();
     const existing = await this.findByEmail(email);
 
     if (existing) throw new ConflictException('Email already registered');
@@ -44,6 +45,7 @@ export class UsersService {
     const passwordHash = await bcrypt.hash(dto.password, 10);
     const newUser = await this.prismaService.user.create({
       data: {
+        username,
         email,
         passwordHash,
       },

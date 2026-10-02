@@ -24,6 +24,7 @@ describe('RegisterComponent', () => {
               authentication: {
                 registrationFailed:
                   'Registration failed. This email may already be registered.',
+                usernameRequired: 'Username is required',
                 confirmPasswordRequired: 'Please confirm your password',
               },
             },
@@ -51,6 +52,7 @@ describe('RegisterComponent', () => {
 
   it('should reject passwords that do not match', () => {
     component.registerForm.setValue({
+      username: 'rider',
       email: 'rider@example.com',
       password: 'password123',
       confirmPassword: 'different123',
@@ -65,6 +67,7 @@ describe('RegisterComponent', () => {
 
   it('should show a translated error when password confirmation is empty', () => {
     component.registerForm.setValue({
+      username: 'rider',
       email: 'rider@example.com',
       password: 'password123',
       confirmPassword: '',
@@ -89,6 +92,7 @@ describe('RegisterComponent', () => {
       }),
     );
     component.registerForm.setValue({
+      username: 'Rider',
       email: 'rider@example.com',
       password: 'password123',
       confirmPassword: 'password123',
@@ -98,6 +102,7 @@ describe('RegisterComponent', () => {
     await fixture.whenStable();
 
     expect(authService.register).toHaveBeenCalledWith({
+      username: 'Rider',
       email: 'rider@example.com',
       password: 'password123',
     });
@@ -112,6 +117,7 @@ describe('RegisterComponent', () => {
       throwError(() => new Error('Email already exists')),
     );
     component.registerForm.setValue({
+      username: 'rider',
       email: 'rider@example.com',
       password: 'password123',
       confirmPassword: 'password123',
@@ -123,6 +129,20 @@ describe('RegisterComponent', () => {
     expect(component.errorMessage()).toBe(
       'Registration failed. This email may already be registered.',
     );
+  });
+
+  it('requires a username before registering', () => {
+    component.registerForm.setValue({
+      username: '   ',
+      email: 'rider@example.com',
+      password: 'password123',
+      confirmPassword: 'password123',
+    });
+
+    component.onRegisterSubmit(new Event('submit'));
+
+    expect(component.registerForm.controls.username.invalid).toBe(true);
+    expect(authService.register).not.toHaveBeenCalled();
   });
 
   it('should toggle password visibility independently', () => {

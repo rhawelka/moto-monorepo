@@ -53,6 +53,18 @@ describe('UsersComponent', () => {
     expect(fixture.componentInstance.loadFailed()).toBe(false);
   });
 
+  it('displays a single user when the API returns an object', async () => {
+    fixture.destroy();
+    usersService.listNonAdminUsers.mockReturnValue(of(users[0]));
+
+    fixture = TestBed.createComponent(UsersComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(fixture.componentInstance.rowData()).toEqual(users);
+    expect(fixture.componentInstance.loadFailed()).toBe(false);
+  });
+
   it('configures columns for username, email, role, and creation date', () => {
     expect(
       fixture.componentInstance.columnDefs.map(({ field }) => field),

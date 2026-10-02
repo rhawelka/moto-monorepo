@@ -22,7 +22,7 @@ export class AuthService {
   currentUser = signal<User | null>(this.getUserFromStorage());
   isAuthenticated = computed(() => !!this.currentUser());
 
-  register(credentials: { email: string; password: string }) {
+  register(credentials: { username: string; email: string; password: string }) {
     return this.http
       .post<AuthResponse>(`${this.API_URL}/register`, credentials)
       .pipe(tap((res) => this.handleAuthSuccess(res)));

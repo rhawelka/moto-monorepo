@@ -43,3 +43,5 @@ export class AuthController {
     return req.user;
   }
 }
+
+// todo unit tests for auth controller

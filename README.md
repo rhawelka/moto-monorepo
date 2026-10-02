@@ -127,7 +127,7 @@ Initial admin login:
 - Email: `admin@test.pl`
 - Password: `admin`
 
-Sign in with username `admin` or email `admin@test.pl`. These are development bootstrap credentials; change the password and credentials before exposing the application outside a trusted environment.
+Sign in with email `admin@test.pl`. These are development bootstrap credentials; change the password and credentials before exposing the application outside a trusted environment.
 
 Start the API in one terminal:
 

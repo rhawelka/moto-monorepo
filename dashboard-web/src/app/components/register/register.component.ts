@@ -46,6 +46,7 @@ export class RegisterComponent {
   passwordVisible = signal(false);
   confirmPasswordVisible = signal(false);
   registerForm!: FormGroup<{
+    username: FormControl<string>;
     email: FormControl<string>;
     password: FormControl<string>;
     confirmPassword: FormControl<string>;
@@ -54,6 +55,7 @@ export class RegisterComponent {
   constructor() {
     this.registerForm = this.formBuilder.nonNullable.group(
       {
+        username: ['', [Validators.required, Validators.pattern(/\S/)]],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', Validators.required],
@@ -71,8 +73,10 @@ export class RegisterComponent {
       return;
     }
 
-    const { email, password } = this.registerForm.getRawValue();
-    firstValueFrom(this.authService.register({ email, password }))
+    const { username, email, password } = this.registerForm.getRawValue();
+    firstValueFrom(
+      this.authService.register({ username: username.trim(), email, password }),
+    )
       .then(() => {
         console.log(`Mock email will be sent to ${email}`);
       })

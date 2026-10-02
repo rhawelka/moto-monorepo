@@ -47,7 +47,8 @@ export class UsersComponent {
       .listNonAdminUsers()
       .pipe(takeUntilDestroyed())
       .subscribe({
-        next: (users) => this.rowData.set(users),
+        next: (users) =>
+          this.rowData.set(Array.isArray(users) ? users : [users]),
         error: () => this.loadFailed.set(true),
       });
   }
