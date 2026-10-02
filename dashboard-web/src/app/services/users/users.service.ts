@@ -11,11 +11,11 @@ export interface UserRow {
 
 @Injectable({ providedIn: 'root' })
 export class UsersService {
+  private readonly http = inject(HttpClient);
+
   listNonAdminUsers() {
     return this.http.get<UserRow[] | UserRow>(
       'http://localhost:3000/api/v1/users',
     );
   }
-
-  private readonly http = inject(HttpClient);
 }

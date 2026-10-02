@@ -42,6 +42,8 @@ export class UsersComponent {
     },
   ];
 
+  private usersService = inject(UsersService);
+
   constructor() {
     this.usersService
       .listNonAdminUsers()
@@ -52,6 +54,4 @@ export class UsersComponent {
         error: () => this.loadFailed.set(true),
       });
   }
-
-  private usersService = inject(UsersService);
 }
