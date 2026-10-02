@@ -2,7 +2,7 @@
   <ui-common-header (logout)="logout()"></ui-common-header>
 
   <div class="app-body">
-    <ui-sidebar>
+    <ui-sidebar [navItems]="navItems()">
       <main class="app-main">
         <router-outlet></router-outlet>
       </main>

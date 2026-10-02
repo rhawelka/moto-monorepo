@@ -2,6 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
+  FormControl,
+  FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
@@ -40,22 +42,27 @@ function passwordsMatch(control: AbstractControl): ValidationErrors | null {
   standalone: true,
 })
 export class RegisterComponent {
-  private authService = inject(AuthService);
-  private formBuilder = inject(FormBuilder);
-  private transloco = inject(TranslocoService);
-
   errorMessage = signal('');
   passwordVisible = signal(false);
   confirmPasswordVisible = signal(false);
+  registerForm!: FormGroup<{
+    username: FormControl<string>;
+    email: FormControl<string>;
+    password: FormControl<string>;
+    confirmPassword: FormControl<string>;
+  }>;
 
-  registerForm = this.formBuilder.nonNullable.group(
-    {
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', Validators.required],
-    },
-    { validators: passwordsMatch },
-  );
+  constructor() {
+    this.registerForm = this.formBuilder.nonNullable.group(
+      {
+        username: ['', [Validators.required, Validators.pattern(/\S/)]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', Validators.required],
+      },
+      { validators: passwordsMatch },
+    );
+  }
 
   onRegisterSubmit(event: Event): void {
     event.preventDefault();
@@ -66,8 +73,10 @@ export class RegisterComponent {
       return;
     }
 
-    const { email, password } = this.registerForm.getRawValue();
-    firstValueFrom(this.authService.register({ email, password }))
+    const { username, email, password } = this.registerForm.getRawValue();
+    firstValueFrom(
+      this.authService.register({ username: username.trim(), email, password }),
+    )
       .then(() => {
         console.log(`Mock email will be sent to ${email}`);
       })
@@ -87,4 +96,8 @@ export class RegisterComponent {
     event.preventDefault();
     this.confirmPasswordVisible.update((visible) => !visible);
   }
+
+  private authService = inject(AuthService);
+  private formBuilder = inject(FormBuilder);
+  private transloco = inject(TranslocoService);
 }

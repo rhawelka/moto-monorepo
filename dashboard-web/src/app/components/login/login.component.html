@@ -13,17 +13,15 @@
 
         <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit($event)">
           <mat-form-field appearance="outline">
-            <mat-label>{{ t('loginEmail') }}</mat-label>
+            <mat-label>{{ t('loginIdentifier') }}</mat-label>
             <input
               matInput
-              type="email"
+              type="text"
               formControlName="email"
-              autocomplete="email"
+              autocomplete="username"
             />
             @if (loginForm.controls.email.hasError('required')) {
               <mat-error>{{ t('emailRequired') }}</mat-error>
-            } @else if (loginForm.controls.email.hasError('email')) {
-              <mat-error>{{ t('enterValidEmail') }}</mat-error>
             }
           </mat-form-field>
 
@@ -51,8 +49,6 @@
             </button>
             @if (loginForm.controls.password.hasError('required')) {
               <mat-error>{{ t('passwordRequired') }}</mat-error>
-            } @else if (loginForm.controls.password.hasError('minlength')) {
-              <mat-error>{{ t('passwordMinLength') }}</mat-error>
             }
           </mat-form-field>
 

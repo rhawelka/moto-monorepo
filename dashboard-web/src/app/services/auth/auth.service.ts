@@ -7,6 +7,7 @@ import { tap } from 'rxjs';
 export interface User {
   id: string;
   email: string;
+  role: 'USER' | 'ADMIN';
 }
 
 // todo move interfaces to a separate file
@@ -17,17 +18,16 @@ export interface AuthResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private http = inject(HttpClient);
-  private router = inject(Router);
-
-  // move localhost URL to environment variable or config file for better flexibility and security
-  private readonly API_URL = 'http://localhost:3000/api/v1/auth';
-
-  // State management using Signals
   currentUser = signal<User | null>(this.getUserFromStorage());
   isAuthenticated = computed(() => !!this.currentUser());
 
-  register(credentials: { email: string; password: string }) {
+  private http = inject(HttpClient);
+  private router = inject(Router);
+
+  //todo move localhost URL to environment variable or config file for better flexibility and security
+  private readonly API_URL = 'http://localhost:3000/api/v1/auth';
+
+  register(credentials: { username: string; email: string; password: string }) {
     return this.http
       .post<AuthResponse>(`${this.API_URL}/register`, credentials)
       .pipe(tap((res) => this.handleAuthSuccess(res)));

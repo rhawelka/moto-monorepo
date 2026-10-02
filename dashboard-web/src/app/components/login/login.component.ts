@@ -1,5 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,17 +33,19 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
   standalone: true,
 })
 export class LoginComponent {
-  private authService = inject(AuthService);
-  private formBuilder = inject(FormBuilder);
-  private transloco = inject(TranslocoService);
-
   errorMessage = signal('');
   passwordVisible = signal(false);
+  loginForm!: FormGroup<{
+    email: FormControl<string>;
+    password: FormControl<string>;
+  }>;
 
-  loginForm = this.formBuilder.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
-  });
+  constructor() {
+    this.loginForm = this.formBuilder.nonNullable.group({
+      email: ['', [Validators.required]],
+      password: ['', [Validators.required]],
+    });
+  }
 
   onLoginSubmit(event: Event) {
     event.preventDefault();
@@ -60,4 +68,8 @@ export class LoginComponent {
     event.preventDefault();
     this.passwordVisible.update((visible) => !visible);
   }
+
+  private authService = inject(AuthService);
+  private formBuilder = inject(FormBuilder);
+  private transloco = inject(TranslocoService);
 }
