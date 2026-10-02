@@ -13,6 +13,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class SettingsComponent {
   readonly activeLanguage = signal('');
   readonly activeTheme = signal<'light' | 'dark'>('light');
+  private readonly document!: Document;
+  private readonly transloco!: TranslocoService;
+  private readonly destroyRef!: DestroyRef;
 
   constructor() {
     this.document = inject(DOCUMENT);
@@ -45,8 +48,4 @@ export class SettingsComponent {
   private applyTheme(theme: 'light' | 'dark'): void {
     this.document.documentElement.dataset['theme'] = theme;
   }
-
-  private readonly document!: Document;
-  private readonly transloco!: TranslocoService;
-  private readonly destroyRef!: DestroyRef;
 }

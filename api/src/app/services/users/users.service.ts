@@ -24,12 +24,12 @@ export class UsersService {
   }
 
   async findByEmailOrUsername(identifier: string): Promise<User | undefined> {
-    const normalizedEmailIndentifier = this.normalizeEmail(identifier);
+    const normalizedEmailIdentifier = this.normalizeEmail(identifier);
     return this.prismaService.user.findFirst({
       where: {
         OR: [
-          { email: normalizedEmailIndentifier },
-          { username: normalizedEmailIndentifier },
+          { email: normalizedEmailIdentifier },
+          { username: normalizedEmailIdentifier },
         ],
       },
     });

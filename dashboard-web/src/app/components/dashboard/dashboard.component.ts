@@ -20,9 +20,9 @@ export class DashboardComponent {
       : []),
   ]);
 
+  private readonly authService = inject(AuthService);
+
   logout(): void {
     this.authService.logout();
   }
-
-  private readonly authService = inject(AuthService);
 }
