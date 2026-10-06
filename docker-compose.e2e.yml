@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: moto_e2e
+      POSTGRES_USER: moto_e2e_user
+      POSTGRES_PASSWORD: moto_e2e_password
+    ports:
+      - '127.0.0.1:55433:5432'
+    volumes:
+      - moto_e2e_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U moto_e2e_user -d moto_e2e']
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  moto_e2e_postgres_data:
