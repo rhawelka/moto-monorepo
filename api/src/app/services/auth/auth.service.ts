@@ -23,7 +23,7 @@ export class AuthService {
   async login(dto: LoginDto) {
     this.logger.log(`Login attempt for email in service: ${dto.email}`);
 
-    const user = await this.usersService.findByEmail(dto.email);
+    const user = await this.usersService.findByEmailOrUsername(dto.email);
     this.logger.log(
       `User found in service: ${user ? user.email : 'not found'}`,
     );

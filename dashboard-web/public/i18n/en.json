@@ -3,6 +3,7 @@
     "overview": "Overview",
     "reports": "Reports",
     "map": "Map",
+    "users": "Users",
     "settings": "Settings",
     "collapse": "Collapse"
   },
@@ -15,6 +16,10 @@
     "light": "Light",
     "dark": "Dark"
   },
+  "users": {
+    "title": "Users",
+    "loadError": "Users could not be loaded. Please try again later."
+  },
   "authentication": {
     "welcomeBack": "Welcome back",
     "signInToDashboard": "Sign in to continue to your dashboard",
@@ -22,6 +27,8 @@
     "registerToDashboard": "Register to access your dashboard",
     "login": "Login",
     "loginEmail": "Login (Email)",
+    "loginIdentifier": "Email or username",
+    "username": "Username",
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm Password",
@@ -32,8 +39,10 @@
     "alreadyHaveAccount": "Already have an account?",
     "backToLogin": "Back to login",
     "emailRequired": "Email is required",
+    "usernameRequired": "Username is required",
     "enterValidEmail": "Please enter a valid email address",
     "passwordRequired": "Password is required",
+    "confirmPasswordRequired": "Please confirm your password",
     "passwordMinLength": "Password must be at least 8 characters",
     "passwordsMismatch": "Passwords must match",
     "loginFailed": "Login failed. Check your email and password.",

@@ -11,3 +11,5 @@ export class LoginController {
     return this.authService.login(dto);
   }
 }
+
+// todo unit tests for login controller

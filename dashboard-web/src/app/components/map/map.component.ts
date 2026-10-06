@@ -18,7 +18,6 @@ import MapView from '@arcgis/core/views/MapView.js';
 export class MapComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapContainer', { static: true })
   private mapContainer!: ElementRef<HTMLDivElement>;
-
   private mapView?: MapView;
   private stylesheet?: HTMLLinkElement;
 

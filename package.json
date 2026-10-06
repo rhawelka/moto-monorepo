@@ -2,6 +2,9 @@
   "name": "@moto-monorepo/source",
   "version": "0.0.0",
   "license": "MIT",
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
+  },
   "scripts": {
     "start:api": "nx serve api",
     "start:ui": "nx serve dashboard-web",
@@ -85,6 +88,8 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.0",
     "@prisma/client": "^6.19.3",
+    "ag-grid-angular": "^36.2.0",
+    "ag-grid-community": "^36.2.0",
     "axios": "^1.6.0",
     "bcrypt": "^6.0.0",
     "class-validator": "^0.15.1",

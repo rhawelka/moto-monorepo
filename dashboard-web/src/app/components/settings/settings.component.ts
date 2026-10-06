@@ -11,14 +11,18 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   standalone: true,
 })
 export class SettingsComponent {
-  private readonly document = inject(DOCUMENT);
-  private readonly transloco = inject(TranslocoService);
-  private readonly destroyRef = inject(DestroyRef);
-
-  readonly activeLanguage = signal(this.transloco.getActiveLang());
-  readonly activeTheme = signal<'light' | 'dark'>(this.getStoredTheme());
+  readonly activeLanguage = signal('');
+  readonly activeTheme = signal<'light' | 'dark'>('light');
+  private readonly document!: Document;
+  private readonly transloco!: TranslocoService;
+  private readonly destroyRef!: DestroyRef;
 
   constructor() {
+    this.document = inject(DOCUMENT);
+    this.transloco = inject(TranslocoService);
+    this.destroyRef = inject(DestroyRef);
+    this.activeLanguage.set(this.transloco.getActiveLang());
+    this.activeTheme.set(this.getStoredTheme());
     this.applyTheme(this.activeTheme());
 
     this.transloco.langChanges$

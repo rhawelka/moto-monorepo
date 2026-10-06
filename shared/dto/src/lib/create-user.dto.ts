@@ -1,6 +1,10 @@
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
 
 export class CreateUserDto {
+  @IsString()
+  @Matches(/\S/, { message: 'Username is required' })
+  username!: string;
+
   @IsEmail({}, { message: 'Invalid email format' })
   email!: string;
 

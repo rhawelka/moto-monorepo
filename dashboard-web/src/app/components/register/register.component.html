@@ -13,6 +13,21 @@
 
         <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit($event)">
           <mat-form-field appearance="outline">
+            <mat-label>{{ t('username') }}</mat-label>
+            <input
+              matInput
+              formControlName="username"
+              autocomplete="username"
+            />
+            @if (
+              registerForm.controls.username.invalid &&
+              registerForm.controls.username.touched
+            ) {
+              <mat-error>{{ t('usernameRequired') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
             <mat-label>{{ t('email') }}</mat-label>
             <input
               matInput

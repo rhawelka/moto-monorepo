@@ -7,6 +7,7 @@ import { Role } from '@prisma/client';
 // TODO move to interfaces folder
 export interface User {
   id: string;
+  username: string | null;
   email: string;
   passwordHash: string;
   role: Role;
@@ -22,8 +23,21 @@ export class UsersService {
     });
   }
 
+  async findByEmailOrUsername(identifier: string): Promise<User | undefined> {
+    const normalizedEmailIdentifier = this.normalizeEmail(identifier);
+    return this.prismaService.user.findFirst({
+      where: {
+        OR: [
+          { email: normalizedEmailIdentifier },
+          { username: normalizedEmailIdentifier },
+        ],
+      },
+    });
+  }
+
   async create(dto: CreateUserDto): Promise<Omit<User, 'passwordHash'>> {
     const email = this.normalizeEmail(dto.email);
+    const username = dto.username.trim().toLowerCase();
     const existing = await this.findByEmail(email);
 
     if (existing) throw new ConflictException('Email already registered');
@@ -31,6 +45,7 @@ export class UsersService {
     const passwordHash = await bcrypt.hash(dto.password, 10);
     const newUser = await this.prismaService.user.create({
       data: {
+        username,
         email,
         passwordHash,
       },
@@ -39,6 +54,20 @@ export class UsersService {
     const { passwordHash: _, ...result } = newUser;
 
     return result;
+  }
+
+  async findNonAdminUsers() {
+    return this.prismaService.user.findMany({
+      where: { role: { not: Role.ADMIN } },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   private normalizeEmail(email: string): string {

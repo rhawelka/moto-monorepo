@@ -3,6 +3,7 @@
     "overview": "Przegląd",
     "reports": "Raporty",
     "map": "Mapa",
+    "users": "Użytkownicy",
     "settings": "Ustawienia",
     "collapse": "Zwiń"
   },
@@ -15,6 +16,10 @@
     "light": "Jasny",
     "dark": "Ciemny"
   },
+  "users": {
+    "title": "Użytkownicy",
+    "loadError": "Nie udało się pobrać użytkowników. Spróbuj ponownie później."
+  },
   "authentication": {
     "welcomeBack": "Witaj ponownie",
     "signInToDashboard": "Zaloguj się, aby przejść do pulpitu nawigacyjnego",
@@ -22,6 +27,8 @@
     "registerToDashboard": "Zarejestruj się, aby uzyskać dostęp do pulpitu nawigacyjnego",
     "login": "Zaloguj się",
     "loginEmail": "Zaloguj się (Email)",
+    "loginIdentifier": "E-mail lub nazwa użytkownika",
+    "username": "Nazwa użytkownika",
     "email": "Adres e-mail",
     "password": "Hasło",
     "confirmPassword": "Potwierdź hasło",
@@ -32,8 +39,10 @@
     "alreadyHaveAccount": "Masz już konto?",
     "backToLogin": "Powrót do logowania",
     "emailRequired": "Email jest wymagany",
+    "usernameRequired": "Nazwa użytkownika jest wymagana",
     "enterValidEmail": "Proszę wprowadzić prawidłowy adres e-mail",
     "passwordRequired": "Hasło jest wymagane",
+    "confirmPasswordRequired": "Potwierdzenie hasła jest wymagane",
     "passwordMinLength": "Hasło musi mieć co najmniej 8 znaków",
     "passwordsMismatch": "Hasła muszą być zgodne",
     "loginFailed": "Logowanie nie powiodło się. Sprawdź adres e-mail i hasło.",
