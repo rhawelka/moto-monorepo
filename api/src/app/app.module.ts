@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthController } from './controllers/auth/auth.controller';
 import { LoginController } from './controllers/login/login.controller';
 import { AuthService } from './services/auth/auth.service';
@@ -24,14 +22,8 @@ import { AdminGuard } from './services/admin.guard';
       }),
     }),
   ],
-  controllers: [
-    AppController,
-    AuthController,
-    LoginController,
-    UsersController,
-  ],
+  controllers: [AuthController, LoginController, UsersController],
   providers: [
-    AppService,
     AuthService,
     UsersService,
     LoggerService,

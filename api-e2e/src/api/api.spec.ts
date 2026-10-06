@@ -20,21 +20,54 @@ afterAll(async () => {
 });
 
 describe('API e2e', () => {
-  describe('GET /api/v1', () => {
-    it('returns the API greeting', async () => {
-      const response = await axios.get('/api/v1');
-
-      expect(response.status).toBe(200);
-      expect(response.data).toEqual({ message: 'Hello API' });
-    });
-  });
-
   describe('POST /api/v1/auth/logout', () => {
     it('returns a successful logout response', async () => {
       const response = await axios.post('/api/v1/auth/logout');
 
       expect(response.status).toBe(201);
       expect(response.data).toEqual({ message: 'Logged out successfully' });
+    });
+  });
+
+  describe('request validation', () => {
+    it('rejects registration when required fields are missing', async () => {
+      await expect(
+        axios.post('/api/v1/auth/register', {
+          email: 'incomplete@example.com',
+          password: 'password123',
+        }),
+      ).rejects.toMatchObject({
+        response: {
+          status: 400,
+          data: { statusCode: 400 },
+        },
+      });
+    });
+
+    it('rejects login when the password is missing', async () => {
+      await expect(
+        axios.post('/api/v1/auth/login', { email: 'rider@example.com' }),
+      ).rejects.toMatchObject({
+        response: {
+          status: 400,
+          data: { statusCode: 400 },
+        },
+      });
+    });
+
+    it('rejects fields that are not declared in the DTO', async () => {
+      await expect(
+        axios.post('/api/v1/auth/login', {
+          email: 'rider@example.com',
+          password: 'password123',
+          isAdmin: true,
+        }),
+      ).rejects.toMatchObject({
+        response: {
+          status: 400,
+          data: { statusCode: 400 },
+        },
+      });
     });
   });
 
