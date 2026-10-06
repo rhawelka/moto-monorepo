@@ -40,6 +40,10 @@ export class LoginComponent {
     password: FormControl<string>;
   }>;
 
+  private authService = inject(AuthService);
+  private formBuilder = inject(FormBuilder);
+  private transloco = inject(TranslocoService);
+
   constructor() {
     this.loginForm = this.formBuilder.nonNullable.group({
       email: ['', [Validators.required]],
@@ -68,8 +72,4 @@ export class LoginComponent {
     event.preventDefault();
     this.passwordVisible.update((visible) => !visible);
   }
-
-  private authService = inject(AuthService);
-  private formBuilder = inject(FormBuilder);
-  private transloco = inject(TranslocoService);
 }

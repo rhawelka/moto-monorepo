@@ -52,6 +52,10 @@ export class RegisterComponent {
     confirmPassword: FormControl<string>;
   }>;
 
+  private authService = inject(AuthService);
+  private formBuilder = inject(FormBuilder);
+  private transloco = inject(TranslocoService);
+
   constructor() {
     this.registerForm = this.formBuilder.nonNullable.group(
       {
@@ -96,8 +100,4 @@ export class RegisterComponent {
     event.preventDefault();
     this.confirmPasswordVisible.update((visible) => !visible);
   }
-
-  private authService = inject(AuthService);
-  private formBuilder = inject(FormBuilder);
-  private transloco = inject(TranslocoService);
 }
