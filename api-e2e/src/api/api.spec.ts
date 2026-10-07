@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { HttpStatus } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
 import { E2E_DATABASE_URL } from '../support/e2e-config';
@@ -24,7 +25,7 @@ describe('API e2e', () => {
     it('returns a successful logout response', async () => {
       const response = await axios.post('/api/v1/auth/logout');
 
-      expect(response.status).toBe(201);
+      expect(response.status).toBe(HttpStatus.CREATED);
       expect(response.data).toEqual({ message: 'Logged out successfully' });
     });
   });
@@ -38,8 +39,8 @@ describe('API e2e', () => {
         }),
       ).rejects.toMatchObject({
         response: {
-          status: 400,
-          data: { statusCode: 400 },
+          status: HttpStatus.BAD_REQUEST,
+          data: { statusCode: HttpStatus.BAD_REQUEST },
         },
       });
     });
@@ -49,8 +50,8 @@ describe('API e2e', () => {
         axios.post('/api/v1/auth/login', { email: 'rider@example.com' }),
       ).rejects.toMatchObject({
         response: {
-          status: 400,
-          data: { statusCode: 400 },
+          status: HttpStatus.BAD_REQUEST,
+          data: { statusCode: HttpStatus.BAD_REQUEST },
         },
       });
     });
@@ -64,8 +65,8 @@ describe('API e2e', () => {
         }),
       ).rejects.toMatchObject({
         response: {
-          status: 400,
-          data: { statusCode: 400 },
+          status: HttpStatus.BAD_REQUEST,
+          data: { statusCode: HttpStatus.BAD_REQUEST },
         },
       });
     });
@@ -75,9 +76,9 @@ describe('API e2e', () => {
     it('rejects requests without a JWT', async () => {
       await expect(axios.get('/api/v1/auth/profile')).rejects.toMatchObject({
         response: {
-          status: 401,
+          status: HttpStatus.UNAUTHORIZED,
           data: {
-            statusCode: 401,
+            statusCode: HttpStatus.UNAUTHORIZED,
           },
         },
       });
@@ -98,7 +99,7 @@ describe('API e2e', () => {
         password,
       });
 
-      expect(registration.status).toBe(201);
+      expect(registration.status).toBe(HttpStatus.CREATED);
       expect(registration.data.user).toMatchObject({
         username,
         email,
@@ -122,7 +123,7 @@ describe('API e2e', () => {
         password,
       });
 
-      expect(login.status).toBe(201);
+      expect(login.status).toBe(HttpStatus.CREATED);
       expect(login.data.user).toEqual({
         id: registration.data.user.id,
         email,
