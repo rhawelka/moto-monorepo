@@ -1,10 +1,141 @@
+import { randomUUID } from 'node:crypto';
+import { HttpStatus } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
+import { E2E_DATABASE_URL } from '../support/e2e-config';
 
-describe('GET /api', () => {
-  it('should return a message', async () => {
-    const res = await axios.get(`/api`);
+let registeredEmail: string | undefined;
 
-    expect(res.status).toBe(200);
-    expect(res.data).toEqual({ message: 'Hello API' });
+afterAll(async () => {
+  if (!registeredEmail) return;
+
+  const prisma = new PrismaClient({
+    datasources: { db: { url: E2E_DATABASE_URL } },
+  });
+
+  try {
+    await prisma.user.deleteMany({ where: { email: registeredEmail } });
+  } finally {
+    await prisma.$disconnect();
+  }
+});
+
+describe('API e2e', () => {
+  describe('POST /api/v1/auth/logout', () => {
+    it('returns a successful logout response', async () => {
+      const response = await axios.post('/api/v1/auth/logout');
+
+      expect(response.status).toBe(HttpStatus.CREATED);
+      expect(response.data).toEqual({ message: 'Logged out successfully' });
+    });
+  });
+
+  describe('request validation', () => {
+    it('rejects registration when required fields are missing', async () => {
+      await expect(
+        axios.post('/api/v1/auth/register', {
+          email: 'incomplete@example.com',
+          password: 'password123',
+        }),
+      ).rejects.toMatchObject({
+        response: {
+          status: HttpStatus.BAD_REQUEST,
+          data: { statusCode: HttpStatus.BAD_REQUEST },
+        },
+      });
+    });
+
+    it('rejects login when the password is missing', async () => {
+      await expect(
+        axios.post('/api/v1/auth/login', { email: 'rider@example.com' }),
+      ).rejects.toMatchObject({
+        response: {
+          status: HttpStatus.BAD_REQUEST,
+          data: { statusCode: HttpStatus.BAD_REQUEST },
+        },
+      });
+    });
+
+    it('rejects fields that are not declared in the DTO', async () => {
+      await expect(
+        axios.post('/api/v1/auth/login', {
+          email: 'rider@example.com',
+          password: 'password123',
+          isAdmin: true,
+        }),
+      ).rejects.toMatchObject({
+        response: {
+          status: HttpStatus.BAD_REQUEST,
+          data: { statusCode: HttpStatus.BAD_REQUEST },
+        },
+      });
+    });
+  });
+
+  describe('GET /api/v1/auth/profile', () => {
+    it('rejects requests without a JWT', async () => {
+      await expect(axios.get('/api/v1/auth/profile')).rejects.toMatchObject({
+        response: {
+          status: HttpStatus.UNAUTHORIZED,
+          data: {
+            statusCode: HttpStatus.UNAUTHORIZED,
+          },
+        },
+      });
+    });
+  });
+
+  describe('authentication flow', () => {
+    it('registers, reads the profile, and logs in', async () => {
+      const id = randomUUID();
+      const username = `e2e-${id}`;
+      const email = `e2e-${id}@example.com`;
+      const password = 'e2e-password-123';
+      registeredEmail = email;
+
+      const registration = await axios.post('/api/v1/auth/register', {
+        username,
+        email,
+        password,
+      });
+
+      expect(registration.status).toBe(HttpStatus.CREATED);
+      expect(registration.data.user).toMatchObject({
+        username,
+        email,
+        role: 'USER',
+      });
+      expect(registration.data.user).not.toHaveProperty('passwordHash');
+      expect(registration.data.access_token).toEqual(expect.any(String));
+
+      const registeredProfile = await axios.get('/api/v1/auth/profile', {
+        headers: { Authorization: `Bearer ${registration.data.access_token}` },
+      });
+
+      expect(registeredProfile.data).toEqual({
+        userId: registration.data.user.id,
+        email,
+        role: 'USER',
+      });
+
+      const login = await axios.post('/api/v1/auth/login', {
+        email,
+        password,
+      });
+
+      expect(login.status).toBe(HttpStatus.CREATED);
+      expect(login.data.user).toEqual({
+        id: registration.data.user.id,
+        email,
+        role: 'USER',
+      });
+      expect(login.data.access_token).toEqual(expect.any(String));
+
+      const loggedInProfile = await axios.get('/api/v1/auth/profile', {
+        headers: { Authorization: `Bearer ${login.data.access_token}` },
+      });
+
+      expect(loggedInProfile.data).toEqual(registeredProfile.data);
+    });
   });
 });

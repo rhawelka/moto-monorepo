@@ -13,6 +13,9 @@
     "test:watch": "npx nx run-many -t test --watch",
     "test:coverage": "npx nx run-many -t test --code-coverage",
     "test:ci": "npx nx run-many -t test --ci --code-coverage",
+    "e2e:api": "nx run api-e2e:e2e",
+    "e2e:dashboard": "nx run dashboard-web-e2e:e2e",
+    "e2e": "npm run e2e:api && npm run e2e:dashboard",
     "build": "npx nx run-many -t build",
     "build:api": "nx build api",
     "build:ui": "nx build dashboard-web"
@@ -92,6 +95,7 @@
     "ag-grid-community": "^36.2.0",
     "axios": "^1.6.0",
     "bcrypt": "^6.0.0",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.0",
