@@ -59,11 +59,8 @@
       "executor": "nx:run-commands",
       "cache": false,
       "options": {
-        "command": "docker compose -p moto-monorepo-e2e -f docker-compose.e2e.yml up -d --wait postgres && npx prisma migrate deploy --schema=api/prisma/schema.prisma",
-        "cwd": ".",
-        "env": {
-          "DATABASE_URL": "postgresql://moto_e2e_user:moto_e2e_password@127.0.0.1:55433/moto_e2e?schema=public"
-        }
+        "command": "docker compose -p moto-monorepo-e2e -f docker-compose.e2e.yml up -d --wait postgres && DATABASE_URL=\"$E2E_DATABASE_URL\" npx prisma migrate deploy --schema=api/prisma/schema.prisma",
+        "cwd": "."
       }
     },
     "serve": {
@@ -89,13 +86,8 @@
       "executor": "nx:run-commands",
       "dependsOn": ["build", "e2e-db-up"],
       "options": {
-        "command": "node dist/api/main.js",
-        "cwd": ".",
-        "env": {
-          "DATABASE_URL": "postgresql://moto_e2e_user:moto_e2e_password@127.0.0.1:55433/moto_e2e?schema=public",
-          "JWT_SECRET": "moto-monorepo-e2e-only-secret",
-          "PORT": "3101"
-        }
+        "command": "DATABASE_URL=\"$E2E_DATABASE_URL\" JWT_SECRET=\"$E2E_JWT_SECRET\" PORT=3101 node dist/api/main.js",
+        "cwd": "."
       }
     },
     "test": {

@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_DB: moto_e2e
       POSTGRES_USER: moto_e2e_user
-      POSTGRES_PASSWORD: moto_e2e_password
+      POSTGRES_PASSWORD: ${E2E_POSTGRES_PASSWORD:?Set E2E_POSTGRES_PASSWORD in .env}
     ports:
       - '127.0.0.1:55433:5432'
     volumes:
