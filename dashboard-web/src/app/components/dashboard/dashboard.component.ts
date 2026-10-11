@@ -12,8 +12,8 @@ import { AuthService } from '../../services/auth/auth.service';
 })
 export class DashboardComponent {
   readonly navItems = computed(() => [
-    { label: 'overview', icon: 'dashboard', route: '/dashboard' },
-    { label: 'incidents', icon: 'bar_chart', route: '/dashboard' },
+    { label: 'overview', icon: 'dashboard', route: '/dashboard/overview' },
+    { label: 'incidents', icon: 'bar_chart', route: '/dashboard/incidents' },
     { label: 'map', icon: 'map', route: '/dashboard/map' },
     ...(this.authService.currentUser()?.role === 'ADMIN'
       ? [{ label: 'users', icon: 'group', route: '/dashboard/users' }]

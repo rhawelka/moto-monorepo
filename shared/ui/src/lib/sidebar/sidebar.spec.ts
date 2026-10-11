@@ -36,8 +36,8 @@ describe('Sidebar', () => {
 
   it('should expose the default navigation items and settings footer config', () => {
     expect(component.navItems).toEqual([
-      { label: 'overview', icon: 'dashboard', route: '/dashboard' },
-      { label: 'incidents', icon: 'bar_chart', route: '/dashboard' },
+      { label: 'overview', icon: 'dashboard', route: '/dashboard/overview' },
+      { label: 'incidents', icon: 'bar_chart', route: '/dashboard/incidents' },
       { label: 'map', icon: 'map', route: '/dashboard/map' },
     ]);
     expect(component.settingsItem).toEqual({
@@ -46,6 +46,16 @@ describe('Sidebar', () => {
       route: '/dashboard/settings',
     });
     expect(component.expanded).toBe(true);
+  });
+
+  it('should keep only the selected nav item active', () => {
+    expect(component.activeItem).toBe('overview');
+    expect(component.isItemActive(component.navItems[0])).toBe(true);
+    expect(component.isItemActive(component.navItems[1])).toBe(false);
+
+    component.selectItem(component.navItems[1]);
+    expect(component.isItemActive(component.navItems[0])).toBe(false);
+    expect(component.isItemActive(component.navItems[1])).toBe(true);
   });
 
   it('should toggle the expanded state', () => {

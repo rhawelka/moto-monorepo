@@ -23,6 +23,21 @@ export const appRoutes: Routes = [
     component: DashboardComponent,
     canActivate: [authGuard],
     children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      {
+        path: 'overview',
+        loadComponent: () =>
+          import('./components/overview/overview.component').then(
+            (component) => component.OverviewComponent,
+          ),
+      },
+      {
+        path: 'incidents',
+        loadComponent: () =>
+          import('./components/incidents/incidents.component').then(
+            (component) => component.IncidentsComponent,
+          ),
+      },
       {
         path: 'settings',
         component: SettingsComponent,
