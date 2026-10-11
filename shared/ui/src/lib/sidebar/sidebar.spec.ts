@@ -37,7 +37,7 @@ describe('Sidebar', () => {
   it('should expose the default navigation items and settings footer config', () => {
     expect(component.navItems).toEqual([
       { label: 'overview', icon: 'dashboard', route: '/dashboard' },
-      { label: 'reports', icon: 'bar_chart', route: '/dashboard' },
+      { label: 'incidents', icon: 'bar_chart', route: '/dashboard' },
       { label: 'map', icon: 'map', route: '/dashboard/map' },
     ]);
     expect(component.settingsItem).toEqual({
