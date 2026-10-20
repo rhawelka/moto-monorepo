@@ -13,7 +13,7 @@ import {
   IncidentSeverity,
   IncidentStatus,
   IncidentsService,
-} from '../../services/incidents/incidents.service';
+} from '../../../services/incidents/incidents.service';
 
 function hasNonWhitespace(control: AbstractControl<string>) {
   return control.value.trim().length > 0 ? null : { whitespace: true };

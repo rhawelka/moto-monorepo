@@ -20,8 +20,8 @@ import {
   IncidentSortField,
   IncidentStatus,
   IncidentsService,
-} from '../../services/incidents/incidents.service';
-import { IncidentStatusDialogComponent } from './incident-status-dialog.component';
+} from '../../../services/incidents/incidents.service';
+import { IncidentStatusDialogComponent } from '../incident-status-dialog/incident-status-dialog.component';
 
 @Component({
   selector: 'app-incidents',

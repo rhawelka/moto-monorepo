@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslocoTestingModule } from '@jsverse/transloco';
 import { of } from 'rxjs';
-import { Incident, IncidentsService } from '../../services/incidents/incidents.service';
+import { Incident, IncidentsService } from '../../../services/incidents/incidents.service';
 import { IncidentsEditComponent } from './incidents-edit.component';
 
 describe('IncidentsEditComponent', () => {

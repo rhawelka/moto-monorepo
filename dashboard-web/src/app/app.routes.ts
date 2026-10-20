@@ -34,14 +34,14 @@ export const appRoutes: Routes = [
       {
         path: 'incidents/:id/edit',
         loadComponent: () =>
-          import('./components/incidents/incidents-edit.component').then(
+          import('./components/incidents/incident-edit/incidents-edit.component').then(
             (component) => component.IncidentsEditComponent,
           ),
       },
       {
         path: 'incidents',
         loadComponent: () =>
-          import('./components/incidents/incidents.component').then(
+          import('./components/incidents/incident-list/incidents.component').then(
             (component) => component.IncidentsComponent,
           ),
       },

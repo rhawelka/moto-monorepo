@@ -6,8 +6,8 @@ import { of } from 'rxjs';
 import {
   Incident,
   IncidentsService,
-} from '../../services/incidents/incidents.service';
-import { IncidentStatusDialogComponent } from './incident-status-dialog.component';
+} from '../../../services/incidents/incidents.service';
+import { IncidentStatusDialogComponent } from '../incident-status-dialog/incident-status-dialog.component';
 import { IncidentsComponent } from './incidents.component';
 
 describe('IncidentsComponent', () => {
