@@ -97,6 +97,75 @@ And join the Nx community:
 - [Our Youtube channel](https://www.youtube.com/@nxdevtools)
 - [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
+## Incident management
+
+The authenticated dashboard includes an incident list with text search, status and
+severity filters, sortable columns, pagination, and live updates. The list is
+available at `/dashboard/incidents`; `/incidents` redirects to the dashboard
+route. Select a row or **Edit** to open `/dashboard/incidents/:id/edit`.
+The `/incidents/:id/edit` shortcut redirects to the same editor.
+
+The editor uses Angular Reactive Forms. It validates required, non-whitespace
+values and field lengths before submitting changes. The **Change status** action
+opens a dynamically created dialog for a quick status update. The interface is
+translated into Polish and English.
+
+### Incident API
+
+All REST endpoints require a valid JWT in the `Authorization: Bearer <token>`
+header:
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/api/v1/incidents` | Return a filtered, sorted, paginated incident page |
+| `GET` | `/api/v1/incidents/:id` | Return one incident |
+| `PATCH` | `/api/v1/incidents/:id` | Validate and save incident changes |
+
+The list endpoint accepts `page`, `pageSize` (maximum 100), `search`, `status`,
+`severity`, `sortBy` (`title`, `status`, `severity`, or `reportedAt`), and
+`order` (`asc` or `desc`). Search covers the title, description, and location.
+The response contains `data`, `total`, `page`, and `pageSize`.
+
+Incident statuses are `OPEN`, `IN_PROGRESS`, `RESOLVED`, and `CLOSED`.
+Severities are `LOW`, `MEDIUM`, `HIGH`, and `CRITICAL`. Updates validate title
+(5–120 characters), description (20–2000 characters), and location (2–160
+characters); text values cannot consist only of whitespace.
+
+The Socket.IO namespace is `http://localhost:3000/incidents`. Connect with the
+JWT as the Socket.IO `auth.token` value. After a successful REST update, the API
+broadcasts the `incident.updated` event with the updated incident to connected
+clients. Clients refresh the current page of results when this event arrives.
+If live sync disconnects, the dashboard displays its connection status; REST
+requests remain available.
+
+### Database and dependencies
+
+The incident model and status/severity enums are defined in
+`api/prisma/schema.prisma`. Apply the new migration along with any other pending
+migrations using the standard local setup command:
+
+```bash
+npx prisma migrate deploy --schema=api/prisma/schema.prisma
+```
+
+The incident migration creates the table and enums; it does not seed sample
+incidents. Four runtime dependencies were added for live sync:
+
+- `@nestjs/websockets` — NestJS WebSocket gateway decorators and lifecycle.
+- `@nestjs/platform-socket.io` — Socket.IO adapter used by the NestJS gateway.
+- `socket.io` — WebSocket server and transport used by the API.
+- `socket.io-client` — Angular browser client used to connect and receive
+  incident update events.
+
+Run the focused incident tests and builds with:
+
+```bash
+npx nx test dashboard-web --runInBand
+npx nx test api --runInBand
+npm run build:api
+npm run build:ui
+```
+
 ## Run locally
 
 Requirements: Node.js 22.22.3 (pinned in `.nvmrc`), npm, and Docker with Docker Compose.

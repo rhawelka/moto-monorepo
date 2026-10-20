@@ -32,6 +32,13 @@ export const appRoutes: Routes = [
           ),
       },
       {
+        path: 'incidents/:id/edit',
+        loadComponent: () =>
+          import('./components/incidents/incidents-edit.component').then(
+            (component) => component.IncidentsEditComponent,
+          ),
+      },
+      {
         path: 'incidents',
         loadComponent: () =>
           import('./components/incidents/incidents.component').then(
@@ -59,6 +66,8 @@ export const appRoutes: Routes = [
       },
     ],
   },
+  { path: 'incidents/:id/edit', redirectTo: 'dashboard/incidents/:id/edit' },
+  { path: 'incidents', redirectTo: 'dashboard/incidents' },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: 'dashboard' },
 ];
