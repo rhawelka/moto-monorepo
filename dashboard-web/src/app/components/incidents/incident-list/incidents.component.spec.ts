@@ -27,6 +27,8 @@ describe('IncidentsComponent', () => {
     title: 'Road hazard near central station',
     description: 'Large debris is blocking one lane near the central station.',
     location: 'Central station',
+    latitude: 50.0614,
+    longitude: 19.9366,
     status: 'OPEN',
     severity: 'HIGH',
     reportedAt: '2026-01-01T00:00:00.000Z',

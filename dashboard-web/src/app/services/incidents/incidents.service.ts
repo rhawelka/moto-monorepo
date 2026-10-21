@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable, expand, reduce } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { AuthService } from '../auth/auth.service';
 
@@ -13,6 +13,8 @@ export interface Incident {
   title: string;
   description: string;
   location: string;
+  latitude: number | null;
+  longitude: number | null;
   status: IncidentStatus;
   severity: IncidentSeverity;
   reportedAt: string;
@@ -63,6 +65,30 @@ export class IncidentsService {
     return this.http.get<IncidentPage>(API_URL, { params });
   }
 
+  listAll(): Observable<Incident[]> {
+    const query: IncidentQuery = {
+      page: 1,
+      pageSize: 100,
+      search: '',
+      status: '',
+      severity: '',
+      sortBy: 'reportedAt',
+      order: 'desc',
+    };
+
+    return this.list(query).pipe(
+      expand((result) =>
+        result.page * result.pageSize < result.total
+          ? this.list({ ...query, page: result.page + 1 })
+          : EMPTY,
+      ),
+      reduce(
+        (incidents, result) => incidents.concat(result.data),
+        [] as Incident[],
+      ),
+    );
+  }
+
   get(id: string): Observable<Incident> {
     return this.http.get<Incident>(`${API_URL}/${encodeURIComponent(id)}`);
   }
@@ -72,7 +98,13 @@ export class IncidentsService {
     changes: Partial<
       Pick<
         Incident,
-        'title' | 'description' | 'location' | 'status' | 'severity'
+        | 'title'
+        | 'description'
+        | 'location'
+        | 'latitude'
+        | 'longitude'
+        | 'status'
+        | 'severity'
       >
     >,
   ): Observable<Incident> {
@@ -85,7 +117,13 @@ export class IncidentsService {
   create(
     incident: Pick<
       Incident,
-      'title' | 'description' | 'location' | 'status' | 'severity'
+      | 'title'
+      | 'description'
+      | 'location'
+      | 'latitude'
+      | 'longitude'
+      | 'status'
+      | 'severity'
     >,
   ): Observable<Incident> {
     return this.http.post<Incident>(API_URL, incident);

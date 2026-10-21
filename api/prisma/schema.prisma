@@ -41,6 +41,8 @@ model Incident {
   title       String
   description String
   location    String
+  latitude    Float?
+  longitude   Float?
   status      IncidentStatus   @default(OPEN)
   severity    IncidentSeverity @default(MEDIUM)
   reportedAt  DateTime         @default(now())

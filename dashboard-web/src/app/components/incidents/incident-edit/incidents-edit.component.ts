@@ -14,6 +14,8 @@ import {
   IncidentStatus,
   IncidentsService,
 } from '../../../services/incidents/incidents.service';
+import { LocationSuggestion } from '../../../services/incidents/location-search.service';
+import { LocationAutocompleteComponent } from '../location-autocomplete/location-autocomplete.component';
 
 function hasNonWhitespace(control: AbstractControl<string>) {
   return control.value.trim().length > 0 ? null : { whitespace: true };
@@ -22,7 +24,12 @@ function hasNonWhitespace(control: AbstractControl<string>) {
 @Component({
   selector: 'app-incidents-edit',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, TranslocoDirective],
+  imports: [
+    LocationAutocompleteComponent,
+    ReactiveFormsModule,
+    RouterLink,
+    TranslocoDirective,
+  ],
   templateUrl: './incidents-edit.component.html',
   styleUrl: './incidents-edit.component.scss',
 })
@@ -73,6 +80,8 @@ export class IncidentsEditComponent {
         Validators.maxLength(160),
       ],
     ],
+    latitude: [null as number | null, Validators.required],
+    longitude: [null as number | null, Validators.required],
     status: ['OPEN' as IncidentStatus, Validators.required],
     severity: ['MEDIUM' as IncidentSeverity, Validators.required],
   });
@@ -110,6 +119,16 @@ export class IncidentsEditComponent {
       });
   }
 
+  clearLocationCoordinates(): void {
+      this.form.controls.latitude.setValue(null);
+      this.form.controls.longitude.setValue(null);
+  }
+
+  selectLocation(location: LocationSuggestion): void {
+      this.form.controls.latitude.setValue(location.latitude);
+      this.form.controls.longitude.setValue(location.longitude);
+  }
+
   private load(): void {
     this.loading.set(true);
     this.loadFailed.set(false);
@@ -123,6 +142,8 @@ export class IncidentsEditComponent {
             title: incident.title,
             description: incident.description,
             location: incident.location,
+            latitude: incident.latitude,
+            longitude: incident.longitude,
             status: incident.status,
             severity: incident.severity,
           });
@@ -134,4 +155,5 @@ export class IncidentsEditComponent {
         },
       });
   }
+
 }

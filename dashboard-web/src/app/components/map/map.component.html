@@ -1,1 +1,15 @@
-<div #mapContainer class="map-page__canvas" aria-label="Map of Krakow"></div>
+<ng-container *transloco="let t; prefix: 'incidents'">
+  @if (loadFailed()) {
+    <p class="map-page__notice" role="alert">{{ t('mapLoadError') }}</p>
+  }
+  @if (unmappedCount() > 0) {
+    <p class="map-page__notice" role="status">
+      {{ unmappedCount() }} {{ t('unmappedIncidents') }}
+    </p>
+  }
+  <div
+    #mapContainer
+    class="map-page__canvas"
+    [attr.aria-label]="t('mapAriaLabel')"
+  ></div>
+</ng-container>

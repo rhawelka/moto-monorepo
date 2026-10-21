@@ -30,9 +30,21 @@
         }
 
         <label for="incident-location">{{ t('location') }}</label>
-        <input id="incident-location" formControlName="location" maxlength="160" />
+        <app-location-autocomplete
+          inputId="incident-location"
+          [control]="form.controls.location"
+          (queryChanged)="clearLocationCoordinates()"
+          (selected)="selectLocation($event)"
+        />
         @if (form.controls.location.touched && form.controls.location.invalid) {
           <small class="error">{{ t('locationValidation') }}</small>
+        }
+        @if (
+          form.controls.location.value &&
+          form.controls.latitude.invalid &&
+          !form.controls.location.invalid
+        ) {
+          <small class="error">{{ t('locationSelectSuggestion') }}</small>
         }
 
         <label for="incident-severity">{{ t('severity') }}</label>

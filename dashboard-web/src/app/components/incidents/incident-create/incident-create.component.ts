@@ -1,6 +1,11 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import {
@@ -8,6 +13,8 @@ import {
   IncidentStatus,
   IncidentsService,
 } from '../../../services/incidents/incidents.service';
+import { LocationSuggestion } from '../../../services/incidents/location-search.service';
+import { LocationAutocompleteComponent } from '../location-autocomplete/location-autocomplete.component';
 
 function hasNonWhitespace(control: AbstractControl<string>) {
   return control.value.trim().length > 0 ? null : { whitespace: true };
@@ -16,7 +23,12 @@ function hasNonWhitespace(control: AbstractControl<string>) {
 @Component({
   selector: 'app-incident-create',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, TranslocoDirective],
+  imports: [
+    LocationAutocompleteComponent,
+    ReactiveFormsModule,
+    RouterLink,
+    TranslocoDirective,
+  ],
   templateUrl: './incident-create.component.html',
   styleUrl: './incident-create.component.scss',
 })
@@ -64,6 +76,8 @@ export class IncidentCreateComponent {
         Validators.maxLength(160),
       ],
     ],
+    latitude: [null as number | null, Validators.required],
+    longitude: [null as number | null, Validators.required],
     status: ['OPEN' as IncidentStatus, Validators.required],
     severity: ['MEDIUM' as IncidentSeverity, Validators.required],
   });
@@ -71,6 +85,16 @@ export class IncidentCreateComponent {
   private readonly incidentsService = inject(IncidentsService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+
+  clearLocationCoordinates(): void {
+    this.form.controls.latitude.setValue(null);
+    this.form.controls.longitude.setValue(null);
+  }
+
+  selectLocation(location: LocationSuggestion): void {
+    this.form.controls.latitude.setValue(location.latitude);
+    this.form.controls.longitude.setValue(location.longitude);
+  }
 
   submit(): void {
     if (this.form.invalid || this.saving()) {

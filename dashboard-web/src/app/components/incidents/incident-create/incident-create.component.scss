@@ -33,7 +33,6 @@ h1 {
   box-sizing: border-box;
 }
 
-input,
 textarea,
 select {
   width: 100%;
@@ -44,6 +43,10 @@ select {
   border-radius: 0.375rem;
   background: var(--color-card-background);
   color: var(--color-page-text);
+}
+
+app-location-autocomplete {
+  width: 100%;
 }
 
 textarea {

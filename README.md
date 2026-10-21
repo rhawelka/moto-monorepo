@@ -110,6 +110,13 @@ values and field lengths before submitting changes. The **Change status** action
 opens a dynamically created dialog for a quick status update. The interface is
 translated into Polish and English.
 
+Create and edit forms use Photon geocoding suggestions based on OpenStreetMap.
+Choose a suggestion to save its latitude and longitude with the address; typing
+an address without selecting a suggestion does not place the incident on the
+map. The map displays located incidents as severity-colored markers and refreshes
+when an incident changes. Older incidents without coordinates are reported on
+the map page and can be located by editing and selecting an address suggestion.
+
 Administrators also see a **Create incident** action on the list. It opens
 `/dashboard/incidents/new`, where an administrator can enter the title,
 description, location, status, and severity. Creation is protected by the
@@ -147,16 +154,18 @@ requests remain available.
 
 ### Database and dependencies
 
-The incident model and status/severity enums are defined in
-`api/prisma/schema.prisma`. Apply the new migration along with any other pending
-migrations using the standard local setup command:
+The incident model, status/severity enums, and optional coordinates for older
+records are defined in `api/prisma/schema.prisma`. Apply pending migrations,
+including the incident and coordinate migrations, using the standard local
+setup command:
 
 ```bash
 npx prisma migrate deploy --schema=api/prisma/schema.prisma
 ```
 
-The incident migration creates the table and enums; it does not seed sample
-incidents. Four runtime dependencies were added for live sync:
+The incident migration creates the table and enums; the coordinate migration
+adds nullable latitude and longitude fields for existing records. Migrations do
+not seed sample incidents. Four runtime dependencies were added for live sync:
 
 - `@nestjs/websockets` — NestJS WebSocket gateway decorators and lifecycle.
 - `@nestjs/platform-socket.io` — Socket.IO adapter used by the NestJS gateway.

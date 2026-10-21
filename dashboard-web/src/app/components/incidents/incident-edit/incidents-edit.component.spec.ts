@@ -2,7 +2,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslocoTestingModule } from '@jsverse/transloco';
 import { of } from 'rxjs';
-import { Incident, IncidentsService } from '../../../services/incidents/incidents.service';
+import {
+  Incident,
+  IncidentsService,
+} from '../../../services/incidents/incidents.service';
+import {
+  LocationSearchService,
+  LocationSuggestion,
+} from '../../../services/incidents/location-search.service';
 import { IncidentsEditComponent } from './incidents-edit.component';
 
 describe('IncidentsEditComponent', () => {
@@ -15,6 +22,8 @@ describe('IncidentsEditComponent', () => {
     title: 'Road hazard near central station',
     description: 'Large debris is blocking one lane near the central station.',
     location: 'Central station',
+    latitude: 50.0614,
+    longitude: 19.9366,
     status: 'OPEN',
     severity: 'HIGH',
     reportedAt: '2026-01-01T00:00:00.000Z',
@@ -48,6 +57,7 @@ describe('IncidentsEditComponent', () => {
         },
         { provide: Router, useValue: router },
         { provide: IncidentsService, useValue: incidentsService },
+        { provide: LocationSearchService, useValue: { search: jest.fn() } },
       ],
     }).compileComponents();
 
@@ -62,6 +72,8 @@ describe('IncidentsEditComponent', () => {
       title: incident.title,
       description: incident.description,
       location: incident.location,
+      latitude: incident.latitude,
+      longitude: incident.longitude,
       status: incident.status,
       severity: incident.severity,
     });
@@ -72,6 +84,8 @@ describe('IncidentsEditComponent', () => {
       title: '    ',
       description: 'too short',
       location: ' ',
+      latitude: 50.0614,
+      longitude: 19.9366,
       status: 'OPEN',
       severity: 'MEDIUM',
     });
@@ -92,6 +106,8 @@ describe('IncidentsEditComponent', () => {
       title: 'Road hazard on King Street',
       description: 'A damaged traffic light is causing unsafe conditions.',
       location: 'King Street',
+      latitude: 50.0614,
+      longitude: 19.9366,
       status: 'IN_PROGRESS',
       severity: 'HIGH',
     });
@@ -102,9 +118,35 @@ describe('IncidentsEditComponent', () => {
       title: 'Road hazard on King Street',
       description: 'A damaged traffic light is causing unsafe conditions.',
       location: 'King Street',
+      latitude: 50.0614,
+      longitude: 19.9366,
       status: 'IN_PROGRESS',
       severity: 'HIGH',
     });
     expect(router.navigate).toHaveBeenCalledWith(['/dashboard/incidents']);
+  });
+
+  it('updates the address and coordinates from a selected suggestion', () => {
+    const suggestion: LocationSuggestion = {
+      label: 'King Street, Krakow, Poland',
+      latitude: 50.0614,
+      longitude: 19.9366,
+    };
+
+    fixture.componentInstance.form.controls.location.setValue(
+      suggestion.label,
+      { emitEvent: false },
+    );
+    fixture.componentInstance.selectLocation(suggestion);
+
+    expect(fixture.componentInstance.form.controls.location.value).toBe(
+      suggestion.label,
+    );
+    expect(fixture.componentInstance.form.controls.latitude.value).toBe(
+      suggestion.latitude,
+    );
+    expect(fixture.componentInstance.form.controls.longitude.value).toBe(
+      suggestion.longitude,
+    );
   });
 });

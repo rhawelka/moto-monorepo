@@ -14,6 +14,8 @@ describe('IncidentsController', () => {
     title: 'Road hazard near central station',
     description: 'Large debris is blocking one lane near the central station.',
     location: 'Central station',
+    latitude: 50.0614,
+    longitude: 19.9366,
     status: 'OPEN',
     severity: 'HIGH',
     reportedAt: new Date('2026-01-01T00:00:00.000Z'),
@@ -86,6 +88,8 @@ describe('IncidentsController', () => {
       title: incident.title,
       description: incident.description,
       location: incident.location,
+      latitude: incident.latitude,
+      longitude: incident.longitude,
       status: 'OPEN' as const,
       severity: 'HIGH' as const,
     };

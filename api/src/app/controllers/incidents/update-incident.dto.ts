@@ -1,6 +1,9 @@
 import { IncidentSeverity, IncidentStatus } from '@prisma/client';
 import {
   IsEnum,
+  IsLatitude,
+  IsLongitude,
+  IsNumber,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -33,6 +36,16 @@ export class UpdateIncidentDto {
   @MinLength(2)
   @MaxLength(160)
   location?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @IsLatitude()
+  latitude?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @IsLongitude()
+  longitude?: number;
 
   @IsOptional()
   @IsEnum(IncidentStatus)
