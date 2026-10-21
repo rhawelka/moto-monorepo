@@ -27,7 +27,7 @@ h1 {
   width: 100%;
   gap: 0.625rem;
   padding: 1.5rem;
-  border: 1px solid var(--color-border);
+  border: 0.0625rem solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-card-background);
   box-sizing: border-box;
@@ -39,7 +39,7 @@ select {
   min-height: var(--control-height);
   padding: 0.625rem 0.75rem;
   box-sizing: border-box;
-  border: 1px solid var(--color-border);
+  border: 0.0625rem solid var(--color-border);
   border-radius: 0.375rem;
   background: var(--color-card-background);
   color: var(--color-page-text);
