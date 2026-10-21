@@ -23,6 +23,36 @@ export const appRoutes: Routes = [
     component: DashboardComponent,
     canActivate: [authGuard],
     children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      {
+        path: 'overview',
+        loadComponent: () =>
+          import('./components/overview/overview.component').then(
+            (component) => component.OverviewComponent,
+          ),
+      },
+      {
+        path: 'incidents/new',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./components/incidents/incident-create/incident-create.component').then(
+            (component) => component.IncidentCreateComponent,
+          ),
+      },
+      {
+        path: 'incidents/:id/edit',
+        loadComponent: () =>
+          import('./components/incidents/incident-edit/incidents-edit.component').then(
+            (component) => component.IncidentsEditComponent,
+          ),
+      },
+      {
+        path: 'incidents',
+        loadComponent: () =>
+          import('./components/incidents/incident-list/incidents.component').then(
+            (component) => component.IncidentsComponent,
+          ),
+      },
       {
         path: 'settings',
         component: SettingsComponent,
@@ -44,6 +74,8 @@ export const appRoutes: Routes = [
       },
     ],
   },
+  { path: 'incidents/:id/edit', redirectTo: 'dashboard/incidents/:id/edit' },
+  { path: 'incidents', redirectTo: 'dashboard/incidents' },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: 'dashboard' },
 ];

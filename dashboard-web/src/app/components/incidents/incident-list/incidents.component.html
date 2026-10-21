@@ -1,0 +1,176 @@
+<ng-container *transloco="let t; prefix: 'incidents'">
+  <section class="incidents-page">
+    <header class="page-heading">
+      <div>
+        <h1>{{ t('title') }}</h1>
+        <p>{{ t('subtitle') }}</p>
+      </div>
+      <div class="heading-actions">
+        @if (isAdmin()) {
+          <button class="create-action" type="button" (click)="createIncident()">
+            {{ t('createIncident') }}
+          </button>
+        }
+        <span
+          class="sync-indicator"
+          [class.sync-indicator--online]="liveConnected()"
+          role="status"
+        >
+          <span class="sync-indicator__dot"></span>
+          {{ liveConnected() ? t('liveConnected') : t('liveDisconnected') }}
+        </span>
+      </div>
+    </header>
+
+    @if (syncFailed()) {
+      <p class="notice" role="status">{{ t('syncUnavailable') }}</p>
+    }
+
+    <div class="filters" role="search">
+      <label class="search-field">
+        <span>{{ t('search') }}</span>
+        <input
+          type="search"
+          [formControl]="search"
+          [placeholder]="t('searchPlaceholder')"
+        />
+      </label>
+      <label>
+        <span>{{ t('status') }}</span>
+        <select [formControl]="status">
+          <option value="">{{ t('allStatuses') }}</option>
+          @for (option of statuses; track option) {
+            <option [value]="option">{{ t('status_' + option) }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        <span>{{ t('severity') }}</span>
+        <select [formControl]="severity">
+          <option value="">{{ t('allSeverities') }}</option>
+          @for (option of severities; track option) {
+            <option [value]="option">{{ t('severity_' + option) }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    @if (loadFailed()) {
+      <p class="error" role="alert">{{ t('loadError') }}</p>
+    }
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">
+              <button class="sort-button" type="button" (click)="setSort('title')">
+                {{ t('titleField') }}
+                @if (sortBy() === 'title') {
+                  <span aria-hidden="true">{{ order() === 'asc' ? '↑' : '↓' }}</span>
+                }
+              </button>
+            </th>
+            <th scope="col">{{ t('location') }}</th>
+            <th scope="col">
+              <button class="sort-button" type="button" (click)="setSort('severity')">
+                {{ t('severity') }}
+                @if (sortBy() === 'severity') {
+                  <span aria-hidden="true">{{ order() === 'asc' ? '↑' : '↓' }}</span>
+                }
+              </button>
+            </th>
+            <th scope="col">
+              <button class="sort-button" type="button" (click)="setSort('status')">
+                {{ t('status') }}
+                @if (sortBy() === 'status') {
+                  <span aria-hidden="true">{{ order() === 'asc' ? '↑' : '↓' }}</span>
+                }
+              </button>
+            </th>
+            <th scope="col">
+              <button class="sort-button" type="button" (click)="setSort('reportedAt')">
+                {{ t('reportedAt') }}
+                @if (sortBy() === 'reportedAt') {
+                  <span aria-hidden="true">{{ order() === 'asc' ? '↑' : '↓' }}</span>
+                }
+              </button>
+            </th>
+            <th scope="col">{{ t('actions') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (loading() && incidents().length === 0) {
+            <tr><td class="empty-state" colspan="6">{{ t('loading') }}</td></tr>
+          } @else if (incidents().length === 0) {
+            <tr><td class="empty-state" colspan="6">{{ t('empty') }}</td></tr>
+          } @else {
+            @for (incident of incidents(); track incident.id) {
+              <tr
+                class="incident-row"
+                tabindex="0"
+                (click)="edit(incident)"
+                (keydown.enter)="edit(incident)"
+              >
+                <td>
+                  <strong>{{ incident.title }}</strong>
+                  <small>{{ incident.description }}</small>
+                </td>
+                <td>{{ incident.location }}</td>
+                <td>
+                  <span class="badge" [class]="'badge severity severity--' + incident.severity.toLowerCase()">
+                    {{ t('severity_' + incident.severity) }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [class]="'badge status status--' + incident.status.toLowerCase()">
+                    {{ t('status_' + incident.status) }}
+                  </span>
+                </td>
+                <td>{{ incident.reportedAt | date: 'medium' }}</td>
+                <td class="row-actions">
+                  <button
+                    type="button"
+                    class="quick-action"
+                    (click)="openStatusDialog(incident, $event)"
+                  >
+                    {{ t('quickStatus') }}
+                  </button>
+                  <button
+                    type="button"
+                    class="edit-action"
+                    (click)="edit(incident); $event.stopPropagation()"
+                  >
+                    {{ t('edit') }}
+                  </button>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="table-footer">
+      <span>{{ t('results', { total: total() }) }}</span>
+      <nav class="pagination" [attr.aria-label]="t('pagination')">
+        <button
+          type="button"
+          [disabled]="page() <= 1"
+          (click)="goToPage(page() - 1)"
+        >
+          {{ t('previous') }}
+        </button>
+        <span>{{ t('page', { current: page(), total: pageCount() }) }}</span>
+        <button
+          type="button"
+          [disabled]="page() >= pageCount()"
+          (click)="goToPage(page() + 1)"
+        >
+          {{ t('next') }}
+        </button>
+      </nav>
+    </footer>
+    <ng-container #modalHost></ng-container>
+  </section>
+</ng-container>

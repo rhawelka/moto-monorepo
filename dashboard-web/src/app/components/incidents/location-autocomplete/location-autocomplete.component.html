@@ -1,0 +1,39 @@
+<ng-container *transloco="let t; prefix: 'incidents'">
+  <div class="location-autocomplete">
+    <input
+      [id]="inputId()"
+      type="text"
+      [formControl]="control()"
+      [attr.aria-label]="t('location')"
+      aria-autocomplete="list"
+      [attr.aria-expanded]="focused() && suggestions().length > 0"
+      aria-controls="location-suggestions"
+      autocomplete="off"
+      (input)="queryChanged.emit()"
+      (focus)="focused.set(true)"
+      (blur)="focused.set(false)"
+    />
+    @if (searching()) {
+      <span class="search-status" role="status">{{ t('locationSearching') }}</span>
+    }
+    @if (searchFailed()) {
+      <span class="search-status error" role="status">{{ t('locationSearchError') }}</span>
+    }
+    @if (focused() && suggestions().length > 0) {
+      <ul id="location-suggestions" class="suggestions" role="listbox">
+        @for (suggestion of suggestions(); track suggestion.label) {
+          <li
+            role="option"
+            [attr.aria-label]="suggestion.label"
+            aria-selected="false"
+          >
+            <button type="button" (mousedown)="$event.preventDefault()" (click)="choose(suggestion)">
+              {{ suggestion.label }}
+            </button>
+          </li>
+        }
+      </ul>
+      <p class="attribution">{{ t('locationAttribution') }}</p>
+    }
+  </div>
+</ng-container>

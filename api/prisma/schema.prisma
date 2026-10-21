@@ -12,6 +12,20 @@ enum Role {
   ADMIN
 }
 
+enum IncidentStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum IncidentSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
 model User {
   id           String   @id @default(uuid()) @db.Uuid
   username     String?  @unique
@@ -20,4 +34,17 @@ model User {
   role         Role     @default(USER)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model Incident {
+  id          String           @id @default(uuid()) @db.Uuid
+  title       String
+  description String
+  location    String
+  latitude    Float?
+  longitude   Float?
+  status      IncidentStatus   @default(OPEN)
+  severity    IncidentSeverity @default(MEDIUM)
+  reportedAt  DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 }
