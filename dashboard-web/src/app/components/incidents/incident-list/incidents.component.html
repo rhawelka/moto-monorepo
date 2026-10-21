@@ -5,14 +5,21 @@
         <h1>{{ t('title') }}</h1>
         <p>{{ t('subtitle') }}</p>
       </div>
-      <span
-        class="sync-indicator"
-        [class.sync-indicator--online]="liveConnected()"
-        role="status"
-      >
-        <span class="sync-indicator__dot"></span>
-        {{ liveConnected() ? t('liveConnected') : t('liveDisconnected') }}
-      </span>
+      <div class="heading-actions">
+        @if (isAdmin()) {
+          <button class="create-action" type="button" (click)="createIncident()">
+            {{ t('createIncident') }}
+          </button>
+        }
+        <span
+          class="sync-indicator"
+          [class.sync-indicator--online]="liveConnected()"
+          role="status"
+        >
+          <span class="sync-indicator__dot"></span>
+          {{ liveConnected() ? t('liveConnected') : t('liveDisconnected') }}
+        </span>
+      </div>
     </header>
 
     @if (syncFailed()) {

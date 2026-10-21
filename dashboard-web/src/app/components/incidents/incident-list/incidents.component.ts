@@ -12,6 +12,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
+import { AuthService } from '../../../services/auth/auth.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import {
   Incident,
@@ -44,6 +45,9 @@ export class IncidentsComponent {
   readonly pageCount = computed(() =>
     Math.max(1, Math.ceil(this.total() / this.pageSize)),
   );
+  readonly isAdmin = computed(
+    () => this.authService.currentUser()?.role === 'ADMIN',
+  );
   readonly search = new FormControl('', { nonNullable: true });
   readonly status = new FormControl<IncidentStatus | ''>('', {
     nonNullable: true,
@@ -65,6 +69,7 @@ export class IncidentsComponent {
   ];
 
   private readonly incidentsService = inject(IncidentsService);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly modalHost = viewChild('modalHost', {
@@ -105,6 +110,10 @@ export class IncidentsComponent {
 
   edit(incident: Incident): void {
     this.router.navigate(['/dashboard/incidents', incident.id, 'edit']);
+  }
+
+  createIncident(): void {
+    this.router.navigate(['/dashboard/incidents/new']);
   }
 
   openStatusDialog(incident: Incident, event: MouseEvent): void {

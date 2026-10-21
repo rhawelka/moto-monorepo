@@ -1,0 +1,60 @@
+<ng-container *transloco="let t; prefix: 'incidents'">
+  <section class="create-page">
+    <a class="back-link" routerLink="/dashboard/incidents">
+      {{ t('backToList') }}
+    </a>
+    <h1>{{ t('createTitle') }}</h1>
+
+    <form class="create-form" [formGroup]="form" (ngSubmit)="submit()">
+      <label for="incident-title">{{ t('titleField') }}</label>
+      <input id="incident-title" formControlName="title" maxlength="120" />
+      @if (form.controls.title.touched && form.controls.title.invalid) {
+        <small class="error">{{ t('titleValidation') }}</small>
+      }
+
+      <label for="incident-description">{{ t('description') }}</label>
+      <textarea
+        id="incident-description"
+        formControlName="description"
+        rows="6"
+        maxlength="2000"
+      ></textarea>
+      @if (
+        form.controls.description.touched &&
+        form.controls.description.invalid
+      ) {
+        <small class="error">{{ t('descriptionValidation') }}</small>
+      }
+
+      <label for="incident-location">{{ t('location') }}</label>
+      <input id="incident-location" formControlName="location" maxlength="160" />
+      @if (form.controls.location.touched && form.controls.location.invalid) {
+        <small class="error">{{ t('locationValidation') }}</small>
+      }
+
+      <label for="incident-severity">{{ t('severity') }}</label>
+      <select id="incident-severity" formControlName="severity">
+        @for (severity of severities; track severity) {
+          <option [value]="severity">{{ t('severity_' + severity) }}</option>
+        }
+      </select>
+
+      <label for="incident-status">{{ t('status') }}</label>
+      <select id="incident-status" formControlName="status">
+        @for (status of statuses; track status) {
+          <option [value]="status">{{ t('status_' + status) }}</option>
+        }
+      </select>
+
+      @if (saveFailed()) {
+        <p class="error" role="alert">{{ t('createError') }}</p>
+      }
+      <div class="actions">
+        <a class="cancel" routerLink="/dashboard/incidents">{{ t('cancel') }}</a>
+        <button type="submit" [disabled]="form.invalid || saving()">
+          {{ saving() ? t('saving') : t('createIncident') }}
+        </button>
+      </div>
+    </form>
+  </section>
+</ng-container>

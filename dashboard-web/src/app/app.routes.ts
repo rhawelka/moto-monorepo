@@ -32,6 +32,14 @@ export const appRoutes: Routes = [
           ),
       },
       {
+        path: 'incidents/new',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./components/incidents/incident-create/incident-create.component').then(
+            (component) => component.IncidentCreateComponent,
+          ),
+      },
+      {
         path: 'incidents/:id/edit',
         loadComponent: () =>
           import('./components/incidents/incident-edit/incidents-edit.component').then(

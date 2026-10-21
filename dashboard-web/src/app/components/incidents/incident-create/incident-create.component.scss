@@ -1,0 +1,83 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.create-page {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.back-link,
+.cancel {
+  color: var(--color-brand-blue);
+  text-decoration: none;
+}
+
+.create-form {
+  display: grid;
+  width: 100%;
+  gap: 0.625rem;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-card-background);
+  box-sizing: border-box;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  min-height: var(--control-height);
+  padding: 0.625rem 0.75rem;
+  box-sizing: border-box;
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  background: var(--color-card-background);
+  color: var(--color-page-text);
+}
+
+textarea {
+  resize: vertical;
+}
+
+label:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+.error {
+  margin: 0;
+  color: var(--color-error);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+button {
+  min-height: var(--control-height);
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background: var(--color-brand-blue);
+  color: var(--color-white);
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

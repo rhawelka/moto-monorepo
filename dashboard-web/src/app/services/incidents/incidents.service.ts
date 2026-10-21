@@ -82,6 +82,15 @@ export class IncidentsService {
     );
   }
 
+  create(
+    incident: Pick<
+      Incident,
+      'title' | 'description' | 'location' | 'status' | 'severity'
+    >,
+  ): Observable<Incident> {
+    return this.http.post<Incident>(API_URL, incident);
+  }
+
   watchUpdates(): Observable<IncidentUpdateEvent> {
     return new Observable((subscriber) => {
       const token = this.authService.getToken();

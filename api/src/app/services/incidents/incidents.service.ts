@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { IncidentsQueryDto } from '../../controllers/incidents/incidents-query.dto';
 import { UpdateIncidentDto } from '../../controllers/incidents/update-incident.dto';
+import { CreateIncidentDto } from '../../controllers/incidents/create-incident.dto';
 
 //TODO napisz testy do tego serwisu jak i innych w api
 @Injectable()
@@ -43,6 +44,10 @@ export class IncidentsService {
     });
     if (!incident) throw new NotFoundException('Incident not found');
     return incident;
+  }
+
+  async create(incident: CreateIncidentDto) {
+    return this.prismaService.incident.create({ data: incident });
   }
 
   async update(id: string, changes: UpdateIncidentDto) {

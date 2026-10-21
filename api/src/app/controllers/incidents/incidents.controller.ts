@@ -4,6 +4,7 @@ import {
   Body,
   Param,
   ParseUUIDPipe,
+  Post,
   Patch,
   Query,
   UseGuards,
@@ -13,6 +14,8 @@ import { IncidentsQueryDto } from './incidents-query.dto';
 import { UpdateIncidentDto } from './update-incident.dto';
 import { IncidentsService } from '../../services/incidents/incidents.service';
 import { IncidentsGateway } from '../../services/incidents/incidents.gateway';
+import { AdminGuard } from '../../services/admin.guard';
+import { CreateIncidentDto } from './create-incident.dto';
 
 @Controller('incidents')
 @UseGuards(AuthGuard('jwt'))
@@ -30,6 +33,14 @@ export class IncidentsController {
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.incidentsService.findOne(id);
+  }
+
+  @Post()
+  @UseGuards(AdminGuard)
+  async create(@Body() incident: CreateIncidentDto) {
+    const createdIncident = await this.incidentsService.create(incident);
+    this.incidentsGateway.publishIncidentUpdate(createdIncident);
+    return createdIncident;
   }
 
   @Patch(':id')

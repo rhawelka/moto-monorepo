@@ -21,6 +21,22 @@
   gap: 1rem;
 }
 
+.heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.create-action {
+  min-height: var(--control-height);
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background: var(--color-brand-blue);
+  color: var(--color-white);
+  cursor: pointer;
+}
+
 h1 {
   margin: 0;
   font-size: 1.5rem;
@@ -229,6 +245,7 @@ td:first-child small {
   }
 
   .page-heading,
+  .heading-actions,
   .table-footer {
     align-items: flex-start;
     flex-direction: column;

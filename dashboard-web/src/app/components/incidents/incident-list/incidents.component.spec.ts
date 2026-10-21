@@ -1,17 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { signal } from '@angular/core';
 import { TranslocoTestingModule } from '@jsverse/transloco';
 import { of } from 'rxjs';
 import {
   Incident,
   IncidentsService,
 } from '../../../services/incidents/incidents.service';
+import { AuthService } from '../../../services/auth/auth.service';
 import { IncidentStatusDialogComponent } from '../incident-status-dialog/incident-status-dialog.component';
 import { IncidentsComponent } from './incidents.component';
 
 describe('IncidentsComponent', () => {
   let fixture: ComponentFixture<IncidentsComponent>;
+  let currentUser: ReturnType<typeof signal<{ role: 'USER' | 'ADMIN' } | null>>;
+  let router: { navigate: jest.Mock };
   let incidentsService: {
     list: jest.Mock;
     watchUpdates: jest.Mock;
@@ -30,6 +34,8 @@ describe('IncidentsComponent', () => {
   };
 
   beforeEach(async () => {
+    currentUser = signal({ role: 'USER' as const });
+    router = { navigate: jest.fn() };
     incidentsService = {
       list: jest.fn().mockReturnValue(
         of({ data: [incident], total: 1, page: 1, pageSize: 10 }),
@@ -51,7 +57,11 @@ describe('IncidentsComponent', () => {
       ],
       providers: [
         { provide: IncidentsService, useValue: incidentsService },
-        { provide: Router, useValue: { navigate: jest.fn() } },
+        {
+          provide: AuthService,
+          useValue: { currentUser },
+        },
+        { provide: Router, useValue: router },
       ],
     }).compileComponents();
 
@@ -74,6 +84,22 @@ describe('IncidentsComponent', () => {
     expect(
       fixture.debugElement.query(By.directive(IncidentStatusDialogComponent)),
     ).not.toBeNull();
+  });
+
+  it('shows the create action only to administrators', () => {
+    expect(fixture.debugElement.query(By.css('.create-action'))).toBeNull();
+
+    currentUser.set({ role: 'ADMIN' });
+    fixture.detectChanges();
+
+    const createButton = fixture.debugElement.query(
+      By.css('.create-action'),
+    );
+    expect(createButton).not.toBeNull();
+    createButton.triggerEventHandler('click');
+    expect(router.navigate).toHaveBeenCalledWith([
+      '/dashboard/incidents/new',
+    ]);
   });
 
   it('saves the status selected in the dynamically created dialog', () => {

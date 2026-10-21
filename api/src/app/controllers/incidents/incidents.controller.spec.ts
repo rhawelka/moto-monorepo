@@ -6,6 +6,7 @@ import {
 import { IncidentsController } from './incidents.controller';
 import { IncidentsGateway } from '../../services/incidents/incidents.gateway';
 import { IncidentsService } from '../../services/incidents/incidents.service';
+import { AdminGuard } from '../../services/admin.guard';
 
 describe('IncidentsController', () => {
   const incident = {
@@ -19,7 +20,7 @@ describe('IncidentsController', () => {
     updatedAt: new Date('2026-01-01T00:00:00.000Z'),
   };
   let incidentsService: jest.Mocked<
-    Pick<IncidentsService, 'findAll' | 'findOne' | 'update'>
+    Pick<IncidentsService, 'findAll' | 'findOne' | 'create' | 'update'>
   >;
   let incidentsGateway: jest.Mocked<
     Pick<IncidentsGateway, 'publishIncidentUpdate'>
@@ -35,6 +36,7 @@ describe('IncidentsController', () => {
         pageSize: 10,
       }),
       findOne: jest.fn().mockResolvedValue(incident),
+      create: jest.fn().mockResolvedValue(incident),
       update: jest.fn().mockResolvedValue(incident),
     };
     incidentsGateway = {
@@ -77,6 +79,34 @@ describe('IncidentsController', () => {
     expect(incidentsGateway.publishIncidentUpdate).toHaveBeenCalledWith(
       incident,
     );
+  });
+
+  it('creates an incident for administrators and broadcasts it', async () => {
+    const newIncident = {
+      title: incident.title,
+      description: incident.description,
+      location: incident.location,
+      status: 'OPEN' as const,
+      severity: 'HIGH' as const,
+    };
+
+    await expect(controller.create(newIncident)).resolves.toEqual(incident);
+    expect(incidentsService.create).toHaveBeenCalledWith(newIncident);
+    expect(incidentsGateway.publishIncidentUpdate).toHaveBeenCalledWith(
+      incident,
+    );
+    expect(
+      Reflect.getMetadata(
+        GUARDS_METADATA,
+        IncidentsController.prototype.create,
+      ),
+    ).toContain(AdminGuard);
+    expect(
+      Reflect.getMetadata(
+        METHOD_METADATA,
+        IncidentsController.prototype.create,
+      ),
+    ).toBe(1);
   });
 
   it('does not broadcast when an update fails', async () => {

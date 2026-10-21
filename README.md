@@ -110,6 +110,12 @@ values and field lengths before submitting changes. The **Change status** action
 opens a dynamically created dialog for a quick status update. The interface is
 translated into Polish and English.
 
+Administrators also see a **Create incident** action on the list. It opens
+`/dashboard/incidents/new`, where an administrator can enter the title,
+description, location, status, and severity. Creation is protected by the
+dashboard's admin route guard and the API's admin guard. A successful creation
+is broadcast as `incident.updated` so other open incident lists refresh.
+
 ### Incident API
 
 All REST endpoints require a valid JWT in the `Authorization: Bearer <token>`
@@ -119,6 +125,7 @@ header:
 | --- | --- | --- |
 | `GET` | `/api/v1/incidents` | Return a filtered, sorted, paginated incident page |
 | `GET` | `/api/v1/incidents/:id` | Return one incident |
+| `POST` | `/api/v1/incidents` | Create an incident (administrator only) |
 | `PATCH` | `/api/v1/incidents/:id` | Validate and save incident changes |
 
 The list endpoint accepts `page`, `pageSize` (maximum 100), `search`, `status`,
