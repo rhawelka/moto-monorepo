@@ -3,9 +3,9 @@ import { inject, Injectable } from '@angular/core';
 import { EMPTY, Observable, expand, reduce } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { AuthService } from '../auth/auth.service';
+import { IncidentSeverity } from '../../shared/models/incident-severity';
+import { IncidentStatus } from '../../shared/models/incident-status';
 
-export type IncidentStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
-export type IncidentSeverity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 export type IncidentSortField = 'title' | 'status' | 'severity' | 'reportedAt';
 
 export interface Incident {

@@ -17,6 +17,7 @@ import Point from '@arcgis/core/geometry/Point.js';
 import PopupTemplate from '@arcgis/core/PopupTemplate.js';
 import MapView from '@arcgis/core/views/MapView.js';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
+import { IncidentSeverity } from '../../shared/models/incident-severity';
 import {
   Incident,
   IncidentsService,
@@ -142,15 +143,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                       fieldInfos: [
                         {
                           fieldName: 'location',
-                          label: this.transloco.translate('incidents.mapLocation'),
+                          label: this.transloco.translate(
+                            'incidents.mapLocation',
+                          ),
                         },
                         {
                           fieldName: 'status',
-                          label: this.transloco.translate('incidents.mapStatus'),
+                          label: this.transloco.translate(
+                            'incidents.mapStatus',
+                          ),
                         },
                         {
                           fieldName: 'severity',
-                          label: this.transloco.translate('incidents.mapSeverity'),
+                          label: this.transloco.translate(
+                            'incidents.mapSeverity',
+                          ),
                         },
                       ],
                     },
@@ -175,7 +182,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   private severityColor(
-    severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL',
+    severity: IncidentSeverity,
   ): [number, number, number, number] {
     switch (severity) {
       case 'LOW':

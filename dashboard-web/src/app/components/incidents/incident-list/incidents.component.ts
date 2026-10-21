@@ -15,11 +15,17 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { AuthService } from '../../../services/auth/auth.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import {
+  INCIDENT_SEVERITIES,
+  IncidentSeverity,
+} from '../../../shared/models/incident-severity';
+import {
+  INCIDENT_STATUSES,
+  IncidentStatus,
+} from '../../../shared/models/incident-status';
+import {
   Incident,
   IncidentQuery,
-  IncidentSeverity,
   IncidentSortField,
-  IncidentStatus,
   IncidentsService,
 } from '../../../services/incidents/incidents.service';
 import { IncidentStatusDialogComponent } from '../incident-status-dialog/incident-status-dialog.component';
@@ -55,18 +61,8 @@ export class IncidentsComponent {
   readonly severity = new FormControl<IncidentSeverity | ''>('', {
     nonNullable: true,
   });
-  readonly statuses: IncidentStatus[] = [
-    'OPEN',
-    'IN_PROGRESS',
-    'RESOLVED',
-    'CLOSED',
-  ];
-  readonly severities: IncidentSeverity[] = [
-    'LOW',
-    'MEDIUM',
-    'HIGH',
-    'CRITICAL',
-  ];
+  readonly statuses = INCIDENT_STATUSES;
+  readonly severities = INCIDENT_SEVERITIES;
 
   private readonly incidentsService = inject(IncidentsService);
   private readonly authService = inject(AuthService);

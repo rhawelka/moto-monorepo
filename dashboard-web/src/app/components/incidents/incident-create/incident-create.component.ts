@@ -8,11 +8,12 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
+import { INCIDENT_SEVERITIES } from '../../../shared/models/incident-severity';
 import {
-  IncidentSeverity,
-  IncidentStatus,
-  IncidentsService,
-} from '../../../services/incidents/incidents.service';
+  DEFAULT_INCIDENT_STATUS,
+  INCIDENT_STATUSES,
+} from '../../../shared/models/incident-status';
+import { IncidentsService } from '../../../services/incidents/incidents.service';
 import { LocationSuggestion } from '../../../services/incidents/location-search.service';
 import { LocationAutocompleteComponent } from '../location-autocomplete/location-autocomplete.component';
 
@@ -35,18 +36,8 @@ function hasNonWhitespace(control: AbstractControl<string>) {
 export class IncidentCreateComponent {
   readonly saveFailed = signal(false);
   readonly saving = signal(false);
-  readonly statuses: IncidentStatus[] = [
-    'OPEN',
-    'IN_PROGRESS',
-    'RESOLVED',
-    'CLOSED',
-  ];
-  readonly severities: IncidentSeverity[] = [
-    'LOW',
-    'MEDIUM',
-    'HIGH',
-    'CRITICAL',
-  ];
+  readonly statuses = INCIDENT_STATUSES;
+  readonly severities = INCIDENT_SEVERITIES;
 
   readonly form = inject(FormBuilder).nonNullable.group({
     title: [
@@ -78,8 +69,8 @@ export class IncidentCreateComponent {
     ],
     latitude: [null as number | null, Validators.required],
     longitude: [null as number | null, Validators.required],
-    status: ['OPEN' as IncidentStatus, Validators.required],
-    severity: ['MEDIUM' as IncidentSeverity, Validators.required],
+    status: [DEFAULT_INCIDENT_STATUS, Validators.required],
+    severity: [INCIDENT_SEVERITIES[0], Validators.required],
   });
 
   private readonly incidentsService = inject(IncidentsService);

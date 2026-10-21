@@ -9,9 +9,13 @@ import {
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslocoDirective } from '@jsverse/transloco';
 import {
+  DEFAULT_INCIDENT_STATUS,
+  INCIDENT_STATUSES,
+  IncidentStatus,
+} from '../../../shared/models/incident-status';
+import {
   Incident,
   IncidentsService,
-  IncidentStatus,
 } from '../../../services/incidents/incidents.service';
 
 @Component({
@@ -25,13 +29,8 @@ export class IncidentStatusDialogComponent implements OnInit {
   readonly incident = input.required<Incident>();
   readonly closed = output<void>();
   readonly saved = output<void>();
-  readonly statuses: IncidentStatus[] = [
-    'OPEN',
-    'IN_PROGRESS',
-    'RESOLVED',
-    'CLOSED',
-  ];
-  readonly status = new FormControl<IncidentStatus>('OPEN', {
+  readonly statuses = INCIDENT_STATUSES;
+  readonly status = new FormControl<IncidentStatus>(DEFAULT_INCIDENT_STATUS, {
     nonNullable: true,
     validators: [Validators.required],
   });
