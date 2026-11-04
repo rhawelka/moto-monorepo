@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { CommonHeader, Sidebar } from '@moto-monorepo/ui';
 import { RouterModule } from '@angular/router';
+import { APP_ROUTES } from '../../app.routes';
 import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
@@ -12,11 +13,11 @@ import { AuthService } from '../../services/auth/auth.service';
 })
 export class DashboardComponent {
   readonly navItems = computed(() => [
-    { label: 'overview', icon: 'dashboard', route: '/dashboard' },
-    { label: 'reports', icon: 'bar_chart', route: '/dashboard' },
-    { label: 'map', icon: 'map', route: '/dashboard/map' },
+    { label: 'overview', icon: 'dashboard', route: APP_ROUTES.dashboard.overview },
+    { label: 'incidents', icon: 'bar_chart', route: APP_ROUTES.dashboard.incidents.list },
+    { label: 'map', icon: 'map', route: APP_ROUTES.dashboard.map },
     ...(this.authService.currentUser()?.role === 'ADMIN'
-      ? [{ label: 'users', icon: 'group', route: '/dashboard/users' }]
+      ? [{ label: 'users', icon: 'group', route: APP_ROUTES.dashboard.users }]
       : []),
   ]);
 

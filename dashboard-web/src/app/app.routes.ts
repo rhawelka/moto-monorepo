@@ -7,6 +7,28 @@ import { authGuard } from './services/auth/auth.guard';
 import { guestGuard } from './services/auth/guest.guard';
 import { adminGuard } from './services/auth/admin.guard';
 
+export const APP_ROUTES = {
+  login: '/login',
+  register: '/register',
+  dashboard: {
+    root: '/dashboard',
+    overview: '/dashboard/overview',
+    incidents: {
+      list: '/dashboard/incidents',
+      create: '/dashboard/incidents/new',
+      edit: (id: string) => `/dashboard/incidents/${id}/edit`,
+      editPath: '/dashboard/incidents/:id/edit',
+    },
+    settings: '/dashboard/settings',
+    users: '/dashboard/users',
+    map: '/dashboard/map',
+  },
+  legacy: {
+    incidents: '/incidents',
+    incidentEditPath: '/incidents/:id/edit',
+  },
+} as const;
+
 export const appRoutes: Routes = [
   {
     path: 'login',
@@ -23,6 +45,36 @@ export const appRoutes: Routes = [
     component: DashboardComponent,
     canActivate: [authGuard],
     children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      {
+        path: 'overview',
+        loadComponent: () =>
+          import('./components/overview/overview.component').then(
+            (component) => component.OverviewComponent,
+          ),
+      },
+      {
+        path: 'incidents/new',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./components/incidents/incident-create/incident-create.component').then(
+            (component) => component.IncidentCreateComponent,
+          ),
+      },
+      {
+        path: 'incidents/:id/edit',
+        loadComponent: () =>
+          import('./components/incidents/incident-edit/incidents-edit.component').then(
+            (component) => component.IncidentsEditComponent,
+          ),
+      },
+      {
+        path: 'incidents',
+        loadComponent: () =>
+          import('./components/incidents/incident-list/incidents.component').then(
+            (component) => component.IncidentsComponent,
+          ),
+      },
       {
         path: 'settings',
         component: SettingsComponent,
@@ -44,6 +96,11 @@ export const appRoutes: Routes = [
       },
     ],
   },
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-  { path: '**', redirectTo: 'dashboard' },
+  {
+    path: 'incidents/:id/edit',
+    redirectTo: APP_ROUTES.dashboard.incidents.editPath,
+  },
+  { path: 'incidents', redirectTo: APP_ROUTES.dashboard.incidents.list },
+  { path: '', redirectTo: APP_ROUTES.dashboard.root, pathMatch: 'full' },
+  { path: '**', redirectTo: APP_ROUTES.dashboard.root },
 ];

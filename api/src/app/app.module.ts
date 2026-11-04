@@ -10,6 +10,9 @@ import { JwtStrategy } from '../app/services/jwt.strategy';
 import { DatabaseModule } from './database/database.module';
 import { UsersController } from './controllers/users/users.controller';
 import { AdminGuard } from './services/admin.guard';
+import { IncidentsController } from './controllers/incidents/incidents.controller';
+import { IncidentsService } from './services/incidents/incidents.service';
+import { IncidentsGateway } from './services/incidents/incidents.gateway';
 
 @Module({
   imports: [
@@ -22,13 +25,20 @@ import { AdminGuard } from './services/admin.guard';
       }),
     }),
   ],
-  controllers: [AuthController, LoginController, UsersController],
+  controllers: [
+    AuthController,
+    LoginController,
+    UsersController,
+    IncidentsController,
+  ],
   providers: [
     AuthService,
     UsersService,
     LoggerService,
     JwtStrategy,
     AdminGuard,
+    IncidentsService,
+    IncidentsGateway,
   ],
 })
 export class AppModule {}

@@ -1,0 +1,31 @@
+<ng-container *transloco="let t; prefix: 'incidents'">
+  <div class="dialog-backdrop">
+    <section
+      class="dialog"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="t('quickStatus')"
+    >
+      <h2>{{ t('quickStatus') }}</h2>
+      <form (ngSubmit)="save()">
+        <label for="quick-status">{{ t('status') }}</label>
+        <select id="quick-status" [formControl]="status">
+          @for (option of statuses; track option) {
+            <option [value]="option">{{ t('status_' + option) }}</option>
+          }
+        </select>
+        @if (errorMessage()) {
+          <p class="error" role="alert">{{ t('saveError') }}</p>
+        }
+        <div class="actions">
+          <button type="button" class="secondary" (click)="closed.emit()">
+            {{ t('cancel') }}
+          </button>
+          <button type="submit" [disabled]="status.invalid || saving()">
+            {{ saving() ? t('saving') : t('save') }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+</ng-container>

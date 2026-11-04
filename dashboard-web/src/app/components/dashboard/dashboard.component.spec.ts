@@ -16,7 +16,7 @@ describe('DashboardComponent', () => {
             en: {
               sidebar: {
                 overview: 'Overview',
-                reports: 'Reports',
+                incidents: 'Incidents',
                 map: 'Map',
                 settings: 'Settings',
                 collapse: 'Collapse',

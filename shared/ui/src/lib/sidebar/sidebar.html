@@ -13,8 +13,9 @@
         @for (item of navItems; track item.route + item.label) {
         <a
           mat-list-item
-          routerLinkActive="active-link"
+          [class.active-link]="isItemActive(item)"
           [routerLink]="item.route"
+          (click)="selectItem(item)"
         >
           <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
           <span matListItemTitle>{{ t(item.label) }}</span>
@@ -26,8 +27,9 @@
         <a
           mat-list-item
           class="ui-sidebar__settings"
-          routerLinkActive="active-link"
+          [class.active-link]="isItemActive(settingsItem)"
           [routerLink]="settingsItem.route"
+          (click)="selectItem(settingsItem)"
         >
           <mat-icon matListItemIcon>{{ settingsItem.icon }}</mat-icon>
           <span matListItemTitle>{{ t(settingsItem.label) }}</span>
