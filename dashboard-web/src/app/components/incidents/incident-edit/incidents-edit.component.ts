@@ -139,15 +139,7 @@ export class IncidentsEditComponent {
       .subscribe({
         next: (incident) => {
           this.incident.set(incident);
-          this.form.setValue({
-            title: incident.title,
-            description: incident.description,
-            location: incident.location,
-            latitude: incident.latitude,
-            longitude: incident.longitude,
-            status: incident.status,
-            severity: incident.severity,
-          });
+          this.setFormValues(incident);
           this.loading.set(false);
         },
         error: () => {
@@ -155,5 +147,17 @@ export class IncidentsEditComponent {
           this.loading.set(false);
         },
       });
+  }
+
+  private setFormValues(incident: Incident): void {
+    this.form.setValue({
+      title: incident.title,
+      description: incident.description,
+      location: incident.location,
+      latitude: incident.latitude,
+      longitude: incident.longitude,
+      status: incident.status,
+      severity: incident.severity,
+    });
   }
 }

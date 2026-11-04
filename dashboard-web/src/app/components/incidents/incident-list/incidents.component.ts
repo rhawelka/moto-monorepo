@@ -74,35 +74,9 @@ export class IncidentsComponent {
   });
 
   constructor() {
-    this.search.valueChanges
-    .pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      takeUntilDestroyed(this.destroyRef),
-    )
-    .subscribe(() => this.resetAndLoad());
-    this.status.valueChanges
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe(() => this.resetAndLoad());
-    this.severity.valueChanges
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe(() => this.resetAndLoad());
-
+    this.initFilterSubscriptions();
+    this.initLiveUpdates();
     this.load();
-    this.incidentsService
-      .watchUpdates()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((event) => {
-        if (event.type === 'connected') {
-          this.liveConnected.set(true);
-          this.syncFailed.set(false);
-        } else if (event.type === 'connection-error') {
-          this.liveConnected.set(false);
-          this.syncFailed.set(true);
-        } else {
-          this.load();
-        }
-      });
   }
 
   edit(incident: Incident): void {
@@ -116,7 +90,9 @@ export class IncidentsComponent {
   openStatusDialog(incident: Incident, event: MouseEvent): void {
     event.stopPropagation();
     const modalHost = this.modalHost();
-    if (!modalHost) throw new Error('Incident status modal host is unavailable.');
+
+    if (!modalHost)
+      throw new Error('Incident status modal host is unavailable.');
 
     modalHost.clear();
     const dialog = modalHost.createComponent(IncidentStatusDialogComponent);
@@ -177,6 +153,45 @@ export class IncidentsComponent {
           this.loadFailed.set(true);
           this.loading.set(false);
         },
+      });
+  }
+
+  private initFilterSubscriptions(): void {
+    this.search.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(() => this.resetAndLoad());
+
+    this.status.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.resetAndLoad());
+
+    this.severity.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.resetAndLoad());
+  }
+
+  private initLiveUpdates(): void {
+    this.incidentsService
+      .watchUpdates()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((event) => {
+        if (event.type === 'connected') {
+          this.liveConnected.set(true);
+          this.syncFailed.set(false);
+          return;
+        }
+
+        if (event.type === 'connection-error') {
+          this.liveConnected.set(false);
+          this.syncFailed.set(true);
+          return;
+        }
+
+        this.load();
       });
   }
 }

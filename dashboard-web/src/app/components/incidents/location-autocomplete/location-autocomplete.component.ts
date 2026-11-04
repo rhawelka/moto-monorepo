@@ -40,35 +40,7 @@ export class LocationAutocompleteComponent {
   private readonly locationSearch = inject(LocationSearchService);
 
   constructor() {
-    effect((onCleanup) => {
-      const subscription = this.control()
-        .valueChanges.pipe(
-          debounceTime(300),
-          distinctUntilChanged(),
-          switchMap((query) => {
-            this.searchFailed.set(false);
-            const normalizedQuery = query.trim();
-            if (normalizedQuery.length < 3) {
-              this.suggestions.set([]);
-              this.searching.set(false);
-              return of([]);
-            }
-
-            this.searching.set(true);
-            return this.locationSearch.search(normalizedQuery).pipe(
-              catchError(() => {
-                this.searchFailed.set(true);
-                return of([]);
-              }),
-            );
-          }),
-        )
-        .subscribe((suggestions) => {
-          this.suggestions.set(suggestions);
-          this.searching.set(false);
-        });
-      onCleanup(() => subscription.unsubscribe());
-    });
+    this.initSearchEffect();
   }
 
   choose(suggestion: LocationSuggestion): void {
@@ -76,5 +48,41 @@ export class LocationAutocompleteComponent {
     this.suggestions.set([]);
     this.focused.set(false);
     this.selected.emit(suggestion);
+  }
+
+  private initSearchEffect(): void {
+    effect((onCleanup) => {
+      const subscription = this.control()
+        .valueChanges.pipe(
+          debounceTime(300),
+          distinctUntilChanged(),
+          switchMap((query) => this.handleSearch(query)),
+        )
+        .subscribe((suggestions) => {
+          this.suggestions.set(suggestions);
+          this.searching.set(false);
+        });
+
+      onCleanup(() => subscription.unsubscribe());
+    });
+  }
+
+  private handleSearch(query: string) {
+    this.searchFailed.set(false);
+    const normalizedQuery = query.trim();
+
+    if (normalizedQuery.length < 3) {
+      this.suggestions.set([]);
+      this.searching.set(false);
+      return of([]);
+    }
+
+    this.searching.set(true);
+    return this.locationSearch.search(normalizedQuery).pipe(
+      catchError(() => {
+        this.searchFailed.set(true);
+        return of([]);
+      }),
+    );
   }
 }

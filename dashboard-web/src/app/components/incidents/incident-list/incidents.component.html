@@ -7,14 +7,18 @@
       </div>
       <div class="heading-actions">
         @if (isAdmin()) {
-          <button class="create-action" type="button" (click)="createIncident()">
+          <button
+            class="create-action"
+            type="button"
+            (click)="createIncident()"
+          >
             {{ t('createIncident') }}
           </button>
         }
         <span
           class="sync-indicator"
-          [class.sync-indicator--online]="liveConnected()"
           role="status"
+          [class.sync-indicator--online]="liveConnected()"
         >
           <span class="sync-indicator__dot"></span>
           {{ liveConnected() ? t('liveConnected') : t('liveDisconnected') }}
@@ -64,35 +68,59 @@
         <thead>
           <tr>
             <th scope="col">
-              <button class="sort-button" type="button" (click)="setSort('title')">
+              <button
+                class="sort-button"
+                type="button"
+                (click)="setSort('title')"
+              >
                 {{ t('titleField') }}
                 @if (sortBy() === 'title') {
-                  <span aria-hidden="true">{{ order() === 'asc' ? '↑' : '↓' }}</span>
+                  <span aria-hidden="true">{{
+                    order() === 'asc' ? '↑' : '↓'
+                  }}</span>
                 }
               </button>
             </th>
             <th scope="col">{{ t('location') }}</th>
             <th scope="col">
-              <button class="sort-button" type="button" (click)="setSort('severity')">
+              <button
+                class="sort-button"
+                type="button"
+                (click)="setSort('severity')"
+              >
                 {{ t('severity') }}
                 @if (sortBy() === 'severity') {
-                  <span aria-hidden="true">{{ order() === 'asc' ? '↑' : '↓' }}</span>
+                  <span aria-hidden="true">{{
+                    order() === 'asc' ? '↑' : '↓'
+                  }}</span>
                 }
               </button>
             </th>
             <th scope="col">
-              <button class="sort-button" type="button" (click)="setSort('status')">
+              <button
+                class="sort-button"
+                type="button"
+                (click)="setSort('status')"
+              >
                 {{ t('status') }}
                 @if (sortBy() === 'status') {
-                  <span aria-hidden="true">{{ order() === 'asc' ? '↑' : '↓' }}</span>
+                  <span aria-hidden="true">{{
+                    order() === 'asc' ? '↑' : '↓'
+                  }}</span>
                 }
               </button>
             </th>
             <th scope="col">
-              <button class="sort-button" type="button" (click)="setSort('reportedAt')">
+              <button
+                class="sort-button"
+                type="button"
+                (click)="setSort('reportedAt')"
+              >
                 {{ t('reportedAt') }}
                 @if (sortBy() === 'reportedAt') {
-                  <span aria-hidden="true">{{ order() === 'asc' ? '↑' : '↓' }}</span>
+                  <span aria-hidden="true">{{
+                    order() === 'asc' ? '↑' : '↓'
+                  }}</span>
                 }
               </button>
             </th>
@@ -101,9 +129,13 @@
         </thead>
         <tbody>
           @if (loading() && incidents().length === 0) {
-            <tr><td class="empty-state" colspan="6">{{ t('loading') }}</td></tr>
+            <tr>
+              <td class="empty-state" colspan="6">{{ t('loading') }}</td>
+            </tr>
           } @else if (incidents().length === 0) {
-            <tr><td class="empty-state" colspan="6">{{ t('empty') }}</td></tr>
+            <tr>
+              <td class="empty-state" colspan="6">{{ t('empty') }}</td>
+            </tr>
           } @else {
             @for (incident of incidents(); track incident.id) {
               <tr
@@ -118,12 +150,23 @@
                 </td>
                 <td>{{ incident.location }}</td>
                 <td>
-                  <span class="badge" [class]="'badge severity severity--' + incident.severity.toLowerCase()">
+                  <span
+                    class="badge"
+                    [class]="
+                      'badge severity severity--' +
+                      incident.severity.toLowerCase()
+                    "
+                  >
                     {{ t('severity_' + incident.severity) }}
                   </span>
                 </td>
                 <td>
-                  <span class="badge" [class]="'badge status status--' + incident.status.toLowerCase()">
+                  <span
+                    class="badge"
+                    [class]="
+                      'badge status status--' + incident.status.toLowerCase()
+                    "
+                  >
                     {{ t('status_' + incident.status) }}
                   </span>
                 </td>
