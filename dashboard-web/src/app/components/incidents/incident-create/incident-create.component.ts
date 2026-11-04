@@ -95,8 +95,11 @@ export class IncidentCreateComponent {
 
     this.saving.set(true);
     this.saveFailed.set(false);
+
+    const formValue = this.form.getRawValue();
+
     this.incidentsService
-      .create(this.form.getRawValue())
+      .create(formValue)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => this.router.navigate(['/dashboard/incidents']),

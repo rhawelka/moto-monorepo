@@ -81,6 +81,21 @@ describe('IncidentStatusDialogComponent', () => {
     expect(saved).toHaveBeenCalledTimes(1);
   });
 
+  it('handles form submission without triggering browser navigation', () => {
+    const form = fixture.nativeElement.querySelector('form') as HTMLFormElement;
+    const submitEvent = new Event('submit', {
+      bubbles: true,
+      cancelable: true,
+    });
+
+    form.dispatchEvent(submitEvent);
+
+    expect(submitEvent.defaultPrevented).toBe(true);
+    expect(incidentsService.update).toHaveBeenCalledWith(incident.id, {
+      status: 'OPEN',
+    });
+  });
+
   it('does not submit an invalid status', () => {
     fixture.componentInstance.status.setValue('' as Incident['status']);
 

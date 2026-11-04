@@ -103,8 +103,11 @@ export class IncidentsEditComponent {
 
     this.saving.set(true);
     this.saveFailed.set(false);
+
+    const formValue = this.form.getRawValue();
+
     this.incidentsService
-      .update(this.incidentId, this.form.getRawValue())
+      .update(this.incidentId, formValue)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => this.router.navigate(['/dashboard/incidents']),
@@ -116,13 +119,13 @@ export class IncidentsEditComponent {
   }
 
   clearLocationCoordinates(): void {
-      this.form.controls.latitude.setValue(null);
-      this.form.controls.longitude.setValue(null);
+    this.form.controls.latitude.setValue(null);
+    this.form.controls.longitude.setValue(null);
   }
 
   selectLocation(location: LocationSuggestion): void {
-      this.form.controls.latitude.setValue(location.latitude);
-      this.form.controls.longitude.setValue(location.longitude);
+    this.form.controls.latitude.setValue(location.latitude);
+    this.form.controls.longitude.setValue(location.longitude);
   }
 
   private load(): void {
@@ -151,5 +154,4 @@ export class IncidentsEditComponent {
         },
       });
   }
-
 }

@@ -6,7 +6,12 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { TranslocoDirective } from '@jsverse/transloco';
 import {
   DEFAULT_INCIDENT_STATUS,
@@ -21,7 +26,7 @@ import {
 @Component({
   selector: 'app-incident-status-dialog',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslocoDirective],
+  imports: [FormsModule, ReactiveFormsModule, TranslocoDirective],
   templateUrl: './incident-status-dialog.component.html',
   styleUrl: './incident-status-dialog.component.scss',
 })

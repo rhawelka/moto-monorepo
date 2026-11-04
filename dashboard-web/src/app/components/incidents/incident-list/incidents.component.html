@@ -128,21 +128,23 @@
                   </span>
                 </td>
                 <td>{{ incident.reportedAt | date: 'medium' }}</td>
-                <td class="row-actions">
-                  <button
-                    type="button"
-                    class="quick-action"
-                    (click)="openStatusDialog(incident, $event)"
-                  >
-                    {{ t('quickStatus') }}
-                  </button>
-                  <button
-                    type="button"
-                    class="edit-action"
-                    (click)="edit(incident); $event.stopPropagation()"
-                  >
-                    {{ t('edit') }}
-                  </button>
+                <td>
+                  <div class="row-actions">
+                    <button
+                      type="button"
+                      class="quick-action"
+                      (click)="openStatusDialog(incident, $event)"
+                    >
+                      {{ t('quickStatus') }}
+                    </button>
+                    <button
+                      type="button"
+                      class="edit-action"
+                      (click)="edit(incident); $event.stopPropagation()"
+                    >
+                      {{ t('edit') }}
+                    </button>
+                  </div>
                 </td>
               </tr>
             }
