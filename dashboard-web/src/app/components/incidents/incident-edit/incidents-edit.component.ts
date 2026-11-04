@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
+import { APP_ROUTES } from '../../../app.routes';
 import {
   DEFAULT_INCIDENT_SEVERITY,
   INCIDENT_SEVERITIES,
@@ -40,6 +41,7 @@ function hasNonWhitespace(control: AbstractControl<string>) {
   styleUrl: './incidents-edit.component.scss',
 })
 export class IncidentsEditComponent {
+  readonly APP_ROUTES = APP_ROUTES;
   readonly incident = signal<Incident | null>(null);
   readonly loading = signal(true);
   readonly loadFailed = signal(false);
@@ -110,7 +112,7 @@ export class IncidentsEditComponent {
       .update(this.incidentId, formValue)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => this.router.navigate(['/dashboard/incidents']),
+        next: () => this.router.navigate([APP_ROUTES.dashboard.incidents.list]),
         error: () => {
           this.saveFailed.set(true);
           this.saving.set(false);

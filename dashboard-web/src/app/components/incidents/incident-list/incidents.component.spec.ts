@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { signal } from '@angular/core';
 import { TranslocoTestingModule } from '@jsverse/transloco';
 import { of } from 'rxjs';
+import { APP_ROUTES } from '../../../app.routes';
 import {
   Incident,
   IncidentsService,
@@ -100,7 +101,7 @@ describe('IncidentsComponent', () => {
     expect(createButton).not.toBeNull();
     createButton.triggerEventHandler('click');
     expect(router.navigate).toHaveBeenCalledWith([
-      '/dashboard/incidents/new',
+      APP_ROUTES.dashboard.incidents.create,
     ]);
   });
 

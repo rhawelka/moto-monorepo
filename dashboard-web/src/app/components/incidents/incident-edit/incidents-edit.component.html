@@ -1,6 +1,8 @@
 <ng-container *transloco="let t; prefix: 'incidents'">
   <section class="edit-page">
-    <a class="back-link" routerLink="/dashboard/incidents">{{ t('backToList') }}</a>
+    <a class="back-link" [routerLink]="APP_ROUTES.dashboard.incidents.list">
+      {{ t('backToList') }}
+    </a>
     <h1>{{ t('editTitle') }}</h1>
 
     @if (loading()) {
@@ -65,7 +67,9 @@
           <p class="error" role="alert">{{ t('saveError') }}</p>
         }
         <div class="actions">
-          <a class="cancel" routerLink="/dashboard/incidents">{{ t('cancel') }}</a>
+          <a class="cancel" [routerLink]="APP_ROUTES.dashboard.incidents.list">
+            {{ t('cancel') }}
+          </a>
           <button type="submit" [disabled]="form.invalid || saving()">
             {{ saving() ? t('saving') : t('save') }}
           </button>

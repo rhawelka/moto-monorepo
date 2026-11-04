@@ -1,6 +1,6 @@
 <ng-container *transloco="let t; prefix: 'incidents'">
   <section class="create-page">
-    <a class="back-link" routerLink="/dashboard/incidents">
+    <a class="back-link" [routerLink]="APP_ROUTES.dashboard.incidents.list">
       {{ t('backToList') }}
     </a>
     <h1>{{ t('createTitle') }}</h1>
@@ -62,7 +62,9 @@
         <p class="error" role="alert">{{ t('createError') }}</p>
       }
       <div class="actions">
-        <a class="cancel" routerLink="/dashboard/incidents">{{ t('cancel') }}</a>
+        <a class="cancel" [routerLink]="APP_ROUTES.dashboard.incidents.list">
+          {{ t('cancel') }}
+        </a>
         <button type="submit" [disabled]="form.invalid || saving()">
           {{ saving() ? t('saving') : t('createIncident') }}
         </button>

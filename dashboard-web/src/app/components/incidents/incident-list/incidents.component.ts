@@ -12,6 +12,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
+import { APP_ROUTES } from '../../../app.routes';
 import { AuthService } from '../../../services/auth/auth.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import {
@@ -105,11 +106,11 @@ export class IncidentsComponent {
   }
 
   edit(incident: Incident): void {
-    this.router.navigate(['/dashboard/incidents', incident.id, 'edit']);
+    this.router.navigate([APP_ROUTES.dashboard.incidents.edit(incident.id)]);
   }
 
   createIncident(): void {
-    this.router.navigate(['/dashboard/incidents/new']);
+    this.router.navigate([APP_ROUTES.dashboard.incidents.create]);
   }
 
   openStatusDialog(incident: Incident, event: MouseEvent): void {

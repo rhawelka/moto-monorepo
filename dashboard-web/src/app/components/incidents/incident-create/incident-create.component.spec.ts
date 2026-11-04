@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { TranslocoTestingModule } from '@jsverse/transloco';
 import { of, throwError } from 'rxjs';
+import { APP_ROUTES } from '../../../app.routes';
 import {
   Incident,
   IncidentsService,
@@ -87,7 +88,9 @@ describe('IncidentCreateComponent', () => {
       status: 'OPEN',
       severity: 'HIGH',
     });
-    expect(router.navigate).toHaveBeenCalledWith(['/dashboard/incidents']);
+    expect(router.navigate).toHaveBeenCalledWith([
+      APP_ROUTES.dashboard.incidents.list,
+    ]);
   });
 
   it('sets coordinates from a selected autocomplete result and clears them when typing resumes', () => {
