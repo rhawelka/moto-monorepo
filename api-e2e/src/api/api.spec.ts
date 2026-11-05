@@ -113,7 +113,7 @@ describe('API e2e', () => {
       });
 
       expect(registeredProfile.data).toEqual({
-        userId: registration.data.user.id,
+        id: registration.data.user.id,
         email,
         role: 'USER',
       });
