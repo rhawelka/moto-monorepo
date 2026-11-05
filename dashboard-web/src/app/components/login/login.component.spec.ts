@@ -8,11 +8,12 @@ import { LoginComponent } from './login.component';
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
-  let authService: { login: jest.Mock };
+  let authService: { login: jest.Mock; startGoogleLogin: jest.Mock };
 
   beforeEach(async () => {
     authService = {
       login: jest.fn(),
+      startGoogleLogin: jest.fn(),
     };
 
     await TestBed.configureTestingModule({
@@ -45,6 +46,12 @@ describe('LoginComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should start Google sign-in', () => {
+    component.onGoogleLogin();
+
+    expect(authService.startGoogleLogin).toHaveBeenCalled();
   });
 
   it('should not submit an invalid form', () => {
