@@ -1,7 +1,8 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
+import { APP_ROUTES } from '../../app.routes';
 
 // todo move interfaces to a separate file
 export interface User {
@@ -39,11 +40,29 @@ export class AuthService {
       .pipe(tap((res) => this.handleAuthSuccess(res)));
   }
 
+  startGoogleLogin(): void {
+    window.location.assign(`${this.API_URL}/google`);
+  }
+
+  completeGoogleLogin(accessToken: string) {
+    return this.http
+      .get<User>(`${this.API_URL}/profile`, {
+        headers: new HttpHeaders({
+          Authorization: `Bearer ${accessToken}`,
+        }),
+      })
+      .pipe(
+        tap((user) =>
+          this.handleAuthSuccess({ user, access_token: accessToken }),
+        ),
+      );
+  }
+
   logout() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('user');
     this.currentUser.set(null);
-    this.router.navigate(['/login']);
+    this.router.navigate([APP_ROUTES.login]);
   }
 
   getToken(): string | null {
@@ -54,7 +73,7 @@ export class AuthService {
     localStorage.setItem('access_token', res.access_token);
     localStorage.setItem('user', JSON.stringify(res.user));
     this.currentUser.set(res.user);
-    this.router.navigate(['/dashboard']);
+    this.router.navigate([APP_ROUTES.dashboard.root]);
   }
 
   private getUserFromStorage(): User | null {

@@ -10,11 +10,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
+import { APP_ROUTES } from '../../app.routes';
 
 @Component({
   selector: 'app-login',
@@ -33,6 +34,7 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
   standalone: true,
 })
 export class LoginComponent {
+  readonly APP_ROUTES = APP_ROUTES;
   errorMessage = signal('');
   passwordVisible = signal(false);
   loginForm!: FormGroup<{
@@ -43,12 +45,28 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
   private transloco = inject(TranslocoService);
+  private route = inject(ActivatedRoute);
 
   constructor() {
     this.loginForm = this.formBuilder.nonNullable.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
     });
+
+    const oauthError = this.route.snapshot.queryParamMap.get('oauthError');
+    if (oauthError === 'google-account-not-found') {
+      this.errorMessage.set(
+        this.transloco.translate('authentication.googleAccountNotFound'),
+      );
+    } else if (oauthError === 'google-login-failed') {
+      this.errorMessage.set(
+        this.transloco.translate('authentication.googleLoginFailed'),
+      );
+    }
+  }
+
+  onGoogleLogin(): void {
+    this.authService.startGoogleLogin();
   }
 
   onLoginSubmit(event: Event) {

@@ -50,6 +50,21 @@ export class AuthService {
     };
   }
 
+  async loginWithGoogle(email: string) {
+    const user = await this.usersService.findByEmail(email);
+
+    if (!user) {
+      throw new UnauthorizedException(
+        'No existing account is associated with this Google email',
+      );
+    }
+
+    return {
+      user: { id: user.id, email: user.email, role: user.role },
+      access_token: this.generateToken(user.id, user.email, user.role),
+    };
+  }
+
   private generateToken(userId: string, email: string, role: string): string {
     return this.jwtService.sign({ sub: userId, email, role });
   }

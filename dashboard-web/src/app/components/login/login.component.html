@@ -55,12 +55,15 @@
           <button mat-flat-button color="primary" type="submit">
             {{ t('login') }}
           </button>
+          <button mat-stroked-button type="button" (click)="onGoogleLogin()">
+            {{ t('loginWithGoogle') }}
+          </button>
         </form>
       </mat-card-content>
 
       <mat-card-actions>
         <span>{{ t('newHere') }}</span>
-        <a mat-button routerLink="/register">{{ t('registerUser') }}</a>
+        <a mat-button [routerLink]="APP_ROUTES.register">{{ t('registerUser') }}</a>
       </mat-card-actions>
     </mat-card>
   </main>

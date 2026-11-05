@@ -3,6 +3,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { GoogleAuthCallbackComponent } from './components/login/google-auth-callback.component';
 import { authGuard } from './services/auth/auth.guard';
 import { guestGuard } from './services/auth/guest.guard';
 import { adminGuard } from './services/auth/admin.guard';
@@ -10,6 +11,7 @@ import { adminGuard } from './services/auth/admin.guard';
 export const APP_ROUTES = {
   login: '/login',
   register: '/register',
+  googleAuthCallbackPath: 'auth/callback',
   dashboard: {
     root: '/dashboard',
     overview: '/dashboard/overview',
@@ -39,6 +41,10 @@ export const appRoutes: Routes = [
     path: 'register',
     component: RegisterComponent,
     canActivate: [guestGuard],
+  },
+  {
+    path: APP_ROUTES.googleAuthCallbackPath,
+    component: GoogleAuthCallbackComponent,
   },
   {
     path: 'dashboard',
