@@ -16,8 +16,15 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  const configuredFrontendUrl =
+    process.env.FRONTEND_URL ?? 'http://localhost:4200';
+  const frontendOrigin = new URL(configuredFrontendUrl).origin;
+  const allowedOrigins =
+    process.env.NODE_ENV === 'production'
+      ? [frontendOrigin]
+      : [frontendOrigin, 'http://localhost:4200', 'http://127.0.0.1:4200'];
   app.enableCors({
-    origin: ['http://localhost:4200', 'http://127.0.0.1:4200'],
+    origin: allowedOrigins,
   });
   app.setGlobalPrefix('api/v1');
   const port = process.env.PORT || 3000;

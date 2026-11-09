@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -10,11 +10,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
+import { APP_ROUTES } from '../../app.routes';
 
 @Component({
   selector: 'app-login',
@@ -32,7 +33,8 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
   styleUrl: './login.component.scss',
   standalone: true,
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  readonly APP_ROUTES = APP_ROUTES;
   errorMessage = signal('');
   passwordVisible = signal(false);
   loginForm!: FormGroup<{
@@ -43,12 +45,15 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
   private transloco = inject(TranslocoService);
+  private route = inject(ActivatedRoute);
 
-  constructor() {
-    this.loginForm = this.formBuilder.nonNullable.group({
-      email: ['', [Validators.required]],
-      password: ['', [Validators.required]],
-    });
+  ngOnInit(): void {
+    this.initializeLoginForm();
+    this.setOAuthErrorMessage();
+  }
+
+  onGoogleLogin(): void {
+    this.authService.startGoogleLogin();
   }
 
   onLoginSubmit(event: Event) {
@@ -71,5 +76,25 @@ export class LoginComponent {
   onClickRevealPassword(event: MouseEvent) {
     event.preventDefault();
     this.passwordVisible.update((visible) => !visible);
+  }
+
+  private initializeLoginForm(): void {
+    this.loginForm = this.formBuilder.nonNullable.group({
+      email: ['', [Validators.required]],
+      password: ['', [Validators.required]],
+    });
+  }
+
+  private setOAuthErrorMessage(): void {
+    const oauthError = this.route.snapshot.queryParamMap.get('oauthError');
+    if (oauthError === 'google-account-not-found') {
+      this.errorMessage.set(
+        this.transloco.translate('authentication.googleAccountNotFound'),
+      );
+    } else if (oauthError === 'google-login-failed') {
+      this.errorMessage.set(
+        this.transloco.translate('authentication.googleLoginFailed'),
+      );
+    }
   }
 }

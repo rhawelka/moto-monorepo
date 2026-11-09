@@ -230,6 +230,17 @@ npm run start:ui
 
 The dashboard is available at `http://localhost:4200`.
 
+### Google OAuth sign-in
+
+The login page also supports Google OAuth 2.0 / OpenID Connect. In Google
+Cloud Console, create a Web application OAuth client and add
+`http://localhost:3000/api/v1/auth/google/callback` as an authorized redirect
+URI. Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `.env`; keep the
+secret on the API only. Set `GOOGLE_CALLBACK_URL` to the registered callback
+and `FRONTEND_URL` to the dashboard origin in deployed environments. OAuth
+sign-in requires a verified Google email matching an existing application
+account; it does not create or link accounts.
+
 To stop PostgreSQL while keeping its data:
 
 ```bash
