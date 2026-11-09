@@ -67,6 +67,7 @@ export class AuthController {
     }
 
     const state = randomBytes(32).toString('hex');
+
     response.cookie(GOOGLE_STATE_COOKIE, state, {
       httpOnly: true,
       secure: this.configService.get<string>('NODE_ENV') === 'production',
@@ -111,9 +112,11 @@ export class AuthController {
       const email = await this.getVerifiedGoogleEmail(code);
       const authResponse = await this.authService.loginWithGoogle(email);
       const callbackUrl = new URL('/auth/callback', this.getFrontendUrl());
+
       callbackUrl.hash = new URLSearchParams({
         access_token: authResponse.access_token,
       }).toString();
+
       response.redirect(callbackUrl.toString());
     } catch (error) {
       if (error instanceof UnauthorizedException) {
@@ -270,5 +273,3 @@ export class AuthController {
     return loginUrl.toString();
   }
 }
-
-// todo unit tests for auth controller
