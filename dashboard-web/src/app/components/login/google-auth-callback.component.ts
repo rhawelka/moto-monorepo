@@ -8,13 +8,7 @@ import { AuthService } from '../../services/auth/auth.service';
   selector: 'app-google-auth-callback',
   standalone: true,
   imports: [TranslocoDirective],
-  template: `
-    <ng-container *transloco="let t; prefix: 'authentication'">
-      <main class="auth-page">
-        <p>{{ t('googleSigningIn') }}</p>
-      </main>
-    </ng-container>
-  `,
+  templateUrl: './google-auth-callback.component.html',
 })
 export class GoogleAuthCallbackComponent {
   private readonly authService = inject(AuthService);

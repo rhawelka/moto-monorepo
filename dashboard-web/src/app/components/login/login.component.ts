@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -33,7 +33,7 @@ import { APP_ROUTES } from '../../app.routes';
   styleUrl: './login.component.scss',
   standalone: true,
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   readonly APP_ROUTES = APP_ROUTES;
   errorMessage = signal('');
   passwordVisible = signal(false);
@@ -47,22 +47,9 @@ export class LoginComponent {
   private transloco = inject(TranslocoService);
   private route = inject(ActivatedRoute);
 
-  constructor() {
-    this.loginForm = this.formBuilder.nonNullable.group({
-      email: ['', [Validators.required]],
-      password: ['', [Validators.required]],
-    });
-
-    const oauthError = this.route.snapshot.queryParamMap.get('oauthError');
-    if (oauthError === 'google-account-not-found') {
-      this.errorMessage.set(
-        this.transloco.translate('authentication.googleAccountNotFound'),
-      );
-    } else if (oauthError === 'google-login-failed') {
-      this.errorMessage.set(
-        this.transloco.translate('authentication.googleLoginFailed'),
-      );
-    }
+  ngOnInit(): void {
+    this.initializeLoginForm();
+    this.setOAuthErrorMessage();
   }
 
   onGoogleLogin(): void {
@@ -89,5 +76,25 @@ export class LoginComponent {
   onClickRevealPassword(event: MouseEvent) {
     event.preventDefault();
     this.passwordVisible.update((visible) => !visible);
+  }
+
+  private initializeLoginForm(): void {
+    this.loginForm = this.formBuilder.nonNullable.group({
+      email: ['', [Validators.required]],
+      password: ['', [Validators.required]],
+    });
+  }
+
+  private setOAuthErrorMessage(): void {
+    const oauthError = this.route.snapshot.queryParamMap.get('oauthError');
+    if (oauthError === 'google-account-not-found') {
+      this.errorMessage.set(
+        this.transloco.translate('authentication.googleAccountNotFound'),
+      );
+    } else if (oauthError === 'google-login-failed') {
+      this.errorMessage.set(
+        this.transloco.translate('authentication.googleLoginFailed'),
+      );
+    }
   }
 }
