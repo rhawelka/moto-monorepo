@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
-import { User, AuthService } from './auth.service';
+import { AuthService } from './auth.service';
+import { User } from './auth.models';
 import { adminGuard } from './admin.guard';
 
 describe('adminGuard', () => {

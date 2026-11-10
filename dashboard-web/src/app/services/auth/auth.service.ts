@@ -3,19 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { APP_ROUTES } from '../../app.routes';
-
-// todo move interfaces to a separate file
-export interface User {
-  id: string;
-  email: string;
-  role: 'USER' | 'ADMIN';
-}
-
-// todo move interfaces to a separate file
-export interface AuthResponse {
-  user: User;
-  access_token: string;
-}
+import { environment } from '../../../environments/environment';
+import type { AuthResponse, User } from './auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -25,8 +14,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  //todo move localhost URL to environment variable or config file for better flexibility and security
-  private readonly API_URL = 'http://localhost:3000/api/v1/auth';
+  private readonly API_URL = `${environment.apiUrl}/auth`;
 
   register(credentials: { username: string; email: string; password: string }) {
     return this.http

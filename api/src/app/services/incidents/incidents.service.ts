@@ -5,7 +5,6 @@ import { IncidentsQueryDto } from '../../controllers/incidents/incidents-query.d
 import { UpdateIncidentDto } from '../../controllers/incidents/update-incident.dto';
 import { CreateIncidentDto } from '../../controllers/incidents/create-incident.dto';
 
-//TODO napisz testy do tego serwisu jak i innych w api
 @Injectable()
 export class IncidentsService {
   constructor(private readonly prismaService: PrismaService) {}

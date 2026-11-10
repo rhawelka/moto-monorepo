@@ -47,7 +47,7 @@ describe('AuthController', () => {
       GOOGLE_CLIENT_ID: 'google-client-id',
       GOOGLE_CLIENT_SECRET: 'google-client-secret',
       GOOGLE_CALLBACK_URL: 'http://localhost:3000/api/v1/auth/google/callback',
-      FRONTEND_URL: 'http://localhost:4200',
+      FRONTEND_URL: 'https://frontend.example.test',
       NODE_ENV: 'test',
     });
     controller = new AuthController(
@@ -242,7 +242,7 @@ describe('AuthController', () => {
       }),
     );
     expect(response.redirect).toHaveBeenCalledWith(
-      'http://localhost:4200/login?oauthError=google-login-failed',
+      getFrontendLoginUrl('google-login-failed'),
     );
     expect(authService.loginWithGoogle).not.toHaveBeenCalled();
   });
@@ -257,7 +257,7 @@ describe('AuthController', () => {
     );
 
     expect(response.redirect).toHaveBeenCalledWith(
-      'http://localhost:4200/login?oauthError=google-login-failed',
+      getFrontendLoginUrl('google-login-failed', 'http://localhost:4200'),
     );
   });
 
@@ -321,7 +321,7 @@ describe('AuthController', () => {
       'rider@example.com',
     );
     const redirectUrl = new URL(response.redirect.mock.calls[0][0]);
-    expect(redirectUrl.origin).toBe('http://localhost:4200');
+    expect(redirectUrl.origin).toBe(new URL(configValues.FRONTEND_URL).origin);
     expect(redirectUrl.pathname).toBe('/auth/callback');
     expect(
       new URLSearchParams(redirectUrl.hash.slice(1)).get('access_token'),
@@ -335,7 +335,7 @@ describe('AuthController', () => {
     await callValidCallback();
 
     expect(response.redirect).toHaveBeenCalledWith(
-      'http://localhost:4200/login?oauthError=google-account-not-found',
+      getFrontendLoginUrl('google-account-not-found'),
     );
   });
 
@@ -348,7 +348,7 @@ describe('AuthController', () => {
     await callValidCallback();
 
     expect(response.redirect).toHaveBeenCalledWith(
-      'http://localhost:4200/login?oauthError=google-login-failed',
+      getFrontendLoginUrl('google-login-failed'),
     );
   });
 
@@ -373,7 +373,7 @@ describe('AuthController', () => {
 
     expect(authService.loginWithGoogle).not.toHaveBeenCalled();
     expect(response.redirect).toHaveBeenCalledWith(
-      'http://localhost:4200/login?oauthError=google-login-failed',
+      getFrontendLoginUrl('google-login-failed'),
     );
   });
 
@@ -409,7 +409,7 @@ describe('AuthController', () => {
 
     expect(authService.loginWithGoogle).not.toHaveBeenCalled();
     expect(response.redirect).toHaveBeenCalledWith(
-      'http://localhost:4200/login?oauthError=google-login-failed',
+      getFrontendLoginUrl('google-login-failed'),
     );
   });
 
@@ -424,7 +424,7 @@ describe('AuthController', () => {
       'Google OAuth provider request failed',
     );
     expect(response.redirect).toHaveBeenCalledWith(
-      'http://localhost:4200/login?oauthError=google-login-failed',
+      getFrontendLoginUrl('google-login-failed'),
     );
   });
 
@@ -439,7 +439,7 @@ describe('AuthController', () => {
       'Google OAuth provider rejected an authentication request',
     );
     expect(response.redirect).toHaveBeenCalledWith(
-      'http://localhost:4200/login?oauthError=google-login-failed',
+      getFrontendLoginUrl('google-login-failed'),
     );
   });
 
@@ -455,7 +455,7 @@ describe('AuthController', () => {
       'Google OAuth provider returned an invalid response',
     );
     expect(response.redirect).toHaveBeenCalledWith(
-      'http://localhost:4200/login?oauthError=google-login-failed',
+      getFrontendLoginUrl('google-login-failed'),
     );
   });
 
@@ -482,5 +482,14 @@ describe('AuthController', () => {
       response as never,
       { code: 'authorization-code', state: validState },
     );
+  }
+
+  function getFrontendLoginUrl(
+    error: string,
+    frontendUrl = configValues.FRONTEND_URL,
+  ): string {
+    const loginUrl = new URL('/login', frontendUrl);
+    loginUrl.searchParams.set('oauthError', error);
+    return loginUrl.toString();
   }
 });

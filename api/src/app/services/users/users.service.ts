@@ -3,15 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '@moto-monorepo/dto';
 import { PrismaService } from '../../database/prisma.service';
 import { Role } from '@prisma/client';
-
-// TODO move to interfaces folder
-export interface User {
-  id: string;
-  username: string | null;
-  email: string;
-  passwordHash: string;
-  role: Role;
-}
+import type { User } from './user.interface';
 
 @Injectable()
 export class UsersService {

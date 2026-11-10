@@ -1,5 +1,5 @@
 import { LoginDto } from '@moto-monorepo/dto';
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from '../../services/auth/auth.service';
 
 @Controller('login')
@@ -11,5 +11,3 @@ export class LoginController {
     return this.authService.login(dto);
   }
 }
-
-// todo unit tests for login controller
