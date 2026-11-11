@@ -8,7 +8,6 @@ import { MapComponent } from '../map/map.component';
   styleUrl: './overview.component.scss',
   template: `
     <section class="overview">
-      <h2>Overview</h2>
       <app-map />
     </section>
   `,

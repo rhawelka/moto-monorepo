@@ -86,7 +86,7 @@
       "executor": "nx:run-commands",
       "dependsOn": ["build", "e2e-db-up"],
       "options": {
-        "command": "DATABASE_URL=\"$E2E_DATABASE_URL\" JWT_SECRET=\"$E2E_JWT_SECRET\" PORT=3101 node dist/api/main.js",
+        "command": "DATABASE_URL=\"$E2E_DATABASE_URL\" JWT_SECRET=\"$E2E_JWT_SECRET\" API_PORT=3101 node dist/api/main.js",
         "cwd": "."
       }
     },
