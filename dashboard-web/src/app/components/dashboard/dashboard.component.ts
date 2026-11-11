@@ -15,7 +15,6 @@ export class DashboardComponent {
   readonly navItems = computed(() => [
     { label: 'overview', icon: 'dashboard', route: APP_ROUTES.dashboard.overview },
     { label: 'incidents', icon: 'bar_chart', route: APP_ROUTES.dashboard.incidents.list },
-    { label: 'map', icon: 'map', route: APP_ROUTES.dashboard.map },
     ...(this.authService.currentUser()?.role === 'ADMIN'
       ? [{ label: 'users', icon: 'group', route: APP_ROUTES.dashboard.users }]
       : []),

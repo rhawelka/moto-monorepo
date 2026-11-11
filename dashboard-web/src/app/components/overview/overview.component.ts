@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-overview',
   standalone: true,
+  imports: [MapComponent],
+  styleUrl: './overview.component.scss',
   template: `
-    <section>
+    <section class="overview">
       <h2>Overview</h2>
+      <app-map />
     </section>
   `,
 })
