@@ -17,7 +17,6 @@ describe('DashboardComponent', () => {
               sidebar: {
                 overview: 'Overview',
                 incidents: 'Incidents',
-                map: 'Map',
                 settings: 'Settings',
                 collapse: 'Collapse',
               },
@@ -39,6 +38,10 @@ describe('DashboardComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should not include a separate map tab in the navigation', () => {
+    expect(component.navItems().map(({ label }) => label)).not.toContain('map');
   });
 
   it('should toggle the sidenav from the footer control', () => {

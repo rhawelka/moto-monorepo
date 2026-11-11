@@ -10,14 +10,21 @@
   flex-direction: column;
 
   .app-body {
+    display: flex;
     flex: 1;
     min-height: 0;
+
+    ui-sidebar {
+      flex: 1;
+      min-height: 0;
+    }
   }
 
   .app-main {
     display: flex;
     flex: 1;
     flex-direction: column;
+    height: 100%;
     padding: 1.5rem;
     min-height: 0;
     box-sizing: border-box;

@@ -23,7 +23,6 @@ export const APP_ROUTES = {
     },
     settings: '/dashboard/settings',
     users: '/dashboard/users',
-    map: '/dashboard/map',
   },
   legacy: {
     incidents: '/incidents',
@@ -93,13 +92,7 @@ export const appRoutes: Routes = [
             (component) => component.UsersComponent,
           ),
       },
-      {
-        path: 'map',
-        loadComponent: () =>
-          import('./components/map/map.component').then(
-            (component) => component.MapComponent,
-          ),
-      },
+      { path: 'map', redirectTo: 'overview', pathMatch: 'full' },
     ],
   },
   {

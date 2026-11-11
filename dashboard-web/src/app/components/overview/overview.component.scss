@@ -1,0 +1,15 @@
+:host {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+  margin: calc(-1 * var(--spacing-lg));
+}
+
+.overview {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
