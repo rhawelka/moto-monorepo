@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
 export interface UserRow {
   id: string;
@@ -14,9 +15,6 @@ export class UsersService {
   private readonly http = inject(HttpClient);
 
   listNonAdminUsers() {
-    return this.http.get<UserRow[] | UserRow>(
-      'http://localhost:3000/api/v1/users',
-    );
+    return this.http.get<UserRow[] | UserRow>(`${environment.apiUrl}/users`);
   }
 }
- 

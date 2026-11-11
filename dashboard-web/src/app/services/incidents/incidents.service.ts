@@ -5,6 +5,7 @@ import { io, Socket } from 'socket.io-client';
 import { AuthService } from '../auth/auth.service';
 import { IncidentSeverity } from '../../shared/models/incident-severity';
 import { IncidentStatus } from '../../shared/models/incident-status';
+import { environment } from '../../../environments/environment';
 
 export type IncidentSortField = 'title' | 'status' | 'severity' | 'reportedAt';
 
@@ -43,8 +44,8 @@ export type IncidentUpdateEvent =
   | { type: 'updated'; incident: Incident }
   | { type: 'connection-error'; message: string };
 
-const API_URL = 'http://localhost:3000/api/v1/incidents';
-const SOCKET_URL = 'http://localhost:3000/incidents';
+const API_URL = `${environment.apiUrl}/incidents`;
+const SOCKET_URL = `${environment.socketUrl}/incidents`;
 
 @Injectable({ providedIn: 'root' })
 export class IncidentsService {
