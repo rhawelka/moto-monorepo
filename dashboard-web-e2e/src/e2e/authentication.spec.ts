@@ -1,21 +1,22 @@
 import { randomUUID } from 'node:crypto';
 import { PrismaClient } from '@prisma/client';
 import { expect, test } from '@playwright/test';
+import { getAppLocators } from './locators/locators';
 
 test.describe('dashboard-web authentication', () => {
   test('should display the login page for unauthenticated users', async ({
     page,
   }) => {
+    const locators = getAppLocators(page);
     await page.goto('/');
 
     await expect(page).toHaveURL(/\/login$/);
-    await expect(page.getByText('Welcome back', { exact: true })).toBeVisible();
-    await expect(
-      page.getByRole('button', { name: 'Login', exact: true }),
-    ).toBeVisible();
+    await expect(locators.authentication.welcomeBack).toBeVisible();
+    await expect(locators.authentication.loginButton).toBeVisible();
   });
 
   test('should start Google OAuth login', async ({ page }) => {
+    const locators = getAppLocators(page);
     await page.route('http://localhost:3000/api/v1/auth/google', (route) =>
       route.fulfill({
         status: 200,
@@ -27,7 +28,7 @@ test.describe('dashboard-web authentication', () => {
     const oauthRequest = page.waitForRequest(
       'http://localhost:3000/api/v1/auth/google',
     );
-    await page.getByRole('button', { name: 'Continue with Google' }).click();
+    await locators.authentication.googleLoginButton.click();
 
     expect((await oauthRequest).method()).toBe('GET');
     await expect(page).toHaveURL('http://localhost:3000/api/v1/auth/google');
@@ -36,6 +37,7 @@ test.describe('dashboard-web authentication', () => {
   test('should register a user, verify it exists, and remove it', async ({
     page,
   }) => {
+    const locators = getAppLocators(page);
     const databaseUrl = process.env['E2E_DATABASE_URL'];
     if (!databaseUrl) {
       throw new Error(
@@ -60,17 +62,17 @@ test.describe('dashboard-web authentication', () => {
       });
 
       await page.goto('/register');
-      await page.getByLabel('Username').fill(username);
-      await page.getByLabel('Email').fill(email);
-      await page.getByLabel('Password', { exact: true }).fill(password);
-      await page.getByLabel('Confirm Password').fill(password);
+      await locators.authentication.username.fill(username);
+      await locators.authentication.email.fill(email);
+      await locators.authentication.registrationPassword.fill(password);
+      await locators.authentication.confirmPassword.fill(password);
 
       const registrationResponse = page.waitForResponse(
         (response) =>
           response.url().includes('/api/v1/auth/register') &&
           response.request().method() === 'POST',
       );
-      await page.getByRole('button', { name: 'Register User' }).click();
+      await locators.authentication.registerButton.click();
       const response = await registrationResponse;
       expect(response.status()).toBe(201);
       await expect(page).toHaveURL(/\/dashboard(?:\/|$)/);

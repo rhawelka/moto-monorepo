@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { PrismaClient } from '@prisma/client';
 import { expect, test, type Page } from '@playwright/test';
+import { getAppLocators } from './locators/locators';
 
 const mockLocation = {
   label: 'Main Square, Krakow, Poland',
@@ -51,19 +52,18 @@ async function installLocationSearchMock(page: Page): Promise<void> {
 }
 
 async function loginAsAdmin(page: Page): Promise<void> {
+  const locators = getAppLocators(page);
   await page.goto('/login');
-  await page.getByLabel('Email or username').fill('admin@test.pl');
-  await page.getByRole('textbox', { name: 'Password' }).fill('admin');
-  await page.getByRole('button', { name: 'Login', exact: true }).click();
+  await locators.authentication.emailOrUsername.fill('admin@test.pl');
+  await locators.authentication.loginPassword.fill('admin');
+  await locators.authentication.loginButton.click();
   await expect(page).toHaveURL(/\/dashboard(?:\/|$)/);
 }
 
 async function selectMockLocation(page: Page): Promise<void> {
-  await page.getByLabel('Location').fill('Main Square');
-  await page
-    .getByRole('option', { name: mockLocation.label })
-    .getByRole('button')
-    .click();
+  const locators = getAppLocators(page);
+  await locators.incidents.location.fill('Main Square');
+  await locators.incidents.locationSuggestion(mockLocation.label).click();
 }
 
 async function createIncidentRecord(
@@ -88,6 +88,7 @@ test.describe('dashboard-web incidents', () => {
   test('should create an incident and show it in the incident list', async ({
     page,
   }) => {
+    const locators = getAppLocators(page);
     const prisma = await createPrismaClient();
     const title = `e2e-incident-${randomUUID()}`;
     const incidentDetails = {
@@ -106,25 +107,23 @@ test.describe('dashboard-web incidents', () => {
       await loginAsAdmin(page);
 
       await page.goto('/dashboard/incidents');
-      await page.getByRole('button', { name: 'Create incident' }).click();
-      await page.getByLabel('Title').fill(title);
-      await page.getByLabel('Description').fill(incidentDetails.description);
+      await locators.incidents.createButton.click();
+      await locators.incidents.title.fill(title);
+      await locators.incidents.description.fill(incidentDetails.description);
       await selectMockLocation(page);
-      await page.getByLabel('Severity').selectOption(incidentDetails.severity);
-      await page.getByLabel('Status').selectOption(incidentDetails.status);
+      await locators.incidents.severity.selectOption(incidentDetails.severity);
+      await locators.incidents.status.selectOption(incidentDetails.status);
 
       const createResponse = page.waitForResponse(
         (response) =>
           response.url().includes('/api/v1/incidents') &&
           response.request().method() === 'POST',
       );
-      await page.getByRole('button', { name: 'Create incident' }).click();
+      await locators.incidents.createButton.click();
       const response = await createResponse;
       expect(response.status()).toBe(201);
       await expect(page).toHaveURL(/\/dashboard\/incidents$/);
-      await expect(
-        page.getByRole('row').filter({ hasText: title }),
-      ).toBeVisible();
+      await expect(locators.incidents.row(title)).toBeVisible();
 
       const createdIncident = await response.json();
       await expect
@@ -157,6 +156,7 @@ test.describe('dashboard-web incidents', () => {
   test('should prevent submitting an incident with invalid fields', async ({
     page,
   }) => {
+    const locators = getAppLocators(page);
     await installApiRoute(page);
     await installLocationSearchMock(page);
     await loginAsAdmin(page);
@@ -172,25 +172,20 @@ test.describe('dashboard-web incidents', () => {
       }
     });
 
-    await page.getByLabel('Title').fill('Bad');
-    await page.getByLabel('Description').fill('Too short');
+    await locators.incidents.title.fill('Bad');
+    await locators.incidents.description.fill('Too short');
     await selectMockLocation(page);
 
-    await expect(
-      page.getByText('Title must be between 5 and 120 characters.'),
-    ).toBeVisible();
-    await expect(
-      page.getByText('Description must be between 20 and 2000 characters.'),
-    ).toBeVisible();
-    await expect(
-      page.getByRole('button', { name: 'Create incident' }),
-    ).toBeDisabled();
+    await expect(locators.incidents.titleValidation).toBeVisible();
+    await expect(locators.incidents.descriptionValidation).toBeVisible();
+    await expect(locators.incidents.createButton).toBeDisabled();
     expect(createRequestCount).toBe(0);
   });
 
   test('should display an error and keep the form when incident creation fails', async ({
     page,
   }) => {
+    const locators = getAppLocators(page);
     await installApiRoute(page);
     await page.route('http://localhost:3000/api/v1/incidents', (route) =>
       route.request().method() === 'POST'
@@ -206,10 +201,10 @@ test.describe('dashboard-web incidents', () => {
     await page.goto('/dashboard/incidents/new');
 
     const title = `e2e-failed-incident-${randomUUID()}`;
-    await page.getByLabel('Title').fill(title);
-    await page
-      .getByLabel('Description')
-      .fill('A vehicle collision is blocking the eastbound lane.');
+    await locators.incidents.title.fill(title);
+    await locators.incidents.description.fill(
+      'A vehicle collision is blocking the eastbound lane.',
+    );
     await selectMockLocation(page);
 
     const createResponse = page.waitForResponse(
@@ -217,23 +212,18 @@ test.describe('dashboard-web incidents', () => {
         response.url().includes('/api/v1/incidents') &&
         response.request().method() === 'POST',
     );
-    await page.getByRole('button', { name: 'Create incident' }).click();
+    await locators.incidents.createButton.click();
     expect((await createResponse).status()).toBe(500);
 
-    await expect(
-      page
-        .getByRole('alert')
-        .getByText('Incident could not be created. Please try again.'),
-    ).toBeVisible();
-    await expect(page.getByLabel('Title')).toHaveValue(title);
-    await expect(
-      page.getByRole('button', { name: 'Create incident' }),
-    ).toBeEnabled();
+    await expect(locators.incidents.createError).toBeVisible();
+    await expect(locators.incidents.title).toHaveValue(title);
+    await expect(locators.incidents.createButton).toBeEnabled();
   });
 
   test('should update an incident and show the saved changes', async ({
     page,
   }) => {
+    const locators = getAppLocators(page);
     const prisma = await createPrismaClient();
     const originalTitle = `e2e-edit-${randomUUID()}`;
     const updatedTitle = `${originalTitle}-updated`;
@@ -244,27 +234,24 @@ test.describe('dashboard-web incidents', () => {
       await installLocationSearchMock(page);
       await loginAsAdmin(page);
       await page.goto('/dashboard/incidents');
-      const row = page.getByRole('row').filter({ hasText: originalTitle });
-      await row.getByRole('button', { name: 'Edit' }).click();
+      await locators.incidents.editButton(originalTitle).click();
 
-      await page.getByLabel('Title').fill(updatedTitle);
-      await page
-        .getByLabel('Description')
-        .fill('Emergency crews are clearing the blocked eastbound lane.');
+      await locators.incidents.title.fill(updatedTitle);
+      await locators.incidents.description.fill(
+        'Emergency crews are clearing the blocked eastbound lane.',
+      );
       await selectMockLocation(page);
-      await page.getByLabel('Severity').selectOption('HIGH');
+      await locators.incidents.severity.selectOption('HIGH');
 
       const updateResponse = page.waitForResponse(
         (response) =>
           response.url().includes(`/api/v1/incidents/${incident.id}`) &&
           response.request().method() === 'PATCH',
       );
-      await page.getByRole('button', { name: 'Save changes' }).click();
+      await locators.incidents.saveButton.click();
       expect((await updateResponse).status()).toBe(200);
       await expect(page).toHaveURL(/\/dashboard\/incidents$/);
-      await expect(
-        page.getByRole('row').filter({ hasText: updatedTitle }),
-      ).toBeVisible();
+      await expect(locators.incidents.row(updatedTitle)).toBeVisible();
 
       await expect
         .poll(async () => {
@@ -303,6 +290,7 @@ test.describe('dashboard-web incidents', () => {
   test('should filter incidents by search text and status', async ({
     page,
   }) => {
+    const locators = getAppLocators(page);
     const prisma = await createPrismaClient();
     const uniqueId = randomUUID();
     const matchingTitle = `e2e-search-${uniqueId}`;
@@ -319,21 +307,15 @@ test.describe('dashboard-web incidents', () => {
       await loginAsAdmin(page);
       await page.goto('/dashboard/incidents');
 
-      await page.getByLabel('Search').fill(matchingTitle);
-      const matchingRow = page
-        .getByRole('row')
-        .filter({ hasText: matchingTitle });
+      await locators.incidents.search.fill(matchingTitle);
+      const matchingRow = locators.incidents.row(matchingTitle);
       await expect(matchingRow).toBeVisible();
-      await expect(
-        page.getByRole('row').filter({ hasText: otherTitle }),
-      ).toHaveCount(0);
+      await expect(locators.incidents.row(otherTitle)).toHaveCount(0);
 
-      await page.getByLabel('Search').fill('');
-      await page.getByLabel('Status').selectOption('RESOLVED');
+      await locators.incidents.search.fill('');
+      await locators.incidents.status.selectOption('RESOLVED');
       await expect(matchingRow).toBeVisible();
-      await expect(
-        page.getByRole('row').filter({ hasText: otherTitle }),
-      ).toHaveCount(0);
+      await expect(locators.incidents.row(otherTitle)).toHaveCount(0);
     } finally {
       try {
         await prisma.incident.deleteMany({
@@ -346,6 +328,7 @@ test.describe('dashboard-web incidents', () => {
   });
 
   test('should deny incident creation to non-admin users', async ({ page }) => {
+    const locators = getAppLocators(page);
     const prisma = await createPrismaClient();
     const id = randomUUID();
     const email = `e2e-user-${id}@example.com`;
@@ -374,9 +357,7 @@ test.describe('dashboard-web incidents', () => {
         { user: registration.user, accessToken: registration.access_token },
       );
       await page.goto('/dashboard/incidents');
-      await expect(
-        page.getByRole('button', { name: 'Create incident' }),
-      ).toHaveCount(0);
+      await expect(locators.incidents.createButton).toHaveCount(0);
 
       await page.goto('/dashboard/incidents/new');
       await expect(page).toHaveURL(/\/dashboard\/overview$/);
@@ -414,6 +395,7 @@ test.describe('dashboard-web incidents', () => {
   test('should save a status change from the incident list', async ({
     page,
   }) => {
+    const locators = getAppLocators(page);
     const prisma = await createPrismaClient();
     const title = `e2e-status-${randomUUID()}`;
     const incident = await createIncidentRecord(prisma, title);
@@ -423,19 +405,17 @@ test.describe('dashboard-web incidents', () => {
       await loginAsAdmin(page);
       await page.goto('/dashboard/incidents');
 
-      const row = page.getByRole('row').filter({ hasText: title });
-      await row.getByRole('button', { name: 'Change status' }).click();
-      const dialog = page.getByRole('dialog', { name: 'Change status' });
-      await dialog.getByLabel('Status').selectOption('RESOLVED');
+      await locators.incidents.changeStatusButton(title).click();
+      await locators.incidents.statusDialogSelect.selectOption('RESOLVED');
 
       const updateResponse = page.waitForResponse(
         (response) =>
           response.url().includes(`/api/v1/incidents/${incident.id}`) &&
           response.request().method() === 'PATCH',
       );
-      await dialog.getByRole('button', { name: 'Save changes' }).click();
+      await locators.incidents.statusDialogSaveButton.click();
       expect((await updateResponse).status()).toBe(200);
-      await expect(row.getByText('Resolved', { exact: true })).toBeVisible();
+      await expect(locators.incidents.resolvedStatus(title)).toBeVisible();
 
       await expect
         .poll(async () => {
