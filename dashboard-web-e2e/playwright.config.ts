@@ -18,9 +18,17 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  webServer: {
-    command: 'npm run start:ui',
-    url: `http://localhost:${port}`,
-    reuseExistingServer: !process.env['CI'],
-  },
+  webServer: [
+    {
+      command: `npm run start:ui -- --port=${port}`,
+      url: `http://localhost:${port}`,
+      reuseExistingServer: !process.env['CI'],
+    },
+    {
+      command: 'npx nx run api:serve-e2e',
+      url: 'http://localhost:3101/api/v1/auth/profile',
+      reuseExistingServer: !process.env['CI'],
+      timeout: 180_000,
+    },
+  ],
 });
