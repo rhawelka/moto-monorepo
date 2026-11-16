@@ -1,7 +1,15 @@
 import { randomUUID } from 'node:crypto';
 import { PrismaClient } from '@prisma/client';
 import { expect, test, type Page } from '@playwright/test';
-import { getAppLocators } from './locators/locators';
+import { getAuthenticationLocators } from './locators/authentication';
+import { getIncidentLocators } from './locators/incidents';
+
+function getLocators(page: Page) {
+  return {
+    authentication: getAuthenticationLocators(page),
+    incidents: getIncidentLocators(page),
+  };
+}
 
 const mockLocation = {
   label: 'Main Square, Krakow, Poland',
@@ -11,6 +19,7 @@ const mockLocation = {
 
 async function createPrismaClient(): Promise<PrismaClient> {
   const databaseUrl = process.env['E2E_DATABASE_URL'];
+
   if (!databaseUrl) {
     throw new Error('E2E_DATABASE_URL is required to run dashboard E2E tests.');
   }
@@ -52,7 +61,7 @@ async function installLocationSearchMock(page: Page): Promise<void> {
 }
 
 async function loginAsAdmin(page: Page): Promise<void> {
-  const locators = getAppLocators(page);
+  const locators = getLocators(page);
   await page.goto('/login');
   await locators.authentication.emailOrUsername.fill('admin@test.pl');
   await locators.authentication.loginPassword.fill('admin');
@@ -61,7 +70,7 @@ async function loginAsAdmin(page: Page): Promise<void> {
 }
 
 async function selectMockLocation(page: Page): Promise<void> {
-  const locators = getAppLocators(page);
+  const locators = getLocators(page);
   await locators.incidents.location.fill('Main Square');
   await locators.incidents.locationSuggestion(mockLocation.label).click();
 }
@@ -88,7 +97,7 @@ test.describe('dashboard-web incidents', () => {
   test('should create an incident and show it in the incident list', async ({
     page,
   }) => {
-    const locators = getAppLocators(page);
+    const locators = getLocators(page);
     const prisma = await createPrismaClient();
     const title = `e2e-incident-${randomUUID()}`;
     const incidentDetails = {
@@ -156,7 +165,7 @@ test.describe('dashboard-web incidents', () => {
   test('should prevent submitting an incident with invalid fields', async ({
     page,
   }) => {
-    const locators = getAppLocators(page);
+    const locators = getLocators(page);
     await installApiRoute(page);
     await installLocationSearchMock(page);
     await loginAsAdmin(page);
@@ -185,7 +194,7 @@ test.describe('dashboard-web incidents', () => {
   test('should display an error and keep the form when incident creation fails', async ({
     page,
   }) => {
-    const locators = getAppLocators(page);
+    const locators = getLocators(page);
     await installApiRoute(page);
     await page.route('http://localhost:3000/api/v1/incidents', (route) =>
       route.request().method() === 'POST'
@@ -223,7 +232,7 @@ test.describe('dashboard-web incidents', () => {
   test('should update an incident and show the saved changes', async ({
     page,
   }) => {
-    const locators = getAppLocators(page);
+    const locators = getLocators(page);
     const prisma = await createPrismaClient();
     const originalTitle = `e2e-edit-${randomUUID()}`;
     const updatedTitle = `${originalTitle}-updated`;
@@ -290,7 +299,7 @@ test.describe('dashboard-web incidents', () => {
   test('should filter incidents by search text and status', async ({
     page,
   }) => {
-    const locators = getAppLocators(page);
+    const locators = getLocators(page);
     const prisma = await createPrismaClient();
     const uniqueId = randomUUID();
     const matchingTitle = `e2e-search-${uniqueId}`;
@@ -328,7 +337,7 @@ test.describe('dashboard-web incidents', () => {
   });
 
   test('should deny incident creation to non-admin users', async ({ page }) => {
-    const locators = getAppLocators(page);
+    const locators = getLocators(page);
     const prisma = await createPrismaClient();
     const id = randomUUID();
     const email = `e2e-user-${id}@example.com`;
@@ -395,7 +404,7 @@ test.describe('dashboard-web incidents', () => {
   test('should save a status change from the incident list', async ({
     page,
   }) => {
-    const locators = getAppLocators(page);
+    const locators = getLocators(page);
     const prisma = await createPrismaClient();
     const title = `e2e-status-${randomUUID()}`;
     const incident = await createIncidentRecord(prisma, title);

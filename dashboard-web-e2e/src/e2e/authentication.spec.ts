@@ -1,13 +1,13 @@
 import { randomUUID } from 'node:crypto';
 import { PrismaClient } from '@prisma/client';
 import { expect, test } from '@playwright/test';
-import { getAppLocators } from './locators/locators';
+import { getAuthenticationLocators } from './locators/authentication';
 
 test.describe('dashboard-web authentication', () => {
   test('should display the login page for unauthenticated users', async ({
     page,
   }) => {
-    const locators = getAppLocators(page);
+    const locators = { authentication: getAuthenticationLocators(page) };
     await page.goto('/');
 
     await expect(page).toHaveURL(/\/login$/);
@@ -16,7 +16,7 @@ test.describe('dashboard-web authentication', () => {
   });
 
   test('should start Google OAuth login', async ({ page }) => {
-    const locators = getAppLocators(page);
+    const locators = { authentication: getAuthenticationLocators(page) };
     await page.route('http://localhost:3000/api/v1/auth/google', (route) =>
       route.fulfill({
         status: 200,
@@ -37,7 +37,7 @@ test.describe('dashboard-web authentication', () => {
   test('should register a user, verify it exists, and remove it', async ({
     page,
   }) => {
-    const locators = getAppLocators(page);
+    const locators = { authentication: getAuthenticationLocators(page) };
     const databaseUrl = process.env['E2E_DATABASE_URL'];
     if (!databaseUrl) {
       throw new Error(
