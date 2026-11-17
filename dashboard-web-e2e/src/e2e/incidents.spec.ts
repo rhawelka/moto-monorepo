@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import { PrismaClient } from '@prisma/client';
 import { expect, test, type Page } from '@playwright/test';
-import { getAuthenticationLocators } from './locators/authentication';
 import { getIncidentLocators } from './locators/incidents';
+import { getAuthenticationLocators } from './locators/authentication';
 
 function getLocators(page: Page) {
   return {
@@ -19,7 +19,6 @@ const mockLocation = {
 
 async function createPrismaClient(): Promise<PrismaClient> {
   const databaseUrl = process.env['E2E_DATABASE_URL'];
-
   if (!databaseUrl) {
     throw new Error('E2E_DATABASE_URL is required to run dashboard E2E tests.');
   }
