@@ -16,7 +16,14 @@ export class DashboardComponent {
     { label: 'overview', icon: 'dashboard', route: APP_ROUTES.dashboard.overview },
     { label: 'incidents', icon: 'bar_chart', route: APP_ROUTES.dashboard.incidents.list },
     ...(this.authService.currentUser()?.role === 'ADMIN'
-      ? [{ label: 'users', icon: 'group', route: APP_ROUTES.dashboard.users }]
+      ? [
+          { label: 'users', icon: 'group', route: APP_ROUTES.dashboard.users },
+          {
+            label: 'adminSettings',
+            icon: 'settings',
+            route: APP_ROUTES.admin.settings,
+          },
+        ]
       : []),
   ]);
 

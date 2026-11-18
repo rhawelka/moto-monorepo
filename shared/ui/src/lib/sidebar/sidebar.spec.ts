@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslocoTestingModule } from '@jsverse/transloco';
 import { provideRouter } from '@angular/router';
+import { Router } from '@angular/router';
 import { Sidebar } from './sidebar';
 
 describe('Sidebar', () => {
@@ -55,6 +56,24 @@ describe('Sidebar', () => {
     component.selectItem(component.navItems[1]);
     expect(component.isItemActive(component.navItems[0])).toBe(false);
     expect(component.isItemActive(component.navItems[1])).toBe(true);
+  });
+
+  it('updates the active item when nav inputs change on an active route', () => {
+    const router = TestBed.inject(Router);
+    jest.spyOn(router, 'url', 'get').mockReturnValue('/admin/settings');
+    fixture.componentRef.setInput('navItems', [
+      ...component.navItems,
+      {
+        label: 'adminSettings',
+        icon: 'settings',
+        route: '/admin/settings',
+      },
+    ]);
+
+    fixture.detectChanges();
+
+    expect(component.activeItem).toBe('adminSettings');
+    expect(component.isItemActive(component.navItems[2])).toBe(true);
   });
 
   it('should toggle the expanded state', () => {

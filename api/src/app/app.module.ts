@@ -13,6 +13,8 @@ import { AdminGuard } from './services/admin.guard';
 import { IncidentsController } from './controllers/incidents/incidents.controller';
 import { IncidentsService } from './services/incidents/incidents.service';
 import { IncidentsGateway } from './services/incidents/incidents.gateway';
+import { AdminSettingsController } from './controllers/admin-settings/admin-settings.controller';
+import { AdminSettingsService } from './services/admin-settings/admin-settings.service';
 
 @Module({
   imports: [
@@ -30,6 +32,7 @@ import { IncidentsGateway } from './services/incidents/incidents.gateway';
     LoginController,
     UsersController,
     IncidentsController,
+    AdminSettingsController,
   ],
   providers: [
     AuthService,
@@ -39,6 +42,7 @@ import { IncidentsGateway } from './services/incidents/incidents.gateway';
     AdminGuard,
     IncidentsService,
     IncidentsGateway,
+    AdminSettingsService,
   ],
 })
 export class AppModule {}

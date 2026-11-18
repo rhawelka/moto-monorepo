@@ -24,6 +24,9 @@ export const APP_ROUTES = {
     settings: '/dashboard/settings',
     users: '/dashboard/users',
   },
+  admin: {
+    settings: '/admin/settings',
+  },
   legacy: {
     incidents: '/incidents',
     incidentEditPath: '/incidents/:id/edit',
@@ -93,6 +96,21 @@ export const appRoutes: Routes = [
           ),
       },
       { path: 'map', redirectTo: 'overview', pathMatch: 'full' },
+    ],
+  },
+  {
+    path: 'admin/settings',
+    component: DashboardComponent,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./components/admin-settings/admin-settings.component').then(
+            (component) => component.AdminSettingsComponent,
+          ),
+      },
     ],
   },
   {

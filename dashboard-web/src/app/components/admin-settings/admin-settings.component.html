@@ -1,0 +1,204 @@
+<ng-container *transloco="let t; prefix: 'adminSettings'">
+  <section class="admin-settings-page">
+    <header class="admin-settings-page__header">
+      <p class="admin-settings-page__eyebrow">{{ t('eyebrow') }}</p>
+      <h1>{{ t('title') }}</h1>
+      <p>{{ t('subtitle') }}</p>
+    </header>
+
+    @if (loading()) {
+      <p role="status">{{ t('loading') }}</p>
+    } @else if (loadFailed()) {
+      <p class="admin-settings-page__error" role="alert">
+        {{ t('loadError') }}
+      </p>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <section class="settings-card" formGroupName="mapCenter">
+          <h2>{{ t('mapCenterTitle') }}</h2>
+          <p>{{ t('mapCenterDescription') }}</p>
+          <div class="settings-fields settings-fields--three">
+            <label>
+              <span>{{ t('latitude') }}</span>
+              <input type="number" formControlName="latitude" step="any" />
+            </label>
+            <label>
+              <span>{{ t('longitude') }}</span>
+              <input type="number" formControlName="longitude" step="any" />
+            </label>
+            <label>
+              <span>{{ t('zoom') }}</span>
+              <input type="number" formControlName="zoom" min="1" max="20" />
+            </label>
+          </div>
+          @if (mapCenter.touched && mapCenter.invalid) {
+            <p class="field-error" role="alert">
+              {{ t('mapCenterValidation') }}
+            </p>
+          }
+        </section>
+
+        <section class="settings-card">
+          <div class="settings-card__heading">
+            <div>
+              <h2>{{ t('zonesTitle') }}</h2>
+              <p>{{ t('zonesDescription') }}</p>
+            </div>
+            <button type="button" class="secondary-action" (click)="addZone()">
+              {{ t('addZone') }}
+            </button>
+          </div>
+          <div class="settings-list" formArrayName="zones">
+            @for (zone of zones.controls; track zone; let index = $index) {
+              <fieldset class="settings-item" [formGroupName]="index">
+                <legend>{{ t('zone') }} {{ index + 1 }}</legend>
+                <div class="settings-fields settings-fields--four">
+                  <label>
+                    <span>{{ t('name') }}</span>
+                    <input formControlName="name" maxlength="80" />
+                  </label>
+                  <label>
+                    <span>{{ t('latitude') }}</span>
+                    <input
+                      type="number"
+                      formControlName="latitude"
+                      step="any"
+                    />
+                  </label>
+                  <label>
+                    <span>{{ t('longitude') }}</span>
+                    <input
+                      type="number"
+                      formControlName="longitude"
+                      step="any"
+                    />
+                  </label>
+                  <label>
+                    <span>{{ t('radiusKm') }}</span>
+                    <input
+                      type="number"
+                      formControlName="radiusKm"
+                      min="0.1"
+                      max="1000"
+                      step="any"
+                    />
+                  </label>
+                </div>
+                @if (zone.touched && zone.invalid) {
+                  <p class="field-error" role="alert">
+                    {{ t('zoneValidation') }}
+                  </p>
+                }
+                <button
+                  type="button"
+                  class="remove-action"
+                  (click)="removeZone(index)"
+                >
+                  {{ t('remove') }}
+                </button>
+              </fieldset>
+            } @empty {
+              <p class="settings-empty">{{ t('noZones') }}</p>
+            }
+          </div>
+          @if (zones.touched && zones.hasError('duplicateName')) {
+            <p class="field-error" role="alert">
+              {{ t('duplicateZoneNames') }}
+            </p>
+          }
+        </section>
+
+        <section class="settings-card">
+          <div class="settings-card__heading">
+            <div>
+              <h2>{{ t('alertTypesTitle') }}</h2>
+              <p>{{ t('alertTypesDescription') }}</p>
+            </div>
+            <button
+              type="button"
+              class="secondary-action"
+              (click)="addAlertType()"
+            >
+              {{ t('addAlertType') }}
+            </button>
+          </div>
+          <div class="settings-list" formArrayName="alertTypes">
+            @for (
+              alertType of alertTypes.controls;
+              track alertType;
+              let index = $index
+            ) {
+              <fieldset class="settings-item" [formGroupName]="index">
+                <legend>{{ t('alertType') }} {{ index + 1 }}</legend>
+                <div class="settings-fields settings-fields--three">
+                  <label>
+                    <span>{{ t('name') }}</span>
+                    <input formControlName="name" maxlength="80" />
+                  </label>
+                  <label>
+                    <span>{{ t('severity') }}</span>
+                    <select formControlName="severity">
+                      @for (severity of severities; track severity) {
+                        <option [value]="severity">
+                          {{ t('severity_' + severity) }}
+                        </option>
+                      }
+                    </select>
+                  </label>
+                  <label class="checkbox-field">
+                    <input type="checkbox" formControlName="enabled" />
+                    <span>{{ t('enabled') }}</span>
+                  </label>
+                </div>
+                @if (alertType.touched && alertType.invalid) {
+                  <p class="field-error" role="alert">
+                    {{ t('alertTypeValidation') }}
+                  </p>
+                }
+                <button
+                  type="button"
+                  class="remove-action"
+                  (click)="removeAlertType(index)"
+                >
+                  {{ t('remove') }}
+                </button>
+              </fieldset>
+            }
+          </div>
+          @if (alertTypes.touched && alertTypes.hasError('minlength')) {
+            <p class="field-error" role="alert">
+              {{ t('atLeastOneAlertType') }}
+            </p>
+          }
+          @if (alertTypes.touched && alertTypes.hasError('duplicateName')) {
+            <p class="field-error" role="alert">
+              {{ t('duplicateAlertNames') }}
+            </p>
+          }
+        </section>
+
+        <div class="form-feedback">
+          <p
+            class="admin-settings-page__error"
+            role="alert"
+            [hidden]="!saveFailed()"
+          >
+            {{ t('saveError') }}
+          </p>
+          <p
+            class="admin-settings-page__success"
+            role="status"
+            [hidden]="!saved()"
+          >
+            {{ t('saved') }}
+          </p>
+        </div>
+        <footer class="form-actions">
+          <button type="submit" [disabled]="form.invalid || saving()">
+            {{ saving() ? t('saving') : t('save') }}
+          </button>
+        </footer>
+      </form>
+    }
+  </section>
+</ng-container>

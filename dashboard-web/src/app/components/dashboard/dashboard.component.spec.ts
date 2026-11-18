@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslocoTestingModule } from '@jsverse/transloco';
 import { provideRouter } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
+import { AuthService } from '../../services/auth/auth.service';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -42,6 +43,28 @@ describe('DashboardComponent', () => {
 
   it('should not include a separate map tab in the navigation', () => {
     expect(component.navItems().map(({ label }) => label)).not.toContain('map');
+  });
+
+  it('shows the global settings link to administrators only', () => {
+    const authService = TestBed.inject(AuthService);
+    authService.currentUser.set({
+      id: 'admin-1',
+      email: 'admin@example.com',
+      role: 'ADMIN',
+    });
+
+    expect(component.navItems().map(({ label }) => label)).toContain(
+      'adminSettings',
+    );
+
+    authService.currentUser.set({
+      id: 'user-1',
+      email: 'user@example.com',
+      role: 'USER',
+    });
+    expect(component.navItems().map(({ label }) => label)).not.toContain(
+      'adminSettings',
+    );
   });
 
   it('should toggle the sidenav from the footer control', () => {
