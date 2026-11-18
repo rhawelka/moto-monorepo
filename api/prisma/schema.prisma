@@ -48,3 +48,36 @@ model Incident {
   reportedAt  DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 }
+
+model AdminSettings {
+  id                 Int         @id @default(1)
+  mapCenterLatitude  Float       @default(50.0614)
+  mapCenterLongitude Float       @default(19.9366)
+  mapZoom            Int         @default(11)
+  updatedAt          DateTime    @updatedAt
+  mapZones           MapZone[]
+  alertTypes         AlertType[]
+}
+
+model MapZone {
+  id         String        @id @default(uuid()) @db.Uuid
+  name       String
+  latitude   Float
+  longitude  Float
+  radiusKm   Float
+  settingsId Int           @default(1)
+  settings   AdminSettings @relation(fields: [settingsId], references: [id], onDelete: Cascade)
+
+  @@index([settingsId])
+}
+
+model AlertType {
+  id         String           @id @default(uuid()) @db.Uuid
+  name       String
+  severity   IncidentSeverity
+  enabled    Boolean          @default(true)
+  settingsId Int              @default(1)
+  settings   AdminSettings    @relation(fields: [settingsId], references: [id], onDelete: Cascade)
+
+  @@index([settingsId])
+}

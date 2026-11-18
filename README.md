@@ -123,6 +123,21 @@ description, location, status, and severity. Creation is protected by the
 dashboard's admin route guard and the API's admin guard. A successful creation
 is broadcast as `incident.updated` so other open incident lists refresh.
 
+## Global administration
+
+Administrators can open `/admin/settings` to configure the default live-map
+center and zoom, add or remove circular operational zones, and manage enabled
+alert types and their severities. The map displays saved zones for all
+authenticated dashboard users. Settings are persisted in the database; the
+first read creates defaults for the Krakow map center and the four incident
+severities.
+
+The settings page uses reactive forms with client- and server-side validation.
+`GET /api/v1/admin/settings` is available to authenticated users so the map can
+load its configuration. `PATCH /api/v1/admin/settings` requires administrator
+privileges. Apply the `admin_settings` Prisma migration as part of the standard
+database migration setup.
+
 ### Incident API
 
 All REST endpoints require a valid JWT in the `Authorization: Bearer <token>`

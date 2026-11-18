@@ -1,4 +1,5 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, DestroyRef, inject, Input, OnChanges } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -27,7 +28,7 @@ export interface SidebarItem {
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
 })
-export class Sidebar {
+export class Sidebar implements OnChanges {
   @Input() navItems: SidebarItem[] = [
     { label: 'overview', icon: 'dashboard', route: '/dashboard/overview' },
     { label: 'incidents', icon: 'bar_chart', route: '/dashboard/incidents' },
@@ -41,12 +42,17 @@ export class Sidebar {
   activeItem = 'overview';
 
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor() {
-    this.activeItem = this.getActiveItem();
-    this.router.events.subscribe(() => {
-      this.activeItem = this.getActiveItem();
-    });
+    this.updateActiveItem();
+    this.router.events
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.updateActiveItem());
+  }
+
+  ngOnChanges(): void {
+    this.updateActiveItem();
   }
 
   isItemActive(item: SidebarItem): boolean {
@@ -61,7 +67,7 @@ export class Sidebar {
     this.expanded = !this.expanded;
   }
 
-  private getActiveItem(): string {
+  private updateActiveItem(): void {
     const currentUrl = this.router.url;
 
     const match = [...this.navItems, this.settingsItem].find(
@@ -69,6 +75,6 @@ export class Sidebar {
         currentUrl === item.route || currentUrl.startsWith(`${item.route}/`),
     );
 
-    return match?.label ?? this.navItems[0]?.label ?? '';
+    this.activeItem = match?.label ?? this.navItems[0]?.label ?? '';
   }
 }

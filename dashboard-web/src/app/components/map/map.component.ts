@@ -11,6 +11,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import EsriMap from '@arcgis/core/Map.js';
 import esriConfig from '@arcgis/core/config.js';
+import Circle from '@arcgis/core/geometry/Circle.js';
 import Graphic from '@arcgis/core/Graphic.js';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer.js';
 import Point from '@arcgis/core/geometry/Point.js';
@@ -18,6 +19,10 @@ import PopupTemplate from '@arcgis/core/PopupTemplate.js';
 import MapView from '@arcgis/core/views/MapView.js';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { IncidentSeverity } from '../../shared/models/incident-severity';
+import {
+  AdminSettingsService,
+  MapZoneSettings,
+} from '../../services/admin-settings/admin-settings.service';
 import {
   Incident,
   IncidentsService,
@@ -41,14 +46,17 @@ const INCIDENT_SEVERITY_COLORS: Record<IncidentSeverity, RgbaColor> = {
 })
 export class MapComponent implements AfterViewInit, OnDestroy {
   readonly loadFailed = signal(false);
+  readonly settingsLoadFailed = signal(false);
   readonly unmappedCount = signal(0);
 
   @ViewChild('mapContainer')
   private mapContainer?: ElementRef<HTMLDivElement>;
   private mapView?: MapView;
   private incidentLayer?: GraphicsLayer;
+  private zoneLayer?: GraphicsLayer;
   private stylesheet?: HTMLLinkElement;
   private readonly incidentsService = inject(IncidentsService);
+  private readonly adminSettingsService = inject(AdminSettingsService);
   private readonly transloco = inject(TranslocoService);
   private readonly destroyRef = inject(DestroyRef);
   private hasCenteredOnIncidents = false;
@@ -96,17 +104,48 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (this.destroyed) return;
 
     this.createMapView(mapContainer);
+    this.loadAdminSettings();
     this.loadIncidents();
     this.subscribeToIncidentUpdates();
   }
 
+  private loadAdminSettings(): void {
+    this.adminSettingsService
+      .getSettings()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (settings) => {
+          this.settingsLoadFailed.set(false);
+          this.renderMapZones(settings.zones);
+          if (
+            !this.hasCenteredOnIncidents &&
+            this.incidentLayer?.graphics.length === 0
+          ) {
+            void this.mapView
+              ?.goTo({
+                center: [
+                  settings.mapCenter.longitude,
+                  settings.mapCenter.latitude,
+                ],
+                zoom: settings.mapCenter.zoom,
+              })
+              .catch((error: Error) => {
+                if (error.name !== 'AbortError') this.loadFailed.set(true);
+              });
+          }
+        },
+        error: () => this.settingsLoadFailed.set(true),
+      });
+  }
+
   private createMapView(mapContainer: HTMLDivElement): void {
     this.incidentLayer = new GraphicsLayer({ title: 'Incidents' });
+    this.zoneLayer = new GraphicsLayer({ title: 'Configured zones' });
     this.mapView = new MapView({
       container: mapContainer,
       map: new EsriMap({
         basemap: 'osm',
-        layers: [this.incidentLayer],
+        layers: [this.zoneLayer, this.incidentLayer],
       }),
       center: [19.94, 50.06],
       zoom: 11,
@@ -225,6 +264,37 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     this.incidentLayer.removeAll();
     this.incidentLayer.addMany(graphics);
+  }
+
+  private renderMapZones(zones: MapZoneSettings[]): void {
+    if (!this.zoneLayer) return;
+
+    this.zoneLayer.removeAll();
+    this.zoneLayer.addMany(
+      zones.map(
+        (zone) =>
+          new Graphic({
+            geometry: new Circle({
+              center: new Point({
+                latitude: zone.latitude,
+                longitude: zone.longitude,
+              }),
+              radius: zone.radiusKm,
+              radiusUnit: 'kilometers',
+            }),
+            attributes: { name: zone.name, radiusKm: zone.radiusKm },
+            symbol: {
+              type: 'simple-fill',
+              color: [45, 114, 232, 0.12],
+              outline: { color: [45, 114, 232, 0.8], width: 1.5 },
+            },
+            popupTemplate: new PopupTemplate({
+              title: '{name}',
+              content: `${this.transloco.translate('incidents.zoneRadius')}: {radiusKm} km`,
+            }),
+          }),
+      ),
+    );
   }
 
   private centerMapOnIncidents(graphics: Graphic[]): void {
