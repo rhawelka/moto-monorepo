@@ -157,7 +157,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       .watchUpdates()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((event) => {
-        if (event.type === 'updated') this.loadIncidents();
+        if (event.type === 'updated' || event.type === 'deleted') {
+          this.loadIncidents();
+        }
       });
   }
 

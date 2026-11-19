@@ -102,7 +102,8 @@ And join the Nx community:
 The authenticated dashboard includes an incident list with text search, status and
 severity filters, sortable columns, pagination, and live updates. The list is
 available at `/dashboard/incidents`; `/incidents` redirects to the dashboard
-route. Select a row or **Edit** to open `/dashboard/incidents/:id/edit`.
+route. Select a row to open its read-only details at `/dashboard/incidents/:id`.
+Use **Edit** to open `/dashboard/incidents/:id/edit`.
 The `/incidents/:id/edit` shortcut redirects to the same editor.
 
 The editor uses Angular Reactive Forms. It validates required, non-whitespace
@@ -143,12 +144,13 @@ database migration setup.
 All REST endpoints require a valid JWT in the `Authorization: Bearer <token>`
 header:
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| `GET` | `/api/v1/incidents` | Return a filtered, sorted, paginated incident page |
-| `GET` | `/api/v1/incidents/:id` | Return one incident |
-| `POST` | `/api/v1/incidents` | Create an incident (administrator only) |
-| `PATCH` | `/api/v1/incidents/:id` | Validate and save incident changes |
+| Method   | Endpoint                | Description                                        |
+| -------- | ----------------------- | -------------------------------------------------- |
+| `GET`    | `/api/v1/incidents`     | Return a filtered, sorted, paginated incident page |
+| `GET`    | `/api/v1/incidents/:id` | Return one incident                                |
+| `POST`   | `/api/v1/incidents`     | Create an incident (administrator only)            |
+| `PATCH`  | `/api/v1/incidents/:id` | Validate and save incident changes                 |
+| `DELETE` | `/api/v1/incidents/:id` | Delete an incident (administrator only)            |
 
 The list endpoint accepts `page`, `pageSize` (maximum 100), `search`, `status`,
 `severity`, `sortBy` (`title`, `status`, `severity`, or `reportedAt`), and
@@ -163,7 +165,9 @@ characters); text values cannot consist only of whitespace.
 The Socket.IO namespace is `http://localhost:3000/incidents`. Connect with the
 JWT as the Socket.IO `auth.token` value. After a successful REST update, the API
 broadcasts the `incident.updated` event with the updated incident to connected
-clients. Clients refresh the current page of results when this event arrives.
+clients. A successful deletion broadcasts `incident.deleted` with the incident
+ID. Clients refresh the current page of results and map markers when these
+events arrive.
 If live sync disconnects, the dashboard displays its connection status; REST
 requests remain available.
 

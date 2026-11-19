@@ -42,6 +42,7 @@ export interface IncidentQuery {
 export type IncidentUpdateEvent =
   | { type: 'connected' }
   | { type: 'updated'; incident: Incident }
+  | { type: 'deleted'; id: string }
   | { type: 'connection-error'; message: string };
 
 const API_URL = `${environment.apiUrl}/incidents`;
@@ -115,6 +116,10 @@ export class IncidentsService {
     );
   }
 
+  delete(id: string): Observable<void> {
+    return this.http.delete<void>(`${API_URL}/${encodeURIComponent(id)}`);
+  }
+
   create(
     incident: Pick<
       Incident,
@@ -148,6 +153,9 @@ export class IncidentsService {
       socket.on('connect', () => subscriber.next({ type: 'connected' }));
       socket.on('incident.updated', (incident: Incident) =>
         subscriber.next({ type: 'updated', incident }),
+      );
+      socket.on('incident.deleted', ({ id }: { id: string }) =>
+        subscriber.next({ type: 'deleted', id }),
       );
       socket.on('connect_error', (error: Error) =>
         subscriber.next({ type: 'connection-error', message: error.message }),

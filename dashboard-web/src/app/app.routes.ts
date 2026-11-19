@@ -18,6 +18,8 @@ export const APP_ROUTES = {
     incidents: {
       list: '/dashboard/incidents',
       create: '/dashboard/incidents/new',
+      detail: (id: string) => `/dashboard/incidents/${id}`,
+      detailPath: '/dashboard/incidents/:id',
       edit: (id: string) => `/dashboard/incidents/${id}/edit`,
       editPath: '/dashboard/incidents/:id/edit',
     },
@@ -65,23 +67,31 @@ export const appRoutes: Routes = [
         path: 'incidents/new',
         canActivate: [adminGuard],
         loadComponent: () =>
-          import('./components/incidents/incident-create/incident-create.component').then(
-            (component) => component.IncidentCreateComponent,
-          ),
+          import(
+            './components/incidents/incident-create/incident-create.component'
+          ).then((component) => component.IncidentCreateComponent),
       },
       {
         path: 'incidents/:id/edit',
         loadComponent: () =>
-          import('./components/incidents/incident-edit/incidents-edit.component').then(
-            (component) => component.IncidentsEditComponent,
-          ),
+          import(
+            './components/incidents/incident-edit/incidents-edit.component'
+          ).then((component) => component.IncidentsEditComponent),
+      },
+      {
+        path: 'incidents/:id',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import(
+            './components/incidents/incident-detail/incident-detail.component'
+          ).then((component) => component.IncidentDetailComponent),
       },
       {
         path: 'incidents',
         loadComponent: () =>
-          import('./components/incidents/incident-list/incidents.component').then(
-            (component) => component.IncidentsComponent,
-          ),
+          import(
+            './components/incidents/incident-list/incidents.component'
+          ).then((component) => component.IncidentsComponent),
       },
       {
         path: 'settings',

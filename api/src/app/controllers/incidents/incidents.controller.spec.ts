@@ -22,10 +22,13 @@ describe('IncidentsController', () => {
     updatedAt: new Date('2026-01-01T00:00:00.000Z'),
   };
   let incidentsService: jest.Mocked<
-    Pick<IncidentsService, 'findAll' | 'findOne' | 'create' | 'update'>
+    Pick<
+      IncidentsService,
+      'findAll' | 'findOne' | 'create' | 'update' | 'remove'
+    >
   >;
   let incidentsGateway: jest.Mocked<
-    Pick<IncidentsGateway, 'publishIncidentUpdate'>
+    Pick<IncidentsGateway, 'publishIncidentUpdate' | 'publishIncidentDeleted'>
   >;
   let controller: IncidentsController;
 
@@ -40,9 +43,11 @@ describe('IncidentsController', () => {
       findOne: jest.fn().mockResolvedValue(incident),
       create: jest.fn().mockResolvedValue(incident),
       update: jest.fn().mockResolvedValue(incident),
+      remove: jest.fn().mockResolvedValue(undefined),
     };
     incidentsGateway = {
       publishIncidentUpdate: jest.fn(),
+      publishIncidentDeleted: jest.fn(),
     };
     controller = new IncidentsController(
       incidentsService as unknown as IncidentsService,
@@ -74,9 +79,9 @@ describe('IncidentsController', () => {
   it('broadcasts successful updates to connected clients', async () => {
     const changes = { status: 'RESOLVED' as const };
 
-    await expect(
-      controller.update(incident.id, changes),
-    ).resolves.toEqual(incident);
+    await expect(controller.update(incident.id, changes)).resolves.toEqual(
+      incident,
+    );
     expect(incidentsService.update).toHaveBeenCalledWith(incident.id, changes);
     expect(incidentsGateway.publishIncidentUpdate).toHaveBeenCalledWith(
       incident,
@@ -123,8 +128,44 @@ describe('IncidentsController', () => {
   });
 
   it('exposes the PATCH update endpoint', () => {
-    expect(Reflect.getMetadata(PATH_METADATA, IncidentsController.prototype.update))
-      .toBe(':id');
-    expect(Reflect.getMetadata(METHOD_METADATA, IncidentsController.prototype.update)).toBe(4);
+    expect(
+      Reflect.getMetadata(PATH_METADATA, IncidentsController.prototype.update),
+    ).toBe(':id');
+    expect(
+      Reflect.getMetadata(
+        METHOD_METADATA,
+        IncidentsController.prototype.update,
+      ),
+    ).toBe(4);
+  });
+
+  it('deletes incidents only for admins and broadcasts successful deletion', async () => {
+    await expect(controller.remove(incident.id)).resolves.toBeUndefined();
+
+    expect(incidentsService.remove).toHaveBeenCalledWith(incident.id);
+    expect(incidentsGateway.publishIncidentDeleted).toHaveBeenCalledWith(
+      incident.id,
+    );
+    expect(
+      Reflect.getMetadata(
+        GUARDS_METADATA,
+        IncidentsController.prototype.remove,
+      ),
+    ).toContain(AdminGuard);
+    expect(
+      Reflect.getMetadata(
+        METHOD_METADATA,
+        IncidentsController.prototype.remove,
+      ),
+    ).toBe(3);
+  });
+
+  it('does not broadcast a deletion if removing the incident fails', async () => {
+    incidentsService.remove.mockRejectedValueOnce(new Error('database error'));
+
+    await expect(controller.remove(incident.id)).rejects.toThrow(
+      'database error',
+    );
+    expect(incidentsGateway.publishIncidentDeleted).not.toHaveBeenCalled();
   });
 });

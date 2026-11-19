@@ -81,4 +81,12 @@ describe('IncidentsGateway', () => {
 
     expect(server.emit).toHaveBeenCalledWith('incident.updated', incident);
   });
+
+  it('publishes incident deletions to connected clients', () => {
+    const id = '00000000-0000-4000-8000-000000000001';
+
+    gateway.publishIncidentDeleted(id);
+
+    expect(server.emit).toHaveBeenCalledWith('incident.deleted', { id });
+  });
 });

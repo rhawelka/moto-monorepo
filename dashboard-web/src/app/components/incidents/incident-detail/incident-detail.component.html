@@ -1,0 +1,98 @@
+<ng-container *transloco="let t; prefix: 'incidents'">
+  <section class="incident-detail">
+    <a class="back-link" [routerLink]="APP_ROUTES.dashboard.incidents.list">
+      {{ t('backToList') }}
+    </a>
+
+    @if (loading()) {
+      <p role="status">{{ t('loading') }}</p>
+    } @else if (loadFailed() || !incident()) {
+      <p class="error" role="alert">{{ t('loadError') }}</p>
+    } @else {
+      <header class="incident-detail__header">
+        <div>
+          <p class="incident-detail__eyebrow">{{ t('details') }}</p>
+          <h1>{{ incident()!.title }}</h1>
+        </div>
+        <div class="incident-detail__actions">
+          <a
+            class="edit-action"
+            [routerLink]="APP_ROUTES.dashboard.incidents.edit(incident()!.id)"
+          >
+            {{ t('edit') }}
+          </a>
+          @if (isAdmin()) {
+            <button
+              class="delete-action"
+              type="button"
+              (click)="requestDelete()"
+            >
+              {{ t('delete') }}
+            </button>
+          }
+        </div>
+      </header>
+
+      <dl class="incident-detail__fields">
+        <div>
+          <dt>{{ t('description') }}</dt>
+          <dd>{{ incident()!.description }}</dd>
+        </div>
+        <div>
+          <dt>{{ t('location') }}</dt>
+          <dd>{{ incident()!.location }}</dd>
+        </div>
+        <div>
+          <dt>{{ t('status') }}</dt>
+          <dd>{{ t('status_' + incident()!.status) }}</dd>
+        </div>
+        <div>
+          <dt>{{ t('severity') }}</dt>
+          <dd>{{ t('severity_' + incident()!.severity) }}</dd>
+        </div>
+        <div>
+          <dt>{{ t('reportedAt') }}</dt>
+          <dd>{{ incident()!.reportedAt | date: 'medium' }}</dd>
+        </div>
+        <div>
+          <dt>{{ t('updatedAt') }}</dt>
+          <dd>{{ incident()!.updatedAt | date: 'medium' }}</dd>
+        </div>
+        @if (incident()!.latitude !== null && incident()!.longitude !== null) {
+          <div>
+            <dt>{{ t('coordinates') }}</dt>
+            <dd>{{ incident()!.latitude }}, {{ incident()!.longitude }}</dd>
+          </div>
+        }
+      </dl>
+
+      @if (deleteConfirmationVisible()) {
+        <section class="delete-confirmation" aria-labelledby="delete-title">
+          <h2 id="delete-title">{{ t('confirmDeleteTitle') }}</h2>
+          <p>{{ t('confirmDeleteDescription') }}</p>
+          @if (deleteFailed()) {
+            <p class="error" role="alert">{{ t('deleteError') }}</p>
+          }
+          <div class="incident-detail__actions">
+            <button
+              type="button"
+              class="cancel-action"
+              [disabled]="deleting()"
+              (click)="cancelDelete()"
+            >
+              {{ t('cancel') }}
+            </button>
+            <button
+              type="button"
+              class="delete-action"
+              [disabled]="deleting()"
+              (click)="confirmDelete()"
+            >
+              {{ deleting() ? t('deleting') : t('confirmDelete') }}
+            </button>
+          </div>
+        </section>
+      }
+    }
+  </section>
+</ng-container>

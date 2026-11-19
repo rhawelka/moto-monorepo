@@ -2,6 +2,9 @@ import {
   Controller,
   Get,
   Body,
+  Delete,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseUUIDPipe,
   Post,
@@ -51,5 +54,13 @@ export class IncidentsController {
     const incident = await this.incidentsService.update(id, changes);
     this.incidentsGateway.publishIncidentUpdate(incident);
     return incident;
+  }
+
+  @Delete(':id')
+  @UseGuards(AdminGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    await this.incidentsService.remove(id);
+    this.incidentsGateway.publishIncidentDeleted(id);
   }
 }
