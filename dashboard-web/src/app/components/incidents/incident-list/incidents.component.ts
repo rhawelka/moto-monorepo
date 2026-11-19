@@ -12,8 +12,9 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { APP_ROUTES } from '../../../app.routes';
+import { APP_ROUTES } from '../../../app-route-constants';
 import { AuthService } from '../../../services/auth/auth.service';
+import { hasPermission } from '../../../services/auth/permission.guard';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import {
   INCIDENT_SEVERITIES,
@@ -52,8 +53,11 @@ export class IncidentsComponent {
   readonly pageCount = computed(() =>
     Math.max(1, Math.ceil(this.total() / this.pageSize)),
   );
-  readonly isAdmin = computed(
-    () => this.authService.currentUser()?.role === 'ADMIN',
+  readonly canCreate = computed(() =>
+    hasPermission(this.authService.currentUser(), 'INCIDENTS_CREATE'),
+  );
+  readonly canUpdate = computed(() =>
+    hasPermission(this.authService.currentUser(), 'INCIDENTS_UPDATE'),
   );
   readonly search = new FormControl('', { nonNullable: true });
   readonly status = new FormControl<IncidentStatus | ''>('', {

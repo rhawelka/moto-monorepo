@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { UserStatus } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { LoginDto, CreateUserDto } from '@moto-monorepo/dto';
@@ -35,7 +36,7 @@ export class AuthService {
 
     const isMatch = await bcrypt.compare(dto.password, user.passwordHash);
 
-    if (!isMatch) {
+    if (!isMatch || user.status !== UserStatus.ACTIVE) {
       this.logger.warn(
         `Login failed for email: ${dto.email} - password mismatch`,
       );
@@ -45,7 +46,13 @@ export class AuthService {
     const token = this.generateToken(user.id, user.email, user.role);
 
     return {
-      user: { id: user.id, email: user.email, role: user.role },
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+        permissions: user.permissions,
+      },
       access_token: token,
     };
   }
@@ -53,14 +60,18 @@ export class AuthService {
   async loginWithGoogle(email: string) {
     const user = await this.usersService.findByEmail(email);
 
-    if (!user) {
-      throw new UnauthorizedException(
-        'No existing account is associated with this Google email',
-      );
+    if (!user || user.status !== UserStatus.ACTIVE) {
+      throw new UnauthorizedException('Google account is unavailable');
     }
 
     return {
-      user: { id: user.id, email: user.email, role: user.role },
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+        permissions: user.permissions,
+      },
       access_token: this.generateToken(user.id, user.email, user.role),
     };
   }

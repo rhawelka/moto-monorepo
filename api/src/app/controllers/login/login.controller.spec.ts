@@ -3,7 +3,7 @@ jest.mock('@moto-monorepo/services', () => ({
 }));
 
 import { METHOD_METADATA, PATH_METADATA } from '@nestjs/common/constants';
-import { Role } from '@prisma/client';
+import { Role, UserPermission, UserStatus } from '@prisma/client';
 import { AuthService } from '../../services/auth/auth.service';
 import { LoginController } from './login.controller';
 
@@ -34,7 +34,13 @@ describe('LoginController', () => {
       password: 'secure-password',
     };
     const authResponse = {
-      user: { id: 'user-id', email: dto.email, role: Role.USER },
+      user: {
+        id: 'user-id',
+        email: dto.email,
+        role: Role.USER,
+        status: UserStatus.ACTIVE,
+        permissions: [UserPermission.INCIDENTS_READ],
+      },
       access_token: 'access-token',
     };
     authService.login.mockResolvedValue(authResponse);

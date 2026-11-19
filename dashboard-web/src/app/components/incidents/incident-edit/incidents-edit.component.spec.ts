@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslocoTestingModule } from '@jsverse/transloco';
 import { of } from 'rxjs';
-import { APP_ROUTES } from '../../../app.routes';
+import { APP_ROUTES } from '../../../app-route-constants';
 import {
   Incident,
   IncidentsService,
@@ -92,8 +92,9 @@ describe('IncidentsEditComponent', () => {
     });
 
     expect(fixture.componentInstance.form.invalid).toBe(true);
-    expect(fixture.componentInstance.form.controls.title.hasError('whitespace'))
-      .toBe(true);
+    expect(
+      fixture.componentInstance.form.controls.title.hasError('whitespace'),
+    ).toBe(true);
     expect(
       fixture.componentInstance.form.controls.description.hasError('minlength'),
     ).toBe(true);

@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { APP_ROUTES } from '../../../app.routes';
+import { APP_ROUTES } from '../../../app-route-constants';
 import {
   DEFAULT_INCIDENT_SEVERITY,
   INCIDENT_SEVERITIES,

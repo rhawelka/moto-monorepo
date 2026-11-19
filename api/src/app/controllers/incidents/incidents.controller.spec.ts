@@ -6,7 +6,9 @@ import {
 import { IncidentsController } from './incidents.controller';
 import { IncidentsGateway } from '../../services/incidents/incidents.gateway';
 import { IncidentsService } from '../../services/incidents/incidents.service';
-import { AdminGuard } from '../../services/admin.guard';
+import { UserPermission } from '@prisma/client';
+import { REQUIRED_PERMISSIONS } from '../../services/permissions';
+import { PermissionsGuard } from '../../services/permissions.guard';
 
 describe('IncidentsController', () => {
   const incident = {
@@ -88,7 +90,7 @@ describe('IncidentsController', () => {
     );
   });
 
-  it('creates an incident for administrators and broadcasts it', async () => {
+  it('creates an incident for users with create permission and broadcasts it', async () => {
     const newIncident = {
       title: incident.title,
       description: incident.description,
@@ -109,7 +111,13 @@ describe('IncidentsController', () => {
         GUARDS_METADATA,
         IncidentsController.prototype.create,
       ),
-    ).toContain(AdminGuard);
+    ).toContain(PermissionsGuard);
+    expect(
+      Reflect.getMetadata(
+        REQUIRED_PERMISSIONS,
+        IncidentsController.prototype.create,
+      ),
+    ).toEqual([UserPermission.INCIDENTS_CREATE]);
     expect(
       Reflect.getMetadata(
         METHOD_METADATA,
@@ -139,7 +147,7 @@ describe('IncidentsController', () => {
     ).toBe(4);
   });
 
-  it('deletes incidents only for admins and broadcasts successful deletion', async () => {
+  it('deletes incidents for users with delete permission and broadcasts successful deletion', async () => {
     await expect(controller.remove(incident.id)).resolves.toBeUndefined();
 
     expect(incidentsService.remove).toHaveBeenCalledWith(incident.id);
@@ -151,7 +159,13 @@ describe('IncidentsController', () => {
         GUARDS_METADATA,
         IncidentsController.prototype.remove,
       ),
-    ).toContain(AdminGuard);
+    ).toContain(PermissionsGuard);
+    expect(
+      Reflect.getMetadata(
+        REQUIRED_PERMISSIONS,
+        IncidentsController.prototype.remove,
+      ),
+    ).toEqual([UserPermission.INCIDENTS_DELETE]);
     expect(
       Reflect.getMetadata(
         METHOD_METADATA,

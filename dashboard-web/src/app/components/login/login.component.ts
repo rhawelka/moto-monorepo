@@ -15,7 +15,7 @@ import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { APP_ROUTES } from '../../app.routes';
+import { APP_ROUTES } from '../../app-route-constants';
 
 @Component({
   selector: 'app-login',

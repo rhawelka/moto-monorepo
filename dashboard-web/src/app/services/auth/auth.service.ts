@@ -2,7 +2,7 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
-import { APP_ROUTES } from '../../app.routes';
+import { APP_ROUTES } from '../../app-route-constants';
 import { environment } from '../../../environments/environment';
 import type { AuthResponse, User } from './auth.models';
 

@@ -3,6 +3,7 @@ jest.mock('@moto-monorepo/services', () => ({
 }));
 
 import { UnauthorizedException } from '@nestjs/common';
+import { UserPermission, UserStatus } from '@prisma/client';
 import { AuthService } from './auth.service';
 
 describe('AuthService Google login', () => {
@@ -12,6 +13,11 @@ describe('AuthService Google login', () => {
     email: 'rider@example.com',
     passwordHash: 'password-hash',
     role: 'USER',
+    status: UserStatus.ACTIVE,
+    permissions: [
+      UserPermission.INCIDENTS_READ,
+      UserPermission.INCIDENTS_UPDATE,
+    ],
   };
   const usersService = {
     findByEmail: jest.fn(),
@@ -40,7 +46,16 @@ describe('AuthService Google login', () => {
 
     await expect(service.loginWithGoogle('rider@example.com')).resolves.toEqual(
       {
-        user: { id: 'user-id', email: 'rider@example.com', role: 'USER' },
+        user: {
+          id: 'user-id',
+          email: 'rider@example.com',
+          role: 'USER',
+          status: UserStatus.ACTIVE,
+          permissions: [
+            UserPermission.INCIDENTS_READ,
+            UserPermission.INCIDENTS_UPDATE,
+          ],
+        },
         access_token: 'signed-token',
       },
     );
@@ -57,6 +72,18 @@ describe('AuthService Google login', () => {
 
     await expect(
       service.loginWithGoogle('unknown@example.com'),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
+    expect(jwtService.sign).not.toHaveBeenCalled();
+  });
+
+  it('does not issue tokens for suspended Google accounts', async () => {
+    usersService.findByEmail.mockResolvedValue({
+      ...user,
+      status: UserStatus.SUSPENDED,
+    });
+
+    await expect(
+      service.loginWithGoogle('rider@example.com'),
     ).rejects.toBeInstanceOf(UnauthorizedException);
     expect(jwtService.sign).not.toHaveBeenCalled();
   });
