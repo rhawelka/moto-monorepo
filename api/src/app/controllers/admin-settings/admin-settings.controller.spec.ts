@@ -4,7 +4,9 @@ import {
   PATH_METADATA,
 } from '@nestjs/common/constants';
 import { IncidentSeverity } from '@prisma/client';
-import { AdminGuard } from '../../services/admin.guard';
+import { UserPermission } from '@prisma/client';
+import { REQUIRED_PERMISSIONS } from '../../services/permissions';
+import { PermissionsGuard } from '../../services/permissions.guard';
 import { AdminSettingsService } from '../../services/admin-settings/admin-settings.service';
 import { AdminSettingsController } from './admin-settings.controller';
 
@@ -28,7 +30,7 @@ describe('AdminSettingsController', () => {
     );
   });
 
-  it('requires JWT authentication and admin privileges to update settings', () => {
+  it('requires JWT authentication and settings permission to update settings', () => {
     expect(Reflect.getMetadata(PATH_METADATA, AdminSettingsController)).toBe(
       'admin/settings',
     );
@@ -46,7 +48,13 @@ describe('AdminSettingsController', () => {
         GUARDS_METADATA,
         AdminSettingsController.prototype.updateSettings,
       ),
-    ).toContain(AdminGuard);
+    ).toContain(PermissionsGuard);
+    expect(
+      Reflect.getMetadata(
+        REQUIRED_PERMISSIONS,
+        AdminSettingsController.prototype.updateSettings,
+      ),
+    ).toEqual([UserPermission.SETTINGS_MANAGE]);
     expect(
       Reflect.getMetadata(
         METHOD_METADATA,

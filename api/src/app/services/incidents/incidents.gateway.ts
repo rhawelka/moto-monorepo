@@ -4,8 +4,9 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { JwtService } from '@nestjs/jwt';
-import { Incident } from '@prisma/client';
+import { Incident, UserPermission, UserStatus } from '@prisma/client';
 import { Server, Socket } from 'socket.io';
+import { UsersService } from '../users/users.service';
 
 @WebSocketGateway({
   namespace: '/incidents',
@@ -15,7 +16,10 @@ export class IncidentsGateway implements OnGatewayConnection {
   @WebSocketServer()
   private server!: Server;
 
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly usersService: UsersService,
+  ) {}
 
   async handleConnection(client: Socket): Promise<void> {
     const token = client.handshake.auth['token'];
@@ -24,9 +28,26 @@ export class IncidentsGateway implements OnGatewayConnection {
       return;
     }
 
+    let payload: { sub?: unknown };
     try {
-      await this.jwtService.verifyAsync(token);
+      payload = await this.jwtService.verifyAsync(token);
     } catch {
+      client.disconnect(true);
+      return;
+    }
+
+    if (typeof payload.sub !== 'string') {
+      client.disconnect(true);
+      return;
+    }
+
+    const user = await this.usersService.findById(payload.sub);
+    if (
+      !user ||
+      user.status !== UserStatus.ACTIVE ||
+      (user.role !== 'ADMIN' &&
+        !user.permissions.includes(UserPermission.INCIDENTS_READ))
+    ) {
       client.disconnect(true);
     }
   }

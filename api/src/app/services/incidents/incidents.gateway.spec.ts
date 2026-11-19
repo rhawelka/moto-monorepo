@@ -2,13 +2,17 @@ import { JwtService } from '@nestjs/jwt';
 import {
   IncidentSeverity,
   IncidentStatus,
+  UserPermission,
+  UserStatus,
   type Incident,
 } from '@prisma/client';
 import type { Server, Socket } from 'socket.io';
+import { UsersService } from '../users/users.service';
 import { IncidentsGateway } from './incidents.gateway';
 
 describe('IncidentsGateway', () => {
   let jwtService: jest.Mocked<Pick<JwtService, 'verifyAsync'>>;
+  let usersService: jest.Mocked<Pick<UsersService, 'findById'>>;
   let gateway: IncidentsGateway;
   let client: {
     handshake: { auth: Record<string, unknown> };
@@ -18,9 +22,23 @@ describe('IncidentsGateway', () => {
 
   beforeEach(() => {
     jwtService = {
-      verifyAsync: jest.fn(),
+      verifyAsync: jest.fn().mockResolvedValue({ sub: 'user-id' }),
     };
-    gateway = new IncidentsGateway(jwtService as unknown as JwtService);
+    usersService = {
+      findById: jest.fn().mockResolvedValue({
+        id: 'user-id',
+        username: 'rider',
+        email: 'rider@example.com',
+        passwordHash: 'hash',
+        role: 'USER',
+        status: UserStatus.ACTIVE,
+        permissions: [UserPermission.INCIDENTS_READ],
+      }),
+    };
+    gateway = new IncidentsGateway(
+      jwtService as unknown as JwtService,
+      usersService as unknown as UsersService,
+    );
     client = {
       handshake: { auth: {} },
       disconnect: jest.fn(),
@@ -43,12 +61,13 @@ describe('IncidentsGateway', () => {
     expect(jwtService.verifyAsync).not.toHaveBeenCalled();
   });
 
-  it('verifies a token and keeps the connection when it is valid', async () => {
+  it('verifies the token and checks current read permissions', async () => {
     client.handshake.auth['token'] = 'valid-jwt';
 
     await gateway.handleConnection(client as unknown as Socket);
 
     expect(jwtService.verifyAsync).toHaveBeenCalledWith('valid-jwt');
+    expect(usersService.findById).toHaveBeenCalledWith('user-id');
     expect(client.disconnect).not.toHaveBeenCalled();
   });
 
@@ -59,6 +78,38 @@ describe('IncidentsGateway', () => {
     await gateway.handleConnection(client as unknown as Socket);
 
     expect(jwtService.verifyAsync).toHaveBeenCalledWith('invalid-jwt');
+    expect(client.disconnect).toHaveBeenCalledWith(true);
+    expect(usersService.findById).not.toHaveBeenCalled();
+  });
+
+  it('disconnects suspended users and users without incident-read permission', async () => {
+    client.handshake.auth['token'] = 'valid-jwt';
+    usersService.findById.mockResolvedValueOnce({
+      id: 'user-id',
+      username: 'rider',
+      email: 'rider@example.com',
+      passwordHash: 'hash',
+      role: 'ADMIN',
+      status: UserStatus.SUSPENDED,
+      permissions: [],
+    });
+
+    await gateway.handleConnection(client as unknown as Socket);
+
+    expect(client.disconnect).toHaveBeenCalledWith(true);
+    client.disconnect.mockClear();
+    usersService.findById.mockResolvedValueOnce({
+      id: 'user-id',
+      username: 'rider',
+      email: 'rider@example.com',
+      passwordHash: 'hash',
+      role: 'USER',
+      status: UserStatus.ACTIVE,
+      permissions: [],
+    });
+
+    await gateway.handleConnection(client as unknown as Socket);
+
     expect(client.disconnect).toHaveBeenCalledWith(true);
   });
 

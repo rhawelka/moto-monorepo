@@ -122,7 +122,13 @@ describe('AuthController', () => {
   });
 
   it('returns the authenticated user profile', () => {
-    const user = { id: 'user-id', email: 'rider@example.com', role: 'USER' };
+    const user = {
+      id: 'user-id',
+      email: 'rider@example.com',
+      role: 'USER',
+      status: 'ACTIVE',
+      permissions: ['INCIDENTS_READ'],
+    };
 
     expect(controller.getProfile({ user })).toBe(user);
   });

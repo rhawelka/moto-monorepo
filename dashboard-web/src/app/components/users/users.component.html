@@ -1,17 +1,208 @@
 <ng-container *transloco="let t; prefix: 'users'">
   <section class="users-page">
-    <h1>{{ t('title') }}</h1>
+    <header class="users-page__header">
+      <div>
+        <h1>{{ t('title') }}</h1>
+        <p>{{ t('subtitle') }}</p>
+      </div>
+      <button type="button" class="primary-action" (click)="openCreateForm()">
+        {{ t('createUser') }}
+      </button>
+    </header>
+
     @if (loadFailed()) {
       <p class="users-page__error" role="alert">{{ t('loadError') }}</p>
     }
-    <ag-grid-angular
-      class="users-grid"
-      [theme]="theme"
-      [rowData]="rowData()"
-      [columnDefs]="columnDefs"
-      [defaultColDef]="defaultColDef"
-      [pagination]="true"
-      [paginationPageSize]="25"
-    />
+
+    @if (formOpen()) {
+      <form class="user-form" [formGroup]="form" (ngSubmit)="save()">
+        <h2>{{ editingId() ? t('editUser') : t('createUser') }}</h2>
+        <div class="user-form__fields">
+          <label>
+            <span>{{ t('username') }}</span>
+            <input formControlName="username" maxlength="80" />
+          </label>
+          <label>
+            <span>{{ t('email') }}</span>
+            <input type="email" formControlName="email" maxlength="254" />
+          </label>
+          <label>
+            <span>{{
+              editingId() ? t('newPasswordOptional') : t('password')
+            }}</span>
+            <input
+              type="password"
+              formControlName="password"
+              autocomplete="new-password"
+            />
+          </label>
+          <label>
+            <span>{{ t('role') }}</span>
+            <select formControlName="role">
+              <option value="USER">{{ t('role_USER') }}</option>
+              <option value="ADMIN" [disabled]="!isAdmin()">
+                {{ t('role_ADMIN') }}
+              </option>
+            </select>
+          </label>
+          <label>
+            <span>{{ t('status') }}</span>
+            <select formControlName="status">
+              <option value="ACTIVE">{{ t('status_ACTIVE') }}</option>
+              <option value="SUSPENDED">{{ t('status_SUSPENDED') }}</option>
+            </select>
+          </label>
+        </div>
+
+        @if (form.controls.username.touched && form.controls.username.invalid) {
+          <p class="users-page__error" role="alert">
+            {{ t('usernameValidation') }}
+          </p>
+        }
+        @if (form.controls.email.touched && form.controls.email.invalid) {
+          <p class="users-page__error" role="alert">
+            {{ t('emailValidation') }}
+          </p>
+        }
+        @if (form.controls.password.touched && form.controls.password.invalid) {
+          <p class="users-page__error" role="alert">
+            {{ t('passwordValidation') }}
+          </p>
+        }
+
+        <fieldset class="permissions">
+          <legend>{{ t('permissions') }}</legend>
+          @if (form.controls.role.value === 'ADMIN') {
+            <p>{{ t('adminHasAllPermissions') }}</p>
+          } @else {
+            <div class="permissions__grid">
+              @for (permission of permissions; track permission) {
+                <label class="permissions__option">
+                  <input
+                    type="checkbox"
+                    [checked]="hasPermission(permission)"
+                    [disabled]="
+                      !isAdmin() &&
+                      (permission === 'USERS_MANAGE' ||
+                        permission === 'SETTINGS_MANAGE')
+                    "
+                    (change)="togglePermission(permission, $event)"
+                  />
+                  <span>{{ t('permission_' + permission) }}</span>
+                </label>
+              }
+            </div>
+          }
+        </fieldset>
+
+        @if (saveFailed()) {
+          <p class="users-page__error" role="alert">{{ t('saveError') }}</p>
+        }
+        <div class="user-form__actions">
+          <button type="button" class="secondary-action" (click)="closeForm()">
+            {{ t('cancel') }}
+          </button>
+          <button
+            type="submit"
+            class="primary-action"
+            [disabled]="form.invalid || saving()"
+          >
+            {{ saving() ? t('saving') : t('save') }}
+          </button>
+        </div>
+      </form>
+    }
+
+    @if (loading()) {
+      <p role="status">{{ t('loading') }}</p>
+    } @else {
+      <div class="users-table-scroll">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th scope="col">{{ t('username') }}</th>
+              <th scope="col">{{ t('email') }}</th>
+              <th scope="col">{{ t('role') }}</th>
+              <th scope="col">{{ t('status') }}</th>
+              <th scope="col">{{ t('permissions') }}</th>
+              <th scope="col">{{ t('createdAt') }}</th>
+              <th scope="col">{{ t('actions') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of rowData(); track user.id) {
+              <tr>
+                <td>{{ user.username || t('noUsername') }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ t('role_' + user.role) }}</td>
+                <td>{{ t('status_' + user.status) }}</td>
+                <td class="users-table__permissions">
+                  @if (user.role === 'ADMIN') {
+                    {{ t('allPermissions') }}
+                  } @else {
+                    @for (permission of user.permissions; track permission) {
+                      <span>{{ t('permission_' + permission) }}</span>
+                    } @empty {
+                      <span>{{ t('noPermissions') }}</span>
+                    }
+                  }
+                </td>
+                <td>{{ user.createdAt | date: 'medium' }}</td>
+                <td>
+                  @if (canManage(user)) {
+                    <div class="users-table__actions">
+                      <button
+                        type="button"
+                        class="secondary-action"
+                        (click)="openEditForm(user)"
+                      >
+                        {{ t('edit') }}
+                      </button>
+                      @if (confirmingDeleteId() === user.id) {
+                        <button
+                          type="button"
+                          class="danger-action"
+                          (click)="confirmDelete(user)"
+                        >
+                          {{ t('confirmDelete') }}
+                        </button>
+                        <button
+                          type="button"
+                          class="secondary-action"
+                          (click)="cancelDelete()"
+                        >
+                          {{ t('cancel') }}
+                        </button>
+                      } @else {
+                        <button
+                          type="button"
+                          class="danger-action"
+                          (click)="requestDelete(user)"
+                        >
+                          {{ t('delete') }}
+                        </button>
+                      }
+                    </div>
+                    @if (deleteFailed() && confirmingDeleteId() === user.id) {
+                      <p class="users-page__error" role="alert">
+                        {{ t('deleteError') }}
+                      </p>
+                    }
+                  } @else if (user.id === currentUserId()) {
+                    <span>{{ t('currentUser') }}</span>
+                  }
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7" class="users-table__empty">
+                  {{ t('empty') }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   </section>
 </ng-container>

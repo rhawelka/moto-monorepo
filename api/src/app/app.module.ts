@@ -15,6 +15,7 @@ import { IncidentsService } from './services/incidents/incidents.service';
 import { IncidentsGateway } from './services/incidents/incidents.gateway';
 import { AdminSettingsController } from './controllers/admin-settings/admin-settings.controller';
 import { AdminSettingsService } from './services/admin-settings/admin-settings.service';
+import { PermissionsGuard } from './services/permissions.guard';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { AdminSettingsService } from './services/admin-settings/admin-settings.s
     IncidentsService,
     IncidentsGateway,
     AdminSettingsService,
+    PermissionsGuard,
   ],
 })
 export class AppModule {}
