@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { signal } from '@angular/core';
 import { TranslocoTestingModule } from '@jsverse/transloco';
 import { of } from 'rxjs';
-import { APP_ROUTES } from '../../../app.routes';
+import { APP_ROUTES } from '../../../app-route-constants';
 import {
   Incident,
   IncidentsService,

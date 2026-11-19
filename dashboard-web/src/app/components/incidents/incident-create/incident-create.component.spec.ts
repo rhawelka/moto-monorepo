@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { TranslocoTestingModule } from '@jsverse/transloco';
 import { of, throwError } from 'rxjs';
-import { APP_ROUTES } from '../../../app.routes';
+import { APP_ROUTES } from '../../../app-route-constants';
 import {
   Incident,
   IncidentsService,
@@ -69,7 +69,8 @@ describe('IncidentCreateComponent', () => {
   it('creates a valid incident and navigates back to the list', () => {
     fixture.componentInstance.form.setValue({
       title: 'Road hazard near central station',
-      description: 'Large debris is blocking one lane near the central station.',
+      description:
+        'Large debris is blocking one lane near the central station.',
       location: 'Central station',
       latitude: 50.0614,
       longitude: 19.9366,
@@ -81,7 +82,8 @@ describe('IncidentCreateComponent', () => {
 
     expect(incidentsService.create).toHaveBeenCalledWith({
       title: 'Road hazard near central station',
-      description: 'Large debris is blocking one lane near the central station.',
+      description:
+        'Large debris is blocking one lane near the central station.',
       location: 'Central station',
       latitude: 50.0614,
       longitude: 19.9366,
@@ -127,7 +129,8 @@ describe('IncidentCreateComponent', () => {
     );
     fixture.componentInstance.form.setValue({
       title: 'Road hazard near central station',
-      description: 'Large debris is blocking one lane near the central station.',
+      description:
+        'Large debris is blocking one lane near the central station.',
       location: 'Central station',
       latitude: 50.0614,
       longitude: 19.9366,

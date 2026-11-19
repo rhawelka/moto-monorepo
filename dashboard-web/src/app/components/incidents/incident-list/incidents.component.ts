@@ -12,7 +12,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { APP_ROUTES } from '../../../app.routes';
+import { APP_ROUTES } from '../../../app-route-constants';
 import { AuthService } from '../../../services/auth/auth.service';
 import { hasPermission } from '../../../services/auth/permission.guard';
 import { debounceTime, distinctUntilChanged } from 'rxjs';

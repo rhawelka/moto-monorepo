@@ -8,33 +8,9 @@ import { GoogleAuthCallbackComponent } from './components/login/google-auth-call
 import { authGuard } from './services/auth/auth.guard';
 import { guestGuard } from './services/auth/guest.guard';
 import { permissionGuard } from './services/auth/permission.guard';
+import { APP_ROUTES } from './app-route-constants';
 
-export const APP_ROUTES = {
-  login: '/login',
-  register: '/register',
-  googleAuthCallbackPath: 'auth/callback',
-  dashboard: {
-    root: '/dashboard',
-    overview: '/dashboard/overview',
-    incidents: {
-      list: '/dashboard/incidents',
-      create: '/dashboard/incidents/new',
-      detail: (id: string) => `/dashboard/incidents/${id}`,
-      detailPath: '/dashboard/incidents/:id',
-      edit: (id: string) => `/dashboard/incidents/${id}/edit`,
-      editPath: '/dashboard/incidents/:id/edit',
-    },
-    settings: '/dashboard/settings',
-    users: '/dashboard/users',
-  },
-  admin: {
-    settings: '/admin/settings',
-  },
-  legacy: {
-    incidents: '/incidents',
-    incidentEditPath: '/incidents/:id/edit',
-  },
-} as const;
+export { APP_ROUTES } from './app-route-constants';
 
 export const appRoutes: Routes = [
   { path: 'access-denied', component: AccessDeniedComponent },

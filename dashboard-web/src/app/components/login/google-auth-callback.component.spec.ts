@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslocoTestingModule } from '@jsverse/transloco';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { APP_ROUTES } from '../../app.routes';
+import { APP_ROUTES } from '../../app-route-constants';
 import { AuthService } from '../../services/auth/auth.service';
 import { GoogleAuthCallbackComponent } from './google-auth-callback.component';
 

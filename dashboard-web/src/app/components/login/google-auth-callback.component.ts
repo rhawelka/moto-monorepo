@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { APP_ROUTES } from '../../app.routes';
+import { APP_ROUTES } from '../../app-route-constants';
 import { AuthService } from '../../services/auth/auth.service';
 
 @Component({

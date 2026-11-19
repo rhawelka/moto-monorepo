@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { CommonHeader, Sidebar } from '@moto-monorepo/ui';
 import { RouterModule } from '@angular/router';
-import { APP_ROUTES } from '../../app.routes';
+import { APP_ROUTES } from '../../app-route-constants';
 import { AuthService } from '../../services/auth/auth.service';
 import { hasPermission } from '../../services/auth/permission.guard';
 
