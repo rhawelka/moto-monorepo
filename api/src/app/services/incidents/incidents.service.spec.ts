@@ -27,6 +27,7 @@ describe('IncidentsService', () => {
       findUnique: jest.Mock;
       create: jest.Mock;
       update: jest.Mock;
+      delete: jest.Mock;
     };
   };
   let service: IncidentsService;
@@ -40,6 +41,7 @@ describe('IncidentsService', () => {
         findUnique: jest.fn(),
         create: jest.fn(),
         update: jest.fn(),
+        delete: jest.fn(),
       },
     };
     service = new IncidentsService(prismaService as unknown as PrismaService);
@@ -181,6 +183,30 @@ describe('IncidentsService', () => {
         service.update(incident.id, { status: IncidentStatus.RESOLVED }),
       ).rejects.toThrow(NotFoundException);
       expect(prismaService.incident.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('remove', () => {
+    it('deletes an existing incident', async () => {
+      prismaService.incident.findUnique.mockResolvedValue(incident);
+      prismaService.incident.delete.mockResolvedValue(incident);
+
+      await expect(service.remove(incident.id)).resolves.toBeUndefined();
+      expect(prismaService.incident.findUnique).toHaveBeenCalledWith({
+        where: { id: incident.id },
+      });
+      expect(prismaService.incident.delete).toHaveBeenCalledWith({
+        where: { id: incident.id },
+      });
+    });
+
+    it('does not delete an incident that does not exist', async () => {
+      prismaService.incident.findUnique.mockResolvedValue(null);
+
+      await expect(service.remove(incident.id)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(prismaService.incident.delete).not.toHaveBeenCalled();
     });
   });
 });

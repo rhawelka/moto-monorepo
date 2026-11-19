@@ -34,4 +34,8 @@ export class IncidentsGateway implements OnGatewayConnection {
   publishIncidentUpdate(incident: Incident): void {
     this.server.emit('incident.updated', incident);
   }
+
+  publishIncidentDeleted(id: string): void {
+    this.server.emit('incident.deleted', { id });
+  }
 }

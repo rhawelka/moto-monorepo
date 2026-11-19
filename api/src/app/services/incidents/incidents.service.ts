@@ -56,4 +56,9 @@ export class IncidentsService {
       data: changes,
     });
   }
+
+  async remove(id: string): Promise<void> {
+    await this.findOne(id);
+    await this.prismaService.incident.delete({ where: { id } });
+  }
 }

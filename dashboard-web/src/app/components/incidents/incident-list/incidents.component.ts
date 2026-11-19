@@ -83,6 +83,10 @@ export class IncidentsComponent {
     this.router.navigate([APP_ROUTES.dashboard.incidents.edit(incident.id)]);
   }
 
+  view(incident: Incident): void {
+    this.router.navigate([APP_ROUTES.dashboard.incidents.detail(incident.id)]);
+  }
+
   createIncident(): void {
     this.router.navigate([APP_ROUTES.dashboard.incidents.create]);
   }

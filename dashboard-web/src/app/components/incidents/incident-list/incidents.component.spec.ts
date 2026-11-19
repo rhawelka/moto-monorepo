@@ -40,11 +40,15 @@ describe('IncidentsComponent', () => {
     currentUser = signal({ role: 'USER' as const });
     router = { navigate: jest.fn() };
     incidentsService = {
-      list: jest.fn().mockReturnValue(
-        of({ data: [incident], total: 1, page: 1, pageSize: 10 }),
-      ),
+      list: jest
+        .fn()
+        .mockReturnValue(
+          of({ data: [incident], total: 1, page: 1, pageSize: 10 }),
+        ),
       watchUpdates: jest.fn().mockReturnValue(of({ type: 'connected' })),
-      update: jest.fn().mockReturnValue(of({ ...incident, status: 'RESOLVED' })),
+      update: jest
+        .fn()
+        .mockReturnValue(of({ ...incident, status: 'RESOLVED' })),
     };
 
     await TestBed.configureTestingModule({
@@ -95,14 +99,34 @@ describe('IncidentsComponent', () => {
     currentUser.set({ role: 'ADMIN' });
     fixture.detectChanges();
 
-    const createButton = fixture.debugElement.query(
-      By.css('.create-action'),
-    );
+    const createButton = fixture.debugElement.query(By.css('.create-action'));
     expect(createButton).not.toBeNull();
     createButton.triggerEventHandler('click');
     expect(router.navigate).toHaveBeenCalledWith([
       APP_ROUTES.dashboard.incidents.create,
     ]);
+  });
+
+  it('opens the read-only detail view when an incident is selected', () => {
+    fixture.componentInstance.view(incident);
+
+    expect(router.navigate).toHaveBeenCalledWith([
+      APP_ROUTES.dashboard.incidents.detail(incident.id),
+    ]);
+  });
+
+  it('reloads incidents when a deletion event arrives', async () => {
+    fixture.destroy();
+    incidentsService.list.mockClear();
+    incidentsService.watchUpdates.mockReturnValue(
+      of({ type: 'deleted', id: incident.id }),
+    );
+
+    fixture = TestBed.createComponent(IncidentsComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(incidentsService.list).toHaveBeenCalledTimes(2);
   });
 
   it('saves the status selected in the dynamically created dialog', () => {
