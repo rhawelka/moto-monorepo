@@ -351,7 +351,7 @@ test.describe('dashboard-web incidents', () => {
         await expect(locators.incidents.createButton).toHaveCount(0);
 
         await page.goto('/dashboard/incidents/new');
-        await expect(page).toHaveURL(/\/dashboard\/overview$/);
+        await expect(page).toHaveURL(/\/access-denied$/);
 
         const createResponse = await page.request.post(
           'http://127.0.0.1:3101/api/v1/incidents',
