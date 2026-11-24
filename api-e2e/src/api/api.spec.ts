@@ -116,6 +116,8 @@ describe('API e2e', () => {
         id: registration.data.user.id,
         email,
         role: 'USER',
+        status: 'ACTIVE',
+        permissions: ['INCIDENTS_READ', 'INCIDENTS_UPDATE'],
       });
 
       const login = await axios.post('/api/v1/auth/login', {
@@ -128,6 +130,8 @@ describe('API e2e', () => {
         id: registration.data.user.id,
         email,
         role: 'USER',
+        status: 'ACTIVE',
+        permissions: ['INCIDENTS_READ', 'INCIDENTS_UPDATE'],
       });
       expect(login.data.access_token).toEqual(expect.any(String));
 
