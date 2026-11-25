@@ -5,11 +5,7 @@ import { MapComponent } from '../map/map.component';
   selector: 'app-overview',
   standalone: true,
   imports: [MapComponent],
+  templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss',
-  template: `
-    <section class="overview">
-      <app-map />
-    </section>
-  `,
 })
 export class OverviewComponent {}

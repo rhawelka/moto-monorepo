@@ -2,7 +2,9 @@ import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AdminSettingsDto } from './admin-settings.dto';
 import { AdminSettingsService } from '../../services/admin-settings/admin-settings.service';
-import { AdminGuard } from '../../services/admin.guard';
+import { RequirePermissions } from '../../services/permissions';
+import { PermissionsGuard } from '../../services/permissions.guard';
+import { UserPermission } from '@prisma/client';
 
 @Controller('admin/settings')
 @UseGuards(AuthGuard('jwt'))
@@ -15,7 +17,8 @@ export class AdminSettingsController {
   }
 
   @Patch()
-  @UseGuards(AdminGuard)
+  @RequirePermissions(UserPermission.SETTINGS_MANAGE)
+  @UseGuards(PermissionsGuard)
   updateSettings(@Body() settings: AdminSettingsDto) {
     return this.adminSettingsService.updateSettings(settings);
   }

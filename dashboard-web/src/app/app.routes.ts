@@ -3,39 +3,17 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { AccessDeniedComponent } from './components/access-denied/access-denied.component';
 import { GoogleAuthCallbackComponent } from './components/login/google-auth-callback.component';
 import { authGuard } from './services/auth/auth.guard';
 import { guestGuard } from './services/auth/guest.guard';
-import { adminGuard } from './services/auth/admin.guard';
+import { permissionGuard } from './services/auth/permission.guard';
+import { APP_ROUTES } from './app-route-constants';
 
-export const APP_ROUTES = {
-  login: '/login',
-  register: '/register',
-  googleAuthCallbackPath: 'auth/callback',
-  dashboard: {
-    root: '/dashboard',
-    overview: '/dashboard/overview',
-    incidents: {
-      list: '/dashboard/incidents',
-      create: '/dashboard/incidents/new',
-      detail: (id: string) => `/dashboard/incidents/${id}`,
-      detailPath: '/dashboard/incidents/:id',
-      edit: (id: string) => `/dashboard/incidents/${id}/edit`,
-      editPath: '/dashboard/incidents/:id/edit',
-    },
-    settings: '/dashboard/settings',
-    users: '/dashboard/users',
-  },
-  admin: {
-    settings: '/admin/settings',
-  },
-  legacy: {
-    incidents: '/incidents',
-    incidentEditPath: '/incidents/:id/edit',
-  },
-} as const;
+export { APP_ROUTES } from './app-route-constants';
 
 export const appRoutes: Routes = [
+  { path: 'access-denied', component: AccessDeniedComponent },
   {
     path: 'login',
     component: LoginComponent,
@@ -58,6 +36,7 @@ export const appRoutes: Routes = [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       {
         path: 'overview',
+        canActivate: [permissionGuard('INCIDENTS_READ')],
         loadComponent: () =>
           import('./components/overview/overview.component').then(
             (component) => component.OverviewComponent,
@@ -65,7 +44,7 @@ export const appRoutes: Routes = [
       },
       {
         path: 'incidents/new',
-        canActivate: [adminGuard],
+        canActivate: [permissionGuard('INCIDENTS_CREATE')],
         loadComponent: () =>
           import(
             './components/incidents/incident-create/incident-create.component'
@@ -73,6 +52,7 @@ export const appRoutes: Routes = [
       },
       {
         path: 'incidents/:id/edit',
+        canActivate: [permissionGuard('INCIDENTS_UPDATE')],
         loadComponent: () =>
           import(
             './components/incidents/incident-edit/incidents-edit.component'
@@ -81,6 +61,7 @@ export const appRoutes: Routes = [
       {
         path: 'incidents/:id',
         pathMatch: 'full',
+        canActivate: [permissionGuard('INCIDENTS_READ')],
         loadComponent: () =>
           import(
             './components/incidents/incident-detail/incident-detail.component'
@@ -88,6 +69,7 @@ export const appRoutes: Routes = [
       },
       {
         path: 'incidents',
+        canActivate: [permissionGuard('INCIDENTS_READ')],
         loadComponent: () =>
           import(
             './components/incidents/incident-list/incidents.component'
@@ -99,7 +81,7 @@ export const appRoutes: Routes = [
       },
       {
         path: 'users',
-        canActivate: [adminGuard],
+        canActivate: [permissionGuard('USERS_MANAGE')],
         loadComponent: () =>
           import('./components/users/users.component').then(
             (component) => component.UsersComponent,
@@ -115,7 +97,7 @@ export const appRoutes: Routes = [
     children: [
       {
         path: '',
-        canActivate: [adminGuard],
+        canActivate: [permissionGuard('SETTINGS_MANAGE')],
         loadComponent: () =>
           import('./components/admin-settings/admin-settings.component').then(
             (component) => component.AdminSettingsComponent,

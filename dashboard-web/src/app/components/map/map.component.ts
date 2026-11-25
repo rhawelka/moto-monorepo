@@ -29,6 +29,7 @@ import {
 } from '../../services/incidents/incidents.service';
 
 type RgbaColor = [number, number, number, number];
+// TODO unuit tests
 
 const INCIDENT_SEVERITY_COLORS: Record<IncidentSeverity, RgbaColor> = {
   LOW: [18, 183, 106, 1],

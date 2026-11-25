@@ -143,7 +143,16 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
   getProfile(
-    @Request() req: { user: { id: string; email: string; role: string } },
+    @Request()
+    req: {
+      user: {
+        id: string;
+        email: string;
+        role: string;
+        status: string;
+        permissions: string[];
+      };
+    },
   ) {
     return req.user;
   }

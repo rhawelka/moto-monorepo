@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client';
+import { Role, UserPermission, UserStatus } from '@prisma/client';
 
 export interface User {
   id: string;
@@ -6,4 +6,6 @@ export interface User {
   email: string;
   passwordHash: string;
   role: Role;
+  status: UserStatus;
+  permissions: UserPermission[];
 }

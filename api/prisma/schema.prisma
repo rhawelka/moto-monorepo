@@ -12,6 +12,20 @@ enum Role {
   ADMIN
 }
 
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum UserPermission {
+  INCIDENTS_READ
+  INCIDENTS_CREATE
+  INCIDENTS_UPDATE
+  INCIDENTS_DELETE
+  USERS_MANAGE
+  SETTINGS_MANAGE
+}
+
 enum IncidentStatus {
   OPEN
   IN_PROGRESS
@@ -32,6 +46,8 @@ model User {
   email        String   @unique
   passwordHash String
   role         Role     @default(USER)
+  status       UserStatus @default(ACTIVE)
+  permissions  UserPermission[] @default([INCIDENTS_READ, INCIDENTS_UPDATE])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

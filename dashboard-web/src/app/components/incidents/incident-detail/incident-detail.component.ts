@@ -3,8 +3,9 @@ import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { APP_ROUTES } from '../../../app.routes';
+import { APP_ROUTES } from '../../../app-route-constants';
 import { AuthService } from '../../../services/auth/auth.service';
+import { hasPermission } from '../../../services/auth/permission.guard';
 import {
   Incident,
   IncidentsService,
@@ -24,8 +25,11 @@ export class IncidentDetailComponent {
   readonly deleteConfirmationVisible = signal(false);
   readonly deleting = signal(false);
   readonly deleteFailed = signal(false);
-  readonly isAdmin = computed(
-    () => this.authService.currentUser()?.role === 'ADMIN',
+  readonly canUpdate = computed(() =>
+    hasPermission(this.authService.currentUser(), 'INCIDENTS_UPDATE'),
+  );
+  readonly canDelete = computed(() =>
+    hasPermission(this.authService.currentUser(), 'INCIDENTS_DELETE'),
   );
   readonly APP_ROUTES = APP_ROUTES;
 
@@ -53,7 +57,7 @@ export class IncidentDetailComponent {
 
   confirmDelete(): void {
     const incident = this.incident();
-    if (!incident || !this.isAdmin() || this.deleting()) return;
+    if (!incident || !this.canDelete() || this.deleting()) return;
 
     this.deleting.set(true);
     this.deleteFailed.set(false);
