@@ -5,20 +5,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
   selector: 'app-access-denied',
   standalone: true,
   imports: [TranslocoDirective],
-  template: `
-    <main class="access-denied" *transloco="let t; prefix: 'accessDenied'">
-      <h1>{{ t('title') }}</h1>
-      <p>{{ t('message') }}</p>
-    </main>
-  `,
-  styles: `
-    .access-denied {
-      padding: 2rem;
-    }
-
-    h1 {
-      margin: 0 0 0.5rem;
-    }
-  `,
+  templateUrl: './access-denied.component.html',
+  styleUrl: './access-denied.component.scss',
 })
 export class AccessDeniedComponent {}
