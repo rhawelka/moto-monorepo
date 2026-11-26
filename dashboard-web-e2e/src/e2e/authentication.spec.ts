@@ -3,6 +3,12 @@ import { expect, test } from '@playwright/test';
 import { getAuthenticationLocators } from './locators/authentication';
 import { installApiRoute, withPrisma } from './helpers';
 
+const LOGIN_PATH = '/login';
+const LOGIN_URL = /\/login$/;
+const DASHBOARD_URL = /\/dashboard(?:\/|$)/;
+const LOGIN_ENDPOINT = '/api/v1/auth/login';
+const GOOGLE_AUTH_ENDPOINT = 'http://localhost:3000/api/v1/auth/google';
+
 test.describe('dashboard-web authentication', () => {
   test('should display the login page for unauthenticated users', async ({
     page,
@@ -10,28 +16,109 @@ test.describe('dashboard-web authentication', () => {
     const locators = getAuthenticationLocators(page);
     await page.goto('/');
 
-    await expect(page).toHaveURL(/\/login$/);
+    await expect(page).toHaveURL(LOGIN_URL);
     await expect(locators.welcomeBack).toBeVisible();
     await expect(locators.loginButton).toBeVisible();
   });
 
+  test('should log in with valid credentials', async ({ page }) => {
+    const locators = getAuthenticationLocators(page);
+    await installApiRoute(page);
+    await page.goto(LOGIN_PATH);
+    await locators.emailOrUsername.fill('admin@test.pl');
+    await locators.loginPassword.fill('admin');
+
+    const loginResponse = page.waitForResponse(
+      (response) =>
+        response.url().includes(LOGIN_ENDPOINT) &&
+        response.request().method() === 'POST',
+    );
+    await locators.loginButton.click();
+
+    expect((await loginResponse).ok()).toBe(true);
+    await expect(page).toHaveURL(DASHBOARD_URL);
+  });
+
+  test('should show an error for invalid credentials', async ({ page }) => {
+    const locators = getAuthenticationLocators(page);
+    await installApiRoute(page);
+    await page.goto(LOGIN_PATH);
+    await locators.emailOrUsername.fill('invalid-user@example.com');
+    await locators.loginPassword.fill('incorrect-password');
+
+    const loginResponse = page.waitForResponse(
+      (response) =>
+        response.url().includes(LOGIN_ENDPOINT) &&
+        response.request().method() === 'POST',
+    );
+    await locators.loginButton.click();
+
+    expect((await loginResponse).status()).toBe(401);
+    await expect(page.getByRole('alert')).toHaveText(
+      'Login failed. Check your email and password.',
+    );
+    await expect(page).toHaveURL(LOGIN_URL);
+  });
+
+  test('should validate empty login fields without submitting', async ({
+    page,
+  }) => {
+    const locators = getAuthenticationLocators(page);
+    let loginRequestCount = 0;
+    page.on('request', (request) => {
+      if (
+        request.url().includes(LOGIN_ENDPOINT) &&
+        request.method() === 'POST'
+      ) {
+        loginRequestCount += 1;
+      }
+    });
+
+    await page.goto(LOGIN_PATH);
+    await locators.loginButton.click();
+
+    await expect(page.getByText('Email is required')).toBeVisible();
+    await expect(page.getByText('Password is required')).toBeVisible();
+    expect(loginRequestCount).toBe(0);
+  });
+
+  test('should toggle login password visibility', async ({ page }) => {
+    const locators = getAuthenticationLocators(page);
+    await page.goto('/login');
+    await locators.loginPassword.fill('test-password');
+    await expect(locators.loginPassword).toHaveAttribute('type', 'password');
+
+    await locators.loginPasswordVisibility.click();
+    await expect(locators.loginPassword).toHaveAttribute('type', 'text');
+    await expect(
+      page.getByRole('button', { name: 'Hide password' }),
+    ).toHaveAttribute('aria-pressed', 'true');
+
+    await page.getByRole('button', { name: 'Hide password' }).click();
+    await expect(locators.loginPassword).toHaveAttribute('type', 'password');
+    await expect(locators.loginPasswordVisibility).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
+  });
+
   test('should start Google OAuth login', async ({ page }) => {
     const locators = getAuthenticationLocators(page);
-    await page.route('http://localhost:3000/api/v1/auth/google', (route) =>
+    await page.route(GOOGLE_AUTH_ENDPOINT, (route) =>
       route.fulfill({
         status: 200,
         body: 'OAuth flow started',
       }),
     );
 
-    await page.goto('/login');
+    await page.goto(LOGIN_PATH);
     const oauthRequest = page.waitForRequest(
-      'http://localhost:3000/api/v1/auth/google',
+      GOOGLE_AUTH_ENDPOINT,
     );
     await locators.googleLoginButton.click();
 
     expect((await oauthRequest).method()).toBe('GET');
-    await expect(page).toHaveURL('http://localhost:3000/api/v1/auth/google');
+    await expect(page).toHaveURL(GOOGLE_AUTH_ENDPOINT);
   });
 
   test('should register a user, verify it exists, and remove it', async ({
@@ -60,7 +147,7 @@ test.describe('dashboard-web authentication', () => {
         await locators.registerButton.click();
         const response = await registrationResponse;
         expect(response.status()).toBe(201);
-        await expect(page).toHaveURL(/\/dashboard(?:\/|$)/);
+        await expect(page).toHaveURL(DASHBOARD_URL);
 
         await expect
           .poll(async () => {
