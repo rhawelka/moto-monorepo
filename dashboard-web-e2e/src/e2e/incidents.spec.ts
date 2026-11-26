@@ -72,9 +72,8 @@ function waitForIncidentResponse(
     (response) =>
       response
         .url()
-        .includes(
-          incidentId ? `/api/v1/incidents/${incidentId}` : '/api/v1/incidents',
-        ) && response.request().method() === method,
+        .includes(getIncidentApiPath(incidentId)) &&
+      response.request().method() === method,
   );
 }
 
@@ -109,10 +108,10 @@ async function openIncidentDetailFromList(
   incidentId: string,
 ): Promise<void> {
   const { incidents } = getLocators(page);
-  await page.goto('/dashboard/incidents');
+  await page.goto(INCIDENTS_LIST_PATH);
   await incidents.row(title).click();
   await expect(page).toHaveURL(
-    new RegExp(`/dashboard/incidents/${incidentId}$`),
+    new RegExp(`${INCIDENTS_LIST_PATH}/${incidentId}$`),
   );
 }
 
@@ -136,7 +135,7 @@ test.describe('dashboard-web incidents', () => {
       async (prisma) => {
         await setupAdminPage(page, true);
 
-        await page.goto('/dashboard/incidents');
+        await page.goto(INCIDENTS_LIST_PATH);
         await locators.incidents.createButton.click();
         await locators.incidents.title.fill(title);
         await locators.incidents.description.fill(incidentDetails.description);
@@ -150,7 +149,7 @@ test.describe('dashboard-web incidents', () => {
         await locators.incidents.createButton.click();
         const response = await createResponse;
         expect(response.status()).toBe(201);
-        await expect(page).toHaveURL(/\/dashboard\/incidents$/);
+        await expect(page).toHaveURL(INCIDENTS_LIST_URL);
         await expect(locators.incidents.row(title)).toBeVisible();
 
         const createdIncident = await response.json();
@@ -182,12 +181,12 @@ test.describe('dashboard-web incidents', () => {
   }) => {
     const locators = getLocators(page);
     await setupAdminPage(page, true);
-    await page.goto('/dashboard/incidents/new');
+    await page.goto(INCIDENTS_CREATE_PATH);
 
     let createRequestCount = 0;
     page.on('request', (request) => {
       if (
-        request.url().includes('/api/v1/incidents') &&
+        request.url().includes(INCIDENTS_API_PATH) &&
         request.method() === 'POST'
       ) {
         createRequestCount += 1;
@@ -209,7 +208,7 @@ test.describe('dashboard-web incidents', () => {
   }) => {
     const locators = getLocators(page);
     await installApiRoute(page);
-    await page.route('http://localhost:3000/api/v1/incidents', (route) =>
+    await page.route(INCIDENTS_API_URL, (route) =>
       route.request().method() === 'POST'
         ? route.fulfill({
             status: 500,
@@ -220,7 +219,7 @@ test.describe('dashboard-web incidents', () => {
     );
     await installLocationSearchMock(page);
     await loginAsAdmin(page);
-    await page.goto('/dashboard/incidents/new');
+    await page.goto(INCIDENTS_CREATE_PATH);
 
     const title = `e2e-failed-incident-${randomUUID()}`;
     await locators.incidents.title.fill(title);
@@ -247,7 +246,7 @@ test.describe('dashboard-web incidents', () => {
       async (prisma) => {
         const incident = await createIncidentRecord(prisma, originalTitle);
         await setupAdminPage(page, true);
-        await page.goto('/dashboard/incidents');
+        await page.goto(INCIDENTS_LIST_PATH);
         await locators.incidents.editButton(originalTitle).click();
 
         await locators.incidents.title.fill(updatedTitle);
@@ -264,7 +263,7 @@ test.describe('dashboard-web incidents', () => {
         );
         await locators.incidents.saveButton.click();
         expect((await updateResponse).status()).toBe(200);
-        await expect(page).toHaveURL(/\/dashboard\/incidents$/);
+        await expect(page).toHaveURL(INCIDENTS_LIST_URL);
         await expect(locators.incidents.row(updatedTitle)).toBeVisible();
 
         await expect
@@ -339,7 +338,7 @@ test.describe('dashboard-web incidents', () => {
         let deleteRequestCount = 0;
         page.on('request', (request) => {
           if (
-            request.url().includes(`/api/v1/incidents/${incident.id}`) &&
+            request.url().includes(getIncidentApiPath(incident.id)) &&
             request.method() === 'DELETE'
           ) {
             deleteRequestCount += 1;
@@ -384,7 +383,7 @@ test.describe('dashboard-web incidents', () => {
         await locators.incidents.deleteConfirmButton.click();
         expect((await deleteResponse).status()).toBe(204);
 
-        await expect(page).toHaveURL(/\/dashboard\/incidents$/);
+        await expect(page).toHaveURL(INCIDENTS_LIST_URL);
         await expect(locators.incidents.row(title)).toHaveCount(0);
         await expect
           .poll(() =>
@@ -407,7 +406,7 @@ test.describe('dashboard-web incidents', () => {
         const incident = await createIncidentRecord(prisma, title);
         await setupAdminPage(page);
         await page.route(
-          `http://localhost:3000/api/v1/incidents/${incident.id}`,
+          getIncidentApiUrl(incident.id),
           (route) =>
             route.request().method() === 'DELETE'
               ? route.fulfill({
@@ -454,7 +453,7 @@ test.describe('dashboard-web incidents', () => {
         await createIncidentRecord(prisma, matchingTitle, 'RESOLVED');
         await createIncidentRecord(prisma, otherTitle);
         await setupAdminPage(page);
-        await page.goto('/dashboard/incidents');
+        await page.goto(INCIDENTS_LIST_PATH);
 
         await locators.incidents.search.fill(matchingTitle);
         const matchingRow = locators.incidents.row(matchingTitle);
@@ -487,7 +486,7 @@ test.describe('dashboard-web incidents', () => {
           titles.map((title) => createIncidentRecord(prisma, title)),
         );
         await setupAdminPage(page);
-        await page.goto('/dashboard/incidents');
+        await page.goto(INCIDENTS_LIST_PATH);
         await locators.incidents.search.fill(prefix);
         await expect(locators.incidents.row(firstTitle)).toBeVisible();
         await expect(page.getByText('3 results', { exact: true })).toBeVisible();
@@ -533,7 +532,7 @@ test.describe('dashboard-web incidents', () => {
           ),
         );
         await setupAdminPage(page);
-        await page.goto('/dashboard/incidents');
+        await page.goto(INCIDENTS_LIST_PATH);
         await locators.incidents.search.fill(prefix);
         await expect(locators.incidents.pageIndicator(1, 2)).toBeVisible();
         await expect(page.getByText('12 results', { exact: true })).toBeVisible();
@@ -567,7 +566,7 @@ test.describe('dashboard-web incidents', () => {
     await withPrisma(
       async (prisma) => {
         const registrationResponse = await page.request.post(
-          'http://127.0.0.1:3101/api/v1/auth/register',
+          `${E2E_API_ORIGIN}${API_V1_PATH}/auth/register`,
           {
             data: { username, email, password: 'e2e-password-123' },
           },
@@ -586,14 +585,14 @@ test.describe('dashboard-web incidents', () => {
           },
           { user: registration.user, accessToken: registration.access_token },
         );
-        await page.goto('/dashboard/incidents');
+        await page.goto(INCIDENTS_LIST_PATH);
         await expect(locators.incidents.createButton).toHaveCount(0);
 
-        await page.goto('/dashboard/incidents/new');
+        await page.goto(INCIDENTS_CREATE_PATH);
         await expect(page).toHaveURL(/\/access-denied$/);
 
         const createResponse = await page.request.post(
-          'http://127.0.0.1:3101/api/v1/incidents',
+          `${E2E_API_ORIGIN}${getIncidentApiPath()}`,
           {
             headers: {
               Authorization: `Bearer ${registration.access_token}`,
@@ -628,7 +627,7 @@ test.describe('dashboard-web incidents', () => {
       async (prisma) => {
         const incident = await createIncidentRecord(prisma, title);
         await setupAdminPage(page);
-        await page.goto('/dashboard/incidents');
+        await page.goto(INCIDENTS_LIST_PATH);
 
         await locators.incidents.changeStatusButton(title).click();
         await locators.incidents.statusDialogSelect.selectOption('RESOLVED');
@@ -665,12 +664,12 @@ test.describe('dashboard-web incidents', () => {
       async (prisma) => {
         const incident = await createIncidentRecord(prisma, title);
         await setupAdminPage(page);
-        await page.goto('/dashboard/incidents');
+        await page.goto(INCIDENTS_LIST_PATH);
 
         let updateRequestCount = 0;
         page.on('request', (request) => {
           if (
-            request.url().includes(`/api/v1/incidents/${incident.id}`) &&
+            request.url().includes(getIncidentApiPath(incident.id)) &&
             request.method() === 'PATCH'
           ) {
             updateRequestCount += 1;
@@ -704,7 +703,7 @@ test.describe('dashboard-web incidents', () => {
         const incident = await createIncidentRecord(prisma, title);
         await setupAdminPage(page);
         await page.route(
-          `http://localhost:3000/api/v1/incidents/${incident.id}`,
+          getIncidentApiUrl(incident.id),
           (route) =>
             route.request().method() === 'PATCH'
               ? route.fulfill({
@@ -714,7 +713,7 @@ test.describe('dashboard-web incidents', () => {
                 })
               : route.fallback(),
         );
-        await page.goto('/dashboard/incidents');
+        await page.goto(INCIDENTS_LIST_PATH);
 
         await locators.incidents.changeStatusButton(title).click();
         await locators.incidents.statusDialogSelect.selectOption('RESOLVED');
@@ -738,3 +737,22 @@ test.describe('dashboard-web incidents', () => {
     );
   });
 });
+
+const INCIDENTS_LIST_PATH = '/dashboard/incidents';
+const INCIDENTS_CREATE_PATH = `${INCIDENTS_LIST_PATH}/new`;
+const INCIDENTS_LIST_URL = new RegExp(`${INCIDENTS_LIST_PATH}$`);
+const API_V1_PATH = '/api/v1';
+const INCIDENTS_API_PATH = `${API_V1_PATH}/incidents`;
+const DASHBOARD_API_ORIGIN = 'http://localhost:3000';
+const E2E_API_ORIGIN = 'http://127.0.0.1:3101';
+const INCIDENTS_API_URL = `${DASHBOARD_API_ORIGIN}${INCIDENTS_API_PATH}`;
+
+function getIncidentApiPath(incidentId?: string): string {
+  return incidentId
+    ? `${INCIDENTS_API_PATH}/${incidentId}`
+    : INCIDENTS_API_PATH;
+}
+
+function getIncidentApiUrl(incidentId: string): string {
+  return `${DASHBOARD_API_ORIGIN}${getIncidentApiPath(incidentId)}`;
+}
