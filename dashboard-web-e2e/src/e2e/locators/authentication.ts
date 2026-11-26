@@ -5,6 +5,9 @@ export function getAuthenticationLocators(page: Page) {
     welcomeBack: page.getByText('Welcome back', { exact: true }),
     emailOrUsername: page.getByLabel('Email or username'),
     loginPassword: page.getByRole('textbox', { name: 'Password' }),
+    loginPasswordVisibility: page.getByRole('button', {
+      name: 'Show password',
+    }),
     loginButton: page.getByRole('button', {
       name: 'Login',
       exact: true,
