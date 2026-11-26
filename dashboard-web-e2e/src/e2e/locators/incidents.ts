@@ -13,8 +13,36 @@ export function getIncidentLocators(page: Page) {
     severity: page.getByLabel('Severity'),
     status: page.getByLabel('Status'),
     search: page.getByLabel('Search'),
+    detailTitle: (title: string) =>
+      page.getByRole('heading', { name: title, exact: true }),
+    deleteButton: page.getByRole('button', { name: 'Delete', exact: true }),
+    deleteConfirmationTitle: page.getByRole('heading', {
+      name: 'Delete incident?',
+      exact: true,
+    }),
+    deleteConfirmButton: page.getByRole('button', {
+      name: 'Delete incident',
+      exact: true,
+    }),
+    deleteCancelButton: page.getByRole('button', {
+      name: 'Cancel',
+      exact: true,
+    }),
+    deleteError: page
+      .getByRole('alert')
+      .getByText('Incident could not be deleted. Please try again.'),
     createButton: page.getByRole('button', { name: 'Create incident' }),
     saveButton: page.getByRole('button', { name: 'Save changes' }),
+    titleSortButton: page.getByRole('button', { name: 'Title', exact: true }),
+    firstIncidentRow: page.getByRole('row').nth(1),
+    pageIndicator: (current: number, total: number) =>
+      page.getByText(`Page ${current} of ${total}`, { exact: true }),
+    nextPageButton: page
+      .getByRole('navigation', { name: 'Incident pagination' })
+      .getByRole('button', { name: 'Next', exact: true }),
+    previousPageButton: page
+      .getByRole('navigation', { name: 'Incident pagination' })
+      .getByRole('button', { name: 'Previous', exact: true }),
     row: incidentRow,
     editButton: (title: string) =>
       incidentRow(title).getByRole('button', { name: 'Edit' }),
@@ -36,6 +64,14 @@ export function getIncidentLocators(page: Page) {
     statusDialogSaveButton: page
       .getByRole('dialog', { name: 'Change status' })
       .getByRole('button', { name: 'Save changes' }),
+    statusDialogCancelButton: page
+      .getByRole('dialog', { name: 'Change status' })
+      .getByRole('button', { name: 'Cancel' }),
+    statusDialogSaveError: page
+      .getByRole('dialog', { name: 'Change status' })
+      .getByRole('alert'),
+    openStatus: (title: string) =>
+      incidentRow(title).getByText('Open', { exact: true }),
     resolvedStatus: (title: string) =>
       incidentRow(title).getByText('Resolved', { exact: true }),
   };
